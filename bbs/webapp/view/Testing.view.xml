@@ -1,0 +1,11 @@
+<mvc:View
+   controllerName="frontend.bbs.controller.Testing"
+   xmlns="sap.m"
+   xmlns:mvc="sap.ui.core.mvc">
+   <MessagePage id="_IDGenMessagePage1"
+      title="Testing"
+      text="Testing"
+      description="Testing"
+      showNavButton="true"
+		navButtonPress="onNavBack"/>
+</mvc:View>

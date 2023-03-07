@@ -1,0 +1,216 @@
+{
+  "_version": "1.48.0",
+  "sap.app": {
+    "id": "frontend.bbs",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "0.0.1"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "resources": "resources.json",
+    "sourceTemplate": {
+      "id": "@sap/generator-fiori:basic",
+      "version": "1.8.4",
+      "toolsId": "35262a44-2c7c-4aa3-9c12-acc68e746699"
+    },
+    "dataSources": {
+      "mainService": {
+        "uri": "/sap/opu/odata/",
+        "type": "OData",
+        "settings": {
+          "annotations": [],
+          "localUri": "localService/metadata.xml",
+          "odataVersion": "2.0"
+        }
+      },
+      "bbsbackend": {
+        "uri" : "http://localhost:8000/api"
+      },
+      "navigationList": {
+				"uri": "model/navigation.json",
+				"type": "JSON"
+			}
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "",
+      "favIcon": "",
+      "phone": "",
+      "phone@2": "",
+      "tablet": "",
+      "tablet@2": ""
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": true,
+    "dependencies": {
+      "minUI5Version": "1.109.3",
+      "libs": {
+        "sap.m": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "frontend.bbs.i18n.i18n"
+        }
+      },
+      "": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {}
+      },
+      "navigationList": {
+				"type": "sap.ui.model.json.JSONModel",
+				"dataSource": "navigationList"
+			}
+    },
+    "resources": {
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "viewType": "XML",
+        "async": true,
+        "viewPath": "frontend.bbs.view",
+        "controlAggregation": "pages",
+        "controlId": "app",
+        "bypassed": {
+          "target": "notFound"
+       }
+      },
+      "routes": [
+          {
+            "pattern": "",
+            "name": "Login",
+            "target": "login",
+            "viewLevel": 1
+            
+          },
+          {
+            "pattern": "testing",
+            "name": "testing",
+            "target": "testing"
+           
+          },
+          {
+            "pattern": "userAdministration_User",
+            "name": "userAdministrationUser",
+            "target": "userAdministrationUser"
+          },
+          {
+            "pattern": "pillarSettings",
+            "name": "pillarSettings",
+            "target": "testing"
+          },
+          {
+            "pattern": "budgetingCreateBudget",
+            "name": "budgetingCreateBudget",
+            "target": "testing"
+          },
+          {
+            "pattern": "userAdministration_Role",
+            "name": "userAdministrationRole",
+            "target": "userAdministrationRole"
+          },
+          {
+            "pattern": "pillarSettings",
+            "name": "pillarSettings",
+            "target": "pillarSettings"
+          },
+          {
+            "pattern": "notFound",
+            "name": "notFOund",
+            "target": "notFound"
+          },
+          {
+            "name": "dashboard",
+            "pattern": "dashboard",
+            "target": [
+              "TargetBBSSAPAddOnDashboard"
+            ],
+            "viewLevel": 2
+            
+          }
+      ],
+      "targets": {
+        "login": {
+          "viewType": "XML",
+          "transition": "show",
+          "clearControlAggregation": false,
+          "viewId": "Login",
+          "viewName": "Login"
+        },
+
+        "TargetBBSSAPAddOnDashboard": {
+          "viewType": "XML",
+          "transition": "show",
+          "clearControlAggregation": false,
+          "viewId": "BBSSAPAddOnDashboard",
+          "viewName": "BBSSAPAddOnDashboard"
+        },
+        "notFound": {
+            "id": "notFound",
+            "name": "notFound",
+            "transition": "show",
+            "viewType": "XML",
+            "clearControlAggregation": false,
+            "viewName": "notFound"
+        },
+        "userAdministrationUser" : {
+          "viewId": "userAdministration_User",
+          "viewName": "userAdministration.User",
+          "parent": "TargetBBSSAPAddOnDashboard",
+          "controlId": "modulContainer",
+          "controlAggregation": "pages"
+				},
+        "userAdministrationRole" : {
+          "viewId": "userAdministration_Role",
+          "viewName": "userAdministration.Role",
+          "parent": "TargetBBSSAPAddOnDashboard",
+          "controlId": "modulContainer",
+          "controlAggregation": "pages"
+        },
+        "pillarSettings" : {
+          "viewId": "pillarSettings",
+          "viewName": "pillarSettings.Index",
+          "parent": "TargetBBSSAPAddOnDashboard",
+          "controlId": "modulContainer",
+          "controlAggregation": "pages"
+        },
+        "testing" : {
+          "viewId": "testing",
+          "viewName": "testing",
+          "parent": "TargetBBSSAPAddOnDashboard",
+          "controlId": "modulContainer",
+          "controlAggregation": "pages"
+				}
+      }
+    },
+    "rootView": {
+      "viewName": "frontend.bbs.view.App",
+      "type": "XML",
+      "async": true,
+      "id": "app"
+    }
+  }
+}

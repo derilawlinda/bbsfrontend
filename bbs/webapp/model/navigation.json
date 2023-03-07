@@ -1,0 +1,118 @@
+{
+	"selectedKey": "home",
+	"navigation": [
+		{
+			"title": "Home",
+			"icon": "sap-icon://home",
+			"expanded": true,
+			"key": "home"
+		},
+		{
+			"title": "User Administration",
+			"icon": "sap-icon://employee",
+			"expanded": false,
+			"items": [
+				{
+					"title": "User",
+					"key": "userAdministration_User"
+				},
+				{
+					"title": "Role",
+					"key": "userAdministration_Role"
+				}
+			]
+		},
+		{
+			"title": "Pillar Settings",
+			"icon": "sap-icon://tree",
+			"expanded": false,
+			"key": "pillarSettings"
+			
+		},
+		{
+			"title": "Budgeting",
+			"icon": "sap-icon://batch-payments",
+			"expanded": false,
+			"key" : "budgeting",
+			"items": [
+				{
+					"title": "Create Budget",
+					"key": "budgetingCreateBudget"
+				},
+				{
+					"title": "Update Budget",
+					"key": "budgetingUpdateBudget"
+				},
+				{
+					"title": "Approve Budget",
+					"key": "budgetingApproveBudget"
+				}
+				
+			]
+		},
+		{
+			"title": "Material Request",
+			"icon": "sap-icon://request",
+			"expanded": false,
+			"items": [
+				{
+					"title": "List MR"
+				},
+				{
+					"title": "Create MR"
+				},
+				{
+					"title": "Approve MR"
+				}
+			]
+		},
+		{
+			"title": "Material Issue",
+			"icon": "sap-icon://product",
+			"expanded": false
+			
+		},
+		{
+			"title": "Advance Employee",
+			"icon": "sap-icon://loan",
+			"expanded": false,
+			"items": [
+				{
+					"title": "AE List"
+				},
+				{
+					"title": "AE Approval"
+				}
+			]
+		},
+		{
+			"title": "Advance Realization",
+			"icon": "sap-icon://payment-approval",
+			"expanded": false
+			
+		}
+	],
+	"fixedNavigation": [
+		{
+			"title": "Log Out",
+			"icon": "sap-icon://log"
+		}
+	],
+	"headerItems": [
+		{
+			"text": "File"
+		},
+		{
+			"text": "Edit"
+		},
+		{
+			"text": "View"
+		},
+		{
+			"text": "Settings"
+		},
+		{
+			"text": "Help"
+		}
+	]
+}

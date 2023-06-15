@@ -4,25 +4,56 @@ xmlns:l="sap.ui.layout"
 xmlns:core="sap.ui.core" 
 xmlns:mvc="sap.ui.core.mvc"
 xmlns:f="sap.f"
+xmlns:semantic="sap.f.semantic"
 xmlns="sap.m">
-<f:DynamicPage  id="_IDGenDynamicPage1" headerExpanded="true" toggleHeaderOnTitleClick="true" class="sapUiContentPadding">
+<semantic:SemanticPage  id="_IDSemanticPage1" 
+headerExpanded="true" 
+toggleHeaderOnTitleClick="true" 
+class="sapUiContentPadding"
+headerPinnable="true"
+preserveHeaderStateOnScroll="false"
+titleAreaShrinkRatio="1:1.6:1.6"
+showFooter="false" >
     
-    <f:content>
-        <Tree items="{path: '/'}" id="Tree" class="sapUiTinyMarginTop tilesClass selTree">
-            <CustomTreeItem id="treeItem" detailPress="pressCustomTreeItem" class="customTreeChildren" >
-                <VBox class="customSelTile" id="customSelTile">
+    <!-- Title Heading-->
+    <semantic:titleHeading>
+        <Title id="_IDGenTitle1" text="Pillar Settings" />
+    </semantic:titleHeading>
+
+    <!-- Header Content -->
+    <semantic:content>
+   
+        
+        <Tree items="{path: '/'}" id="Tree" class="sapUiTinyMarginTop tilesClass selTree" >
+            <CustomTreeItem id="treeItem" detailPress="pressCustomTreeItem" class="customTreeChildren"   >
+                <VBox class="customSelTile" id="customSelTile" >
                     <HBox id="_IDGenHBox1">
                         <VBox id="_IDGenVBox1" class="sapUiTinyMarginTop customTxts">
-                            <Label id="_IDGenLabel1" class="sapUiSmallMarginBegin headTxtFont" text="{text}"/>
+                               
+                            <Label id="_IDGenLabel1" class="sapUiSmallMarginBegin headTxtFont"  text="{text}"/>
                             <Label id="_IDGenLabel2" class="sapUiSmallMarginBegin subHeadTxtFont" text="{subheader}"/>
                         </VBox>
-                        <Button id="_IDGenButton1" class="sapUiSmallMarginBegin sapUiTinyMarginTop" press="addTile" icon="sap-icon://add"/>
-                        <Button id="_IDGenButton2" class="sapUiTinyMarginBegin sapUiTinyMarginTop" press="removeTile" icon="sap-icon://less"/>
+                        <Button id="_IDGenButton1" class="sapUiSmallMarginBegin sapUiTinyMarginTop" press="addTile" visible="{= ${viewConfig>/addButtonVisibility} &amp;&amp; ${subheader} !== 'Subclass2'}" icon="sap-icon://add"/>
+                        <Button id="_IDGenButton2" class="sapUiTinyMarginBegin sapUiTinyMarginTop" press="removeTile" visible="{viewConfig>/removeButtonVisibility}" icon="sap-icon://less"/>
                     </HBox>
                 </VBox>
             </CustomTreeItem>
         </Tree>
-    </f:content>
-</f:DynamicPage>
+    </semantic:content>
+
+    <semantic:titleMainAction>
+        <semantic:TitleMainAction id="editAction" text="Edit" press="onEdit"/>
+    </semantic:titleMainAction>
+
+    <semantic:positiveAction>
+        <semantic:PositiveAction text="Save" press="onSave"/>
+    </semantic:positiveAction>
+
+    <semantic:footerCustomActions>
+            <Button text="Cancel" press="onCancel" />
+    </semantic:footerCustomActions>
+   
+
+</semantic:SemanticPage>
 	    
 </mvc:View>

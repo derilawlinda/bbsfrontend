@@ -29,3 +29,30 @@ server:
       configuration:
         component: frontend.bbs
         ui5Theme: sap_horizon
+framework:
+  name: SAPUI5
+  version: "1.111.1"
+  libraries:
+    - name: sap.m
+    - name: sap.ui.core
+    - name: sap.ui.layout
+    - name: themelib_sap_horizon
+    - name: sap.ui.webc.main
+    - name: sap.tnt
+---
+specVersion: '2.5'
+kind: extension
+type: project-shim
+metadata:
+  name: extlib # this can be your project shim name
+shims:
+  configurations:
+    d-forest: # name as defined in package.json
+      specVersion: '2.5'
+      type: module # Use module type
+      metadata:
+        name: d-forest
+      resources:
+        configuration:
+          paths:
+            /resources/extlib/d-forest/: "" # map root directory of lodash module

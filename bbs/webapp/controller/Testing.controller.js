@@ -3,7 +3,7 @@ sap.ui.define([
     "sap/ui/core/routing/History"
  ], function (Controller,History) {
     "use strict";
-    return Controller.extend("frontend.bbs.controller.Testing", {
+    return Controller.extend("frontend.bbs.controller.testing", {
        onInit: function () {
        },
        getRouter : function () {

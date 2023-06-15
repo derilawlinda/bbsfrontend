@@ -2,6 +2,21 @@
  * eslint-disable @sap/ui5-jsdocs/no-jsdoc
  */
 
+sap.ui.loader.config({
+	map: {
+		"*": {
+			"lodash": "bbs-frontend/extlib/d-forest"
+		}
+	},
+	shim: {
+		"bbs-frontend/extlib/d-forest": {
+			"amd": true,
+			"deps": [],
+			"exports": "_"
+		}
+	}
+});
+
 sap.ui.define([
         "sap/ui/core/UIComponent",
         "sap/ui/Device",
@@ -31,9 +46,12 @@ sap.ui.define([
                 // set the device model
                 this.setModel(models.createDeviceModel(), "device");
                 window.backendUrl = this.getManifestEntry("/sap.app/dataSources/bbsbackend/uri");
-
-                
-
+                this.setModel(models.createPillarModel(), "oPillarModel");
+                this.setModel(models.createClassificationModel(), "oClassificationModel");
+                this.setModel(models.createSubClassModel(), "oSubClassModel");
+                this.setModel(models.createSubClass2Model(), "oSubClass2Model");
+                this.setModel(models.createSalesOrderModel(), "salesOrder");
+			    this.setModel(models.createCompanyModel(),"companies");
                 
             },
 

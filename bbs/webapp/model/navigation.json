@@ -1,11 +1,11 @@
 {
-	"selectedKey": "home",
+	"selectedKey": "dashboard",
 	"navigation": [
 		{
 			"title": "Home",
 			"icon": "sap-icon://home",
 			"expanded": true,
-			"key": "home"
+			"key": "dashboard"
 		},
 		{
 			"title": "User Administration",
@@ -33,62 +33,39 @@
 			"title": "Budgeting",
 			"icon": "sap-icon://batch-payments",
 			"expanded": false,
-			"key" : "budgeting",
-			"items": [
-				{
-					"title": "Create Budget",
-					"key": "budgetingCreateBudget"
-				},
-				{
-					"title": "Update Budget",
-					"key": "budgetingUpdateBudget"
-				},
-				{
-					"title": "Approve Budget",
-					"key": "budgetingApproveBudget"
-				}
-				
-			]
+			"key": "budgetingList"
 		},
 		{
 			"title": "Material Request",
 			"icon": "sap-icon://request",
-			"expanded": false,
-			"items": [
-				{
-					"title": "List MR"
-				},
-				{
-					"title": "Create MR"
-				},
-				{
-					"title": "Approve MR"
-				}
-			]
+			"key": "materialRequestListMR",
+			"expanded": false
 		},
 		{
 			"title": "Material Issue",
 			"icon": "sap-icon://product",
-			"expanded": false
+			"expanded": false,
+			"key": "materialIssue"
 			
 		},
 		{
-			"title": "Advance Employee",
+			"title": "Employee Advance",
 			"icon": "sap-icon://loan",
 			"expanded": false,
-			"items": [
-				{
-					"title": "AE List"
-				},
-				{
-					"title": "AE Approval"
-				}
-			]
+			"key": "advanceEmployee"
 		},
 		{
 			"title": "Advance Realization",
 			"icon": "sap-icon://payment-approval",
-			"expanded": false
+			"expanded": false,
+			"key": "advanceRealization"
+			
+		},
+		{
+			"title": "Reimbursement",
+			"icon": "sap-icon://travel-expense-report",
+			"expanded": false,
+			"key": "reimbursement"
 			
 		}
 	],

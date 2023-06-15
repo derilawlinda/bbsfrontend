@@ -9,10 +9,13 @@
     "sapui5"
   ],
   "main": "dist/index.html",
-  "dependencies": {},
+  "dependencies": {
+    "d-forest": "^3.2.4"
+  },
   "devDependencies": {
-    "@ui5/cli": "^2.14.1",
-    "@sap/ux-ui5-tooling": "1"
+    "@sap/ux-ui5-tooling": "1",
+    "@ui5/cli": "^2.14.17",
+    "napa": "^3.0.0"
   },
   "scripts": {
     "start": "fiori run --open \"test/flpSandbox.html?sap-ui-xx-viewCache=false#frontendbbs-display\"",
@@ -24,14 +27,16 @@
     "start-variants-management": "fiori run --open \"preview.html?sap-ui-xx-viewCache=false&fiori-tools-rta-mode=true&sap-ui-rta-skip-flex-validation=true#preview-app\"",
     "unit-tests": "fiori run --open 'test/unit/unitTests.qunit.html'",
     "int-tests": "fiori run --open 'test/integration/opaTests.qunit.html'",
-    "start-build" : "fiori run --open \"../dist/index.html?sap-ui-xx-viewCache=false#\""
+    "start-build": "fiori run --open \"../dist/index.html?sap-ui-xx-viewCache=false#\""
+  },
+  "napa": {
+    "d-forest": "https://github.com/akarande777/d-forest"
   },
   "ui5": {
     "dependencies": [
-      "@sap/ux-ui5-tooling"
+      "@sap/ux-ui5-tooling",
+      "d-forest"
     ]
   },
   "sapuxLayer": "CUSTOMER_BASE"
-  
 }
-

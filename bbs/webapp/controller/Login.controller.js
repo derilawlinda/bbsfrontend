@@ -42,6 +42,9 @@ sap.ui.define(
                 statusCode: {    
                     401: function(request,status,errorThrown){ 
                         loginErrorToast.show();
+                    },
+                    404: function(request,status,errorThrown){ 
+                        loginErrorToast.show();
                     }
                 },
                 

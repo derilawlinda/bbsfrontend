@@ -17,7 +17,7 @@
                         columnsL="2"
                         columnsXL="2">
 					<f:content>
-						<Label id="_IDGenLabel44" text="Company" />
+						<Label id="_IDGenLabel44" text="{viewConfig>/windowText}" />
 
 						<ComboBox id="CreateCompany" 
 									items="{companies>/Items}">

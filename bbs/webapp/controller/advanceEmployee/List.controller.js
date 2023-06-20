@@ -38,7 +38,6 @@ sap.ui.define([
 			var dynamicProperties = [];
 			oBudgetingDetailModel.setData(dynamicProperties);
 			this.getView().setModel(oBudgetingDetailModel,"budgetingDetailModel");
-			this._oMessageManager.registerObject(this.oView.byId("formContainer"), true);
 
 		}.bind(this));
 	   },

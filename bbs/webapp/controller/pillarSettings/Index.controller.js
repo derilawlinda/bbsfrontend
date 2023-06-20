@@ -87,7 +87,18 @@ sap.ui.define([
 			var _oModel = this.getView().getModel();
 			var aData = _oModel.getProperty(_sBindingPath);
 			var oModel = this.getView().getModel("viewConfig");
-			oModel.setProperty("/windowText", aData.subheader);
+			var windowText;
+			if(aData.subheader == 'Company'){
+				windowText = 'Pillar'
+			}else if(aData.subheader == 'Pillar'){
+				windowText = 'Classification'
+			}else if(aData.subheader == 'Classification'){
+				windowText = 'Subclass'
+			}else if(aData.subheader == 'Subclass'){
+				windowText = 'SubClass2'
+			}
+
+			oModel.setProperty("/windowText", windowText);
 			if (!this.createTileDialog) {
 				this.createTileDialog = this.loadFragment({
 					name: "frontend.bbs.view.pillarSettings.addNode"
@@ -96,38 +107,22 @@ sap.ui.define([
 			this.createTileDialog.then(function (oDialog) {
 				this.oDialog = oDialog;
 				this.oDialog.open();
-				// var oBudgetingDetailModel = new sap.ui.model.json.JSONModel();
-				// var dynamicProperties = [];
-				// oBudgetingDetailModel.setData(dynamicProperties);
-				// this.getView().setModel(oBudgetingDetailModel,"budgetingDetailModel");
-	
 			}.bind(this));
 
-		// 	var _oItem = oEvt.getSource().getParent().getParent().getParent();
-		// 	var _sBindingPath = _oItem.getBindingContextPath();
-		// 	var _oModel = this.getView().getModel();
-		// 	var aData = _oModel.getProperty(_sBindingPath);
-    	// 	var _oChildNodes = [];
-		// 	if (aData.nodes !== undefined) {
-		// 		_oChildNodes = aData.nodes; 
-		// 	} else {
-		// 		aData.nodes = _oChildNodes;
-		// 	}
-
-		// 	var oDialog1 = new sap.ui.commons.Dialog(); 
-		// 	oDialog1.setTitle("Enter Details"); 
-		// 	oDialog1.setShowCloseButton(); 
-		// 	oDialog1.open();
+    		var _oChildNodes = [];
+			if (aData.nodes !== undefined) {
+				_oChildNodes = aData.nodes; 
+			} else {
+				aData.nodes = _oChildNodes;
+			}
 		//    // you can hard code new child data or open a popup to get input from user
-		// 	var newData = {
-		// 		"text": "New",
-		// 		"subheader": "New 1",
-		// 		"is_editable": true
-		// 	};
-		// 	_oChildNodes.push(newData);
-		// 	_oModel.setProperty(_sBindingPath, aData);
-			
-			
+			var newData = {
+				"text": "New",
+				"subheader": "New 1",
+				"is_editable": true
+			};
+			_oChildNodes.push(newData);
+			_oModel.setProperty(_sBindingPath, aData);
 			
 		   },
 		_closeDialog: function () {

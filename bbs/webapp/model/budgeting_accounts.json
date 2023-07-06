@@ -1,0 +1,19 @@
+{
+    "data": [
+      {
+        "account_code": 600001,
+        "account_name": "Travel",
+        "amount" : 10000000
+      },
+      {
+        "account_code": 600002,
+        "account_name": "Accomodation",
+        "amount" : 20000000
+      },
+      {
+        "account_code": 600003,
+        "account_name": "Food",
+        "amount" : 15000000
+      }
+    ]
+  }

@@ -38,7 +38,7 @@
 		{
 			"title": "Material Request",
 			"icon": "sap-icon://request",
-			"key": "materialRequestListMR",
+			"key": "materialRequestList",
 			"expanded": false
 		},
 		{

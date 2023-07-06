@@ -31,6 +31,7 @@ sap.ui.define([
 			var currentRoute = this.getRouter().getHashChanger().getHash();
 			var userData = await this.getOwnerComponent().checkToken(oJWT,currentRoute);
 			var oViewModel = new JSONModel({userName: userData.data.user.name});
+			var userData = this.getOwnerComponent().setModel(oViewModel,"userModel");
 			this.getView().setModel(oViewModel,"view");
 			Device.media.attachHandler(this._handleWindowResize, this);
 			this.getRouter().attachRouteMatched(this.onRouteChange.bind(this));

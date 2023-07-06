@@ -16,6 +16,13 @@
       "toolsId": "35262a44-2c7c-4aa3-9c12-acc68e746699"
     },
     "dataSources": {
+      "default": {
+        "uri": "http://localhost:8000/api/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0"
+        }
+      },
       "mainService": {
         "uri": "/sap/opu/odata/",
         "type": "OData",
@@ -26,14 +33,10 @@
         }
       },
       "bbsbackend": {
-        "uri" : "http://localhost:8000/api"
+        "uri" : "http://localhost:8000/api/"
       },
       "navigationList": {
 				"uri": "model/navigation.json",
-				"type": "JSON"
-			},
-      "budgetingRemote": {
-				"uri": "model/budgeting.json",
 				"type": "JSON"
 			}
     }
@@ -84,10 +87,6 @@
       "navigationList": {
 				"type": "sap.ui.model.json.JSONModel",
 				"dataSource": "navigationList"
-			},
-      "budgeting": {
-				"type": "sap.ui.model.json.JSONModel",
-				"dataSource": "budgetingRemote"
 			}
     },
     "resources": {
@@ -116,6 +115,16 @@
             "target": "login",
             "viewLevel": 1
             
+          },
+          {
+            "pattern": "reimbursement",
+            "name": "reimbursement",
+            "target": "reimbursement"
+          },
+          {
+            "pattern": "reimbursementDetail/{ID}",
+            "name": "reimbursementDetail",
+            "target": "reimbursementDetail"
           },
           {
             "pattern": "testing",
@@ -159,9 +168,9 @@
             "target": "budgetingUpdateBudget"
           },
           {
-            "pattern": "materialRequestListMR",
-            "name": "materialRequestListMR",
-            "target": "materialRequestListMR"
+            "pattern": "materialRequestList",
+            "name": "materialRequestList",
+            "target": "materialRequestList"
           },
           {
             "pattern": "materialRequestDetail/{materialRequestID}",
@@ -198,16 +207,7 @@
             "name": "advanceRealizationDetail",
             "target": "advanceRealizationDetail"
           },
-          {
-            "pattern": "reimbursement",
-            "name": "reimbursement",
-            "target": "reimbursement"
-          },
-          {
-            "pattern": "reimbursementDetail/{ID}",
-            "name": "reimbursement",
-            "target": "reimbursement"
-          },
+          
           {
             "pattern": "notFound",
             "name": "notFOund",
@@ -294,9 +294,9 @@
           "controlId": "modulContainer",
           "controlAggregation": "pages"
         },
-        "materialRequestListMR" : {
+        "materialRequestList" : {
           "viewId": "materialRequestList",
-          "viewName": "materialRequest.listMR",
+          "viewName": "materialRequest.List",
           "parent": "TargetBBSSAPAddOnDashboard",
           "controlId": "modulContainer",
           "controlAggregation": "pages"
@@ -346,6 +346,20 @@
         "advanceRealizationDetail" : {
           "viewId": "advanceRealizationDetail",
           "viewName": "advanceRealization.Detail",
+          "parent": "TargetBBSSAPAddOnDashboard",
+          "controlId": "modulContainer",
+          "controlAggregation": "pages"
+        },
+        "reimbursement" : {
+          "viewId": "reimbursement",
+          "viewName": "budgeting.List",
+          "parent": "TargetBBSSAPAddOnDashboard",
+          "controlId": "modulContainer",
+          "controlAggregation": "pages"
+        },
+        "reimbursementDetail" : {
+          "viewId": "reimbursementDetail",
+          "viewName": "reimbursement.Detail",
           "parent": "TargetBBSSAPAddOnDashboard",
           "controlId": "modulContainer",
           "controlAggregation": "pages"

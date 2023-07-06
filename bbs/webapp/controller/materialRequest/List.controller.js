@@ -11,7 +11,8 @@ sap.ui.define([
 	"sap/m/MessageToast",
 	"sap/m/Text",
 	"sap/m/TextArea",
-	"sap/ui/model/json/JSONModel"
+	"sap/ui/model/json/JSONModel",
+	'frontend/bbs/libs/lodash'
  ], function (Controller,History,Fragment,HorizontalLayout, VerticalLayout, Dialog, Button, Label, mobileLibrary, MessageToast, Text, TextArea,JSONModel) {
     "use strict";
 
@@ -20,7 +21,7 @@ sap.ui.define([
 
 	// shortcut for sap.m.DialogType
 	var DialogType = mobileLibrary.DialogType;
-    return Controller.extend("frontend.bbs.controller.materialRequest.listMR", {
+    return Controller.extend("frontend.bbs.controller.materialRequest.List", {
        onInit: async function () {
 		var oModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/material_request.json"));
 		this.getOwnerComponent().setModel(oModel,"materialRequest");
@@ -28,6 +29,12 @@ sap.ui.define([
 		this.getView().setModel(oSalesOrderModel,"salesOrder");
 		var oCompaniesModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/companies.json"));
 		this.getView().setModel(oCompaniesModel,"companies");
+		var oBudgetingModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/budgeting.json"));
+		this.getView().setModel(oBudgetingModel,"budgeting");
+		var oNewBudgetingAccounts = new sap.ui.model.json.JSONModel();
+		this.getView().setModel(oNewBudgetingAccounts,"new_mr_items");
+		this.getView().getModel("new_mr_items").setProperty("/itemRow", []);
+		
 		
 
        },
@@ -85,6 +92,42 @@ sap.ui.define([
 			}else{
 				return 'Reject'
 			}
-		  }
+		  },
+		  onBudgetChange : function(oEvent){
+			var budgetingModel = this.getView().getModel("budgeting");
+			var budgetingData = budgetingModel.getData().data;
+			// console.log(budgetingData);
+			// var result = _.find(budgetingData, function(obj) {
+			// 	if (obj.ID == oEvent.getParameters('selectedItem')) {
+			// 		return true;
+			// 	}
+			// });
+			// console.log(result);
+			
+			 var selectedID = parseInt(oEvent.getParameters('selectedItem').value);
+			let result = _.find(budgetingData, function(obj) {
+				if (obj.ID == selectedID) {
+					return true;
+				}
+			});
+			console.log(result)
+
+		  },
+		  onAddPress : function(oEvent){
+			console.log("Aaaa");
+			const oModel = this.getView().getModel("new_mr_items");
+			var oModelData = oModel.getData();
+			var oNewObject = {
+				"account_code": "",
+				"item_name": "",
+				"amount": ""
+			};
+			oModelData.itemRow.push(oNewObject);
+			console.log(oModelData.itemRow);
+			var f = new sap.ui.model.json.JSONModel(oModelData);
+			this.getView().setModel(f, 'new_mr_items');
+			f.refresh();
+		
+		}
     });
  });

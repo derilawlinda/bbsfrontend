@@ -52,6 +52,7 @@ sap.ui.define([
                 this.setModel(models.createSubClass2Model(), "oSubClass2Model");
                 this.setModel(models.createSalesOrderModel(), "salesOrder");
 			    this.setModel(models.createCompanyModel(),"companies");
+		        this.setModel(models.createAccountModel(),"accounts");
                 
             },
 
@@ -73,7 +74,7 @@ sap.ui.define([
                         headers: { 'Authorization': 'Bearer ' + oJWT }
                     });
                     $.ajax({
-                        url: backendUrl+"/checkToken",
+                        url: backendUrl+"checkToken",
                         method: 'POST',
                         contentType:"application/json; charset=utf-8",
                         dataType:"json",

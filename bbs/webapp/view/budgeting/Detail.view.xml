@@ -22,6 +22,9 @@ xmlns:core="sap.ui.core"
 					<form:content>
                     <core:Title id="_IDGenTitle1" text="Information" />
 
+						<Label id="_IDGenLabel101" text="ID" />
+						<Text id="_IDGenText101" text="{budgeting>ID}" />
+
                         <Label id="_IDGenLabel1" text="Date" />
 						<Text id="_IDGenText1" text="{budgeting>date}" />
 

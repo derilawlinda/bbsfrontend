@@ -129,14 +129,32 @@
 
 								<core:Item
 									key="{accounts>account_code}"
-									text="{accounts>account_code} - {accounts>account_name}"
+									text="{accounts>account_code}"
 								/>
 
 							</ComboBox>
 						</table:template>
 					</table:Column>
 
-					
+					<table:Column >
+						<Text text="Account Name" />
+						<table:template>
+							<ComboBox width="100%"
+								selectedKey="{new_budgeting_accounts>account_name}"
+								items="{
+								path: 'accounts>/data',
+								templateShareable: false
+								}"
+							>
+
+								<core:Item
+									key="{accounts>account_name}"
+									text="{accounts>account_name}"
+								/>
+
+							</ComboBox>
+						</table:template>
+					</table:Column>
 
 					<table:Column >
 						<Text text="Amount" />

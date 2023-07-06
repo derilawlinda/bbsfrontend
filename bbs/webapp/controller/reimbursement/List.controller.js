@@ -1,39 +1,33 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/core/routing/History",
+	"sap/ui/core/Fragment",
+	"sap/ui/layout/HorizontalLayout",
+	"sap/ui/layout/VerticalLayout",
+	"sap/m/Dialog",
+	"sap/m/Button",
+	"sap/m/Label",
+	"sap/m/library",
+	"sap/m/MessageToast",
+	"sap/m/Text",
+	"sap/m/TextArea",
+	"sap/m/Input",
 	"sap/ui/model/json/JSONModel",
-	"sap/ui/model/odata/v4/ODataModel"
- ], function (Controller,History,JSONModel,ODataModel) {
+	"sap/ui/core/Core"
+ ], function (Controller,History,Fragment,HorizontalLayout, VerticalLayout, Dialog, Button, Label, mobileLibrary, MessageToast, Text, TextArea,Input,JSONModel,Core) {
     "use strict";
 	var endTerm;
 	var startTerm;
 	var matches = [];
 
-    return Controller.extend("frontend.bbs.controller.budgeting.List", {
-       onInit: function () {
-		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
-		var oJWT = oStore.get("jwt");
-		var oModel = new ODataModel({
-			/* send requests directly. Use $auto for batch request wich will be send automatically on before rendering */
-		  groupId : "$direct",
-			/* I'll just quote the API documentary:
-		  Controls synchronization between different bindings which refer to the same data for the case data changes in one binding.
-		  Must be set to 'None' which means bindings are not synchronized at all; all other values are not supported and lead to an error.
-		  */
-		  synchronizationMode : "None",
-		  /*
-		  Root URL of the service to request data from.
-		  */
-			serviceUrl : backendUrl,
-			httpHeaders : {
-				'Authorization': 'Bearer ' + oJWT 
-			}
-		  });
-		  console.log(oModel);
-		  this.getView().setModel(oModel,"budgeting");
+    return Controller.extend("frontend.bbs.controller.reimbursement.List", {
+       onInit: async function () {
+		var oModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/budgeting.json"));
+		this.getView().setModel(oModel,"budgeting");
 		var oBudgetingAccount = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/budgeting_accounts.json"));
 		this.getView().setModel(oBudgetingAccount,"budgeting_accounts");
-		
+		var oAccount = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/accounts.json"));
+		this.getView().setModel(oAccount,"accounts");
 		
 		
 		

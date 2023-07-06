@@ -1,5 +1,5 @@
 <mvc:View xmlns:cards="sap.f.cards" 
-controllerName="frontend.bbs.controller.budgeting.List"
+controllerName="frontend.bbs.controller.reimbursement.List"
 xmlns:mvc="sap.ui.core.mvc"
 xmlns="sap.m"
 xmlns:f="sap.f"
@@ -13,7 +13,10 @@ xmlns:table="sap.ui.table"
         inset="false"
         selectionChange="handleSelectionChange"
         items="{
-					path: 'budgeting>/getBudget'
+					path: 'budgeting>/data',
+					sorter: {
+						path: 'ID'
+					}
 				}">
          	<headerToolbar>
 			<OverflowToolbar id="_IDGenOverflowToolbar1">
@@ -57,20 +60,20 @@ xmlns:table="sap.ui.table"
              <ColumnListItem id="_IDGenColumnListItem1" vAlign="Middle" type="Navigation" press=".onPress">
                 <cells>
                     	<ObjectIdentifier id="_IDGenObjectIdentifier1"
-						    text="{value>Code}"/>
+						    text="{budgeting>ID}"/>
                         <Text id="_IDGenText10"
-						    text="{name}" />
+						    text="{budgeting>name}" />
                         <Text id="_IDGenText1"
-						    text="{date}" />
-                        <Text id="_IDGenText2" text="{project}" />
-                        <Text id="_IDGenText3" text="{pillar}" />
-                        <Text id="_IDGenText4" text="{class}" />
-                        <Text id="_IDGenText5" text="{subclass}" />
+						    text="{budgeting>date}" />
+                        <Text id="_IDGenText2" text="{budgeting>project}" />
+                        <Text id="_IDGenText3" text="{budgeting>pillar}" />
+                        <Text id="_IDGenText4" text="{budgeting>class}" />
+                        <Text id="_IDGenText5" text="{budgeting>subclass}" />
                         <ObjectNumber id="_IDGenObjectNumber1" 
                         	number="{
-								parts:[{path:'amount'}]
+								parts:[{path:'budgeting>amount'}]
 							}"/>
-                        <Button id="_IDGenButton1" text="{status}" type="{path:'status', formatter:'.buttonFormatter'}"/>
+                        <Button id="_IDGenButton1" text="{budgeting>status}" type="{path:'budgeting>status', formatter:'.buttonFormatter'}"/>
 
                 </cells>
              </ColumnListItem>

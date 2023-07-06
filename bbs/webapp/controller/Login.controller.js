@@ -26,7 +26,7 @@ sap.ui.define(
             let loginErrorToast = this.getView().byId("loginError");
             let router = this.getOwnerComponent().getRouter();
 
-            $.ajax({url : backendUrl+"/login",
+            $.ajax({url : backendUrl+"login",
                 type: 'POST',
                 data: JSON.stringify({ 
                     email: username, 

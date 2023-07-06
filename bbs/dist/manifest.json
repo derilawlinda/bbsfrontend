@@ -1,0 +1,383 @@
+{
+  "_version": "1.48.0",
+  "sap.app": {
+    "id": "frontend.bbs",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "0.0.1"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "resources": "resources.json",
+    "sourceTemplate": {
+      "id": "@sap/generator-fiori:basic",
+      "version": "1.8.4",
+      "toolsId": "35262a44-2c7c-4aa3-9c12-acc68e746699"
+    },
+    "dataSources": {
+      "default": {
+        "uri": "http://localhost:8000/api/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0"
+        }
+      },
+      "mainService": {
+        "uri": "/sap/opu/odata/",
+        "type": "OData",
+        "settings": {
+          "annotations": [],
+          "localUri": "localService/metadata.xml",
+          "odataVersion": "2.0"
+        }
+      },
+      "bbsbackend": {
+        "uri" : "http://localhost:8000/api/"
+      },
+      "navigationList": {
+				"uri": "model/navigation.json",
+				"type": "JSON"
+			}
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "",
+      "favIcon": "",
+      "phone": "",
+      "phone@2": "",
+      "tablet": "",
+      "tablet@2": ""
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": true,
+    "dependencies": {
+      "minUI5Version": "1.108.7",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.webc.main" : {},
+        "sap.ui.core": {},
+				"sap.ui.layout": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "frontend.bbs.i18n.i18n"
+        }
+      },
+      "": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {}
+      },
+      "navigationList": {
+				"type": "sap.ui.model.json.JSONModel",
+				"dataSource": "navigationList"
+			}
+    },
+    "resources": {
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "viewType": "XML",
+        "async": true,
+        "viewPath": "frontend.bbs.view",
+        "controlAggregation": "pages",
+        "controlId": "app",
+        "bypassed": {
+          "target": "notFound"
+       }
+      },
+      "routes": [
+          {
+            "pattern": "",
+            "name": "Login",
+            "target": "login",
+            "viewLevel": 1
+            
+          },
+          {
+            "pattern": "reimbursement",
+            "name": "reimbursement",
+            "target": "reimbursement"
+          },
+          {
+            "pattern": "reimbursementDetail/{ID}",
+            "name": "reimbursementDetail",
+            "target": "reimbursementDetail"
+          },
+          {
+            "pattern": "testing",
+            "name": "testing",
+            "target": "testing"
+           
+          },
+          {
+            "pattern": "userAdministration_User",
+            "name": "userAdministrationUser",
+            "target": "userAdministrationUser"
+          },
+          {
+            "pattern": "pillarSettings",
+            "name": "pillarSettings",
+            "target": "testing"
+          },
+          {
+            "pattern": "budgetingCreateBudget",
+            "name": "budgetingCreateBudget",
+            "target": "testing"
+          },
+          {
+            "pattern": "userAdministration_Role",
+            "name": "userAdministrationRole",
+            "target": "userAdministrationRole"
+          },
+          {
+            "pattern": "pillarSettings",
+            "name": "pillarSettings",
+            "target": "pillarSettings"
+          },
+          {
+            "pattern": "budgetingList",
+            "name": "budgetingList",
+            "target": "budgetingList"
+          },
+          {
+            "pattern": "budgetingUpdateBudget",
+            "name": "budgetingUpdateBudget",
+            "target": "budgetingUpdateBudget"
+          },
+          {
+            "pattern": "materialRequestList",
+            "name": "materialRequestList",
+            "target": "materialRequestList"
+          },
+          {
+            "pattern": "materialRequestDetail/{materialRequestID}",
+            "name": "materialRequestDetail",
+            "target": "materialRequestDetail"
+          },
+          {
+            "pattern": "materialIssue",
+            "name": "materialIssue",
+            "target": "materialIssue"
+          },
+          {
+            "pattern": "materialIssueDetail/{ID}",
+            "name": "materialIssueDetail",
+            "target": "materialIssueDetail"
+          },
+          {
+            "pattern": "advanceEmployee",
+            "name": "advanceEmployee",
+            "target": "advanceEmployee"
+          },
+          {
+            "pattern": "advanceEmployeeDetail/{ID}",
+            "name": "advanceEmployeeDetail",
+            "target": "advanceEmployeeDetail"
+          },
+          {
+            "pattern": "advanceRealization",
+            "name": "advanceRealization",
+            "target": "advanceRealization"
+          },
+          {
+            "pattern": "advanceRealizationDetail/{ID}",
+            "name": "advanceRealizationDetail",
+            "target": "advanceRealizationDetail"
+          },
+          
+          {
+            "pattern": "notFound",
+            "name": "notFOund",
+            "target": "notFound"
+          },
+          {
+            "pattern": "budgetingDetail/{budgetID}",
+            "name": "budgetingDetail",
+            "target": "budgetingDetail"
+          },
+          {
+            "name": "dashboard",
+            "pattern": "dashboard",
+            "target": [
+              "TargetBBSSAPAddOnDashboard"
+            ],
+            "viewLevel": 2
+            
+          }
+      ],
+      "targets": {
+        "login": {
+          "viewType": "XML",
+          "transition": "show",
+          "clearControlAggregation": false,
+          "viewId": "Login",
+          "viewName": "Login"
+        },
+
+        "TargetBBSSAPAddOnDashboard": {
+          "viewType": "XML",
+          "transition": "show",
+          "clearControlAggregation": false,
+          "viewId": "BBSSAPAddOnDashboard",
+          "viewName": "BBSSAPAddOnDashboard"
+        },
+        "notFound": {
+            "id": "notFound",
+            "name": "notFound",
+            "transition": "show",
+            "viewType": "XML",
+            "clearControlAggregation": false,
+            "viewName": "notFound"
+        },
+        "userAdministrationUser" : {
+          "viewId": "userAdministration_User",
+          "viewName": "userAdministration.User",
+          "parent": "TargetBBSSAPAddOnDashboard",
+          "controlId": "modulContainer",
+          "controlAggregation": "pages"
+				},
+        "userAdministrationRole" : {
+          "viewId": "userAdministration_Role",
+          "viewName": "userAdministration.Role",
+          "parent": "TargetBBSSAPAddOnDashboard",
+          "controlId": "modulContainer",
+          "controlAggregation": "pages"
+        },
+        "pillarSettings" : {
+          "viewId": "pillarSettings",
+          "viewName": "pillarSettings.Index",
+          "parent": "TargetBBSSAPAddOnDashboard",
+          "controlId": "modulContainer",
+          "controlAggregation": "pages"
+        },
+        "budgetingList" : {
+          "viewId": "budegtingList",
+          "viewName": "budgeting.List",
+          "parent": "TargetBBSSAPAddOnDashboard",
+          "controlId": "modulContainer",
+          "controlAggregation": "pages"
+        },
+        "budgetingDetail" : {
+          "viewId": "budegtingDetail",
+          "viewName": "budgeting.Detail",
+          "parent": "TargetBBSSAPAddOnDashboard",
+          "controlId": "modulContainer",
+          "controlAggregation": "pages"
+        },
+        "budgetingUpdateBudget" : {
+          "viewId": "budgetingUpdate",
+          "viewName": "budgeting.Update",
+          "parent": "TargetBBSSAPAddOnDashboard",
+          "controlId": "modulContainer",
+          "controlAggregation": "pages"
+        },
+        "materialRequestList" : {
+          "viewId": "materialRequestList",
+          "viewName": "materialRequest.List",
+          "parent": "TargetBBSSAPAddOnDashboard",
+          "controlId": "modulContainer",
+          "controlAggregation": "pages"
+        },
+        "materialRequestDetail" : {
+          "viewId": "materialRequestDetail",
+          "viewName": "materialRequest.Detail",
+          "parent": "TargetBBSSAPAddOnDashboard",
+          "controlId": "modulContainer",
+          "controlAggregation": "pages"
+        },
+        "materialIssue" : {
+          "viewId": "materialIssue",
+          "viewName": "materialIssue.Index",
+          "parent": "TargetBBSSAPAddOnDashboard",
+          "controlId": "modulContainer",
+          "controlAggregation": "pages"
+        },
+        "materialIssueDetail" : {
+          "viewId": "materialIssueDetail",
+          "viewName": "materialIssue.Detail",
+          "parent": "TargetBBSSAPAddOnDashboard",
+          "controlId": "modulContainer",
+          "controlAggregation": "pages"
+        },
+        "advanceEmployee" : {
+          "viewId": "advanceEmployee",
+          "viewName": "advanceEmployee.List",
+          "parent": "TargetBBSSAPAddOnDashboard",
+          "controlId": "modulContainer",
+          "controlAggregation": "pages"
+        },
+        "advanceEmployeeDetail" : {
+          "viewId": "advanceEmployeeDetail",
+          "viewName": "advanceEmployee.Detail",
+          "parent": "TargetBBSSAPAddOnDashboard",
+          "controlId": "modulContainer",
+          "controlAggregation": "pages"
+        },
+        "advanceRealization" : {
+          "viewId": "advanceRealization",
+          "viewName": "advanceRealization.List",
+          "parent": "TargetBBSSAPAddOnDashboard",
+          "controlId": "modulContainer",
+          "controlAggregation": "pages"
+        },
+        "advanceRealizationDetail" : {
+          "viewId": "advanceRealizationDetail",
+          "viewName": "advanceRealization.Detail",
+          "parent": "TargetBBSSAPAddOnDashboard",
+          "controlId": "modulContainer",
+          "controlAggregation": "pages"
+        },
+        "reimbursement" : {
+          "viewId": "reimbursement",
+          "viewName": "budgeting.List",
+          "parent": "TargetBBSSAPAddOnDashboard",
+          "controlId": "modulContainer",
+          "controlAggregation": "pages"
+        },
+        "reimbursementDetail" : {
+          "viewId": "reimbursementDetail",
+          "viewName": "reimbursement.Detail",
+          "parent": "TargetBBSSAPAddOnDashboard",
+          "controlId": "modulContainer",
+          "controlAggregation": "pages"
+        },
+        "testing" : {
+          "viewId": "testing",
+          "viewName": "testing",
+          "parent": "TargetBBSSAPAddOnDashboard",
+          "controlId": "modulContainer",
+          "controlAggregation": "pages"
+				}
+      }
+    },
+    "rootView": {
+      "viewName": "frontend.bbs.view.App",
+      "type": "XML",
+      "async": true,
+      "id": "app"
+    }
+  }
+}

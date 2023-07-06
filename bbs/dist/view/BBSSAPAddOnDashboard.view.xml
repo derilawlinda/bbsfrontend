@@ -1,0 +1,75 @@
+<mvc:View
+	controllerName="frontend.bbs.controller.BBSSAPAddOnDashboard"
+	xmlns="sap.m"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:tnt="sap.tnt"
+	height="100%">
+	<tnt:ToolPage id="toolPage"
+	>
+		<tnt:header 
+		>
+			<tnt:ToolHeader id="_IDGenToolHeader1" >
+				<Button
+					id="sideNavigationToggleButton"
+					icon="sap-icon://menu2"
+					type="Transparent"
+					press=".onSideNavButtonPress">
+					<layoutData>
+						<OverflowToolbarLayoutData id="_IDGenOverflowToolbarLayoutData1" priority="NeverOverflow" />
+					</layoutData>
+				</Button>
+				
+				<tnt:ToolHeaderUtilitySeparator id="_IDGenToolHeaderUtilitySeparator1" />
+				<ToolbarSpacer id="_IDGenToolbarSpacer2">
+					<layoutData>
+						<OverflowToolbarLayoutData id="_IDGenOverflowToolbarLayoutData10" priority="NeverOverflow" minWidth="20px" />
+					</layoutData>
+				</ToolbarSpacer>
+				<Button id="_IDGenButton9" text="{view>/userName}" type="Transparent" press=".handleUserNamePress" ariaHasPopup="Menu">
+					<layoutData>
+						<OverflowToolbarLayoutData id="_IDGenOverflowToolbarLayoutData11" priority="NeverOverflow" />
+					</layoutData>
+				</Button>
+			</tnt:ToolHeader>
+		</tnt:header>
+		<tnt:sideContent
+		>
+			<tnt:SideNavigation id="_IDGenSideNavigation1"
+				expanded="true"
+				selectedKey="{/selectedKey}"
+				>
+				<tnt:NavigationList id="_IDGenNavigationList1" 
+				items="{path: '/navigation'}" 
+				
+				>
+					<tnt:NavigationListItem id="_IDGenNavigationListItem1"
+						text="{title}"
+						icon="{icon}"
+						enabled="{enabled}"
+						expanded="{expanded}"
+						items="{
+							path: 'items',
+							templateShareable: false
+						}"
+						select="onParentItemSelect"
+
+						key="{key}">
+					<tnt:NavigationListItem id="_IDGenNavigationListItem2"
+							text="{title}"
+							key="{key}"
+							enabled="{enabled}"
+							href="#/{key}" />
+					</tnt:NavigationListItem>
+				</tnt:NavigationList>
+				<tnt:fixedItem>
+					<tnt:NavigationList id="_IDGenNavigationList2" items="{path: '/fixedNavigation'}">
+						<tnt:NavigationListItem id="_IDGenNavigationListItem3" text="{title}" icon="{icon}" />
+					</tnt:NavigationList>
+				</tnt:fixedItem>
+			</tnt:SideNavigation>
+		</tnt:sideContent>
+		<tnt:mainContents>
+			<NavContainer id="modulContainer"></NavContainer>
+		</tnt:mainContents>
+	</tnt:ToolPage>
+</mvc:View>

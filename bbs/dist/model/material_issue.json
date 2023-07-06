@@ -1,0 +1,44 @@
+{
+  "MI": [
+    {
+      "ID": 1,
+      "date": "2023-02-28",
+      "company": "BBS",
+      "project": "BLIF 2023",
+      "pillar": "Distribution",
+      "class": "Distribution 2023",
+      "subclass": "Sponsorship 2023",
+      "subclass2": "CSR Indomie 2022/2023",
+      "amount": 25000000,
+      "sales_order" : 1000211,
+      "status": "Issued",
+      "name" : "Travel untuk Project BLIF 2023"
+    },
+    {
+      "ID": 2,
+      "date": "2023-02-28",
+      "company": "KKB",
+      "project": "BLIF 2023",
+      "pillar": "Store",
+      "class": "Stadion 2023",
+      "subclass": "Product Distribution 2023",
+      "subclass2": "CSR Indomie 2022/2023",
+      "amount": 10000.00,
+      "status": "Issued",
+      "name" : "Sales untuk Project BLIF 2023"
+    },
+    {
+      "ID": 3,
+      "date": "2023-02-28",
+      "company": "BBS",
+      "project": "Project Z",
+      "pillar": "Finance",
+      "class": "Expense",
+      "subclass": "Supplies",
+      "subclass2": "Distribution 2023",
+      "amount": 500.00,
+      "status": "Requested",
+      "name" : "Pembelian perlengkapan untuk Project Z"
+    }
+  ]
+}

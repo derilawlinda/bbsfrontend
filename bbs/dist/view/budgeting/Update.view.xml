@@ -1,0 +1,88 @@
+<mvc:View xmlns:cards="sap.f.cards" 
+controllerName="frontend.bbs.controller.budgeting.Update"
+xmlns:mvc="sap.ui.core.mvc"
+xmlns="sap.m"
+xmlns:f="sap.f"
+xmlns:table="sap.ui.table" 
+>
+  <f:DynamicPage  id="_IDGenDynamicPage1" headerExpanded="true" toggleHeaderOnTitleClick="true" class="sapUiContentPadding">
+    
+    <f:content>
+      <table:Table 
+        id="_IDGenTable1" 
+        visibleRowCount="10" 
+        selectionMode="Single" 
+        selectionBehavior="Row"
+        
+        rows="{
+					path: '/data',
+					sorter: {
+						path: 'ID'
+					}
+				}">
+            <table:extension>
+                <OverflowToolbar id="_IDGenOverflowToolbar1" style="Clear">
+                    <Title id="title" text="Update Budgeting"/>
+                    <ToolbarSpacer id="_IDGenToolbarSpacer1"/>
+                    <Button id="_IDGenButton1" text="Create" press="onCreateButtonClick" />
+                    <Button id="_IDGenButton2" text="Assign" press="onAssignPress" />
+                </OverflowToolbar>
+            </table:extension>
+          
+            <table:columns>
+                <table:Column id="_IDGenColumn1">
+                    <Label id="_IDGenLabel4" text="ID" />
+                    <table:template>
+                        <Text id="_IDGenTextView1" text="{ID}" />
+                    </table:template>
+                </table:Column>
+                <table:Column id="_IDGenColumn2">
+                    <Label id="_IDGenLabel2" text="Date" />
+                    <table:template>
+                        <Text id="_IDGenTextView2" text="{date}" />
+                    </table:template>
+                </table:Column>
+                <table:Column id="_IDGenColumn3">
+                    <Label id="_IDGenLabel3" text="Project" />
+                    <table:template>
+                        <Text id="_IDGenTextView3" text="{project}" />
+                    </table:template>
+                </table:Column>
+                <table:Column id="_IDGenColumn4">
+                    <Label id="_IDGenLabel5" text="Pillar" />
+                    <table:template>
+                        <Text id="_IDGenTextView4" text="{pillar}" />
+                    </table:template>
+                </table:Column>
+                <table:Column id="_IDGenColumn5">
+                    <Label id="_IDGenLabel6" text="Class" />
+                    <table:template>
+                        <Text id="_IDGenTextView5" text="{class}" />
+                    </table:template>
+                </table:Column>
+                <table:Column id="_IDGenColumn6">
+                    <Label id="_IDGenLabel7" text="Sub Class" />
+                    <table:template>
+                        <Text id="_IDGenTextView6" text="{subclass}" />
+                    </table:template>
+                </table:Column>
+                <table:Column id="_IDGenColumn7">
+                    <Label id="_IDGenLabel8" text="Amount" />
+                    <table:template>
+                        <Text id="_IDGenTextView8" text="{amount}" />
+                    </table:template>
+                </table:Column>
+                 <table:Column id="_IDGenColumn9">
+                    <Label id="_IDGenLabel0" text="Status" />
+                    <table:template>
+                        <Text id="_IDGenTextView0" text="{status}" />
+                    </table:template>
+                </table:Column>
+            </table:columns>
+      </table:Table>
+      
+    </f:content>
+  </f:DynamicPage>
+
+  
+</mvc:View>

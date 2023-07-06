@@ -1,0 +1,63 @@
+<mvc:View xmlns:cards="sap.f.cards" 
+controllerName="frontend.bbs.controller.userAdministration.Role"
+xmlns:mvc="sap.ui.core.mvc"
+xmlns="sap.m"
+xmlns:f="sap.f"
+xmlns:table="sap.ui.table" 
+>
+  <f:DynamicPage  id="_IDGenDynamicPage1" headerExpanded="true" toggleHeaderOnTitleClick="true" class="sapUiContentPadding">
+    
+    <f:content>
+      <table:Table 
+        id="_IDGenTable1" 
+        visibleRowCount="10" 
+        selectionMode="Single" 
+        selectionBehavior="Row"
+        
+        rows="{
+					path: '/Users',
+					sorter: {
+						path: 'ID'
+					}
+				}">
+            <table:extension>
+                <OverflowToolbar id="_IDGenOverflowToolbar1" style="Clear">
+                    <Title id="title" text="Roles"/>
+                    <ToolbarSpacer id="_IDGenToolbarSpacer1"/>
+                    <Button id="_IDGenButton1" text="Create" press="onCreateButtonClick" />
+                    <Button id="_IDGenButton2" text="Assign" press="onAssignPress" />
+                </OverflowToolbar>
+            </table:extension>
+            <table:columns>
+                <table:Column id="_IDGenColumn1">
+                    <Label id="_IDGenLabel4" text="ID" />
+                    <table:template>
+                        <Text id="_IDGenTextView1" text="{ID}" />
+                    </table:template>
+                </table:Column>
+                <table:Column id="_IDGenColumn2">
+                    <Label id="_IDGenLabel2" text="Name" />
+                    <table:template>
+                        <Text id="_IDGenTextView2" text="{username}" />
+                    </table:template>
+                </table:Column>
+                <table:Column id="_IDGenColumn3">
+                    <Label id="_IDGenLabel3" text="Email" />
+                    <table:template>
+                        <Text id="_IDGenTextView3" text="{email}" />
+                    </table:template>
+                </table:Column>
+                <table:Column id="_IDGenColumn4">
+                    <Label id="_IDGenLabel5" text="Role" />
+                    <table:template>
+                        <Text id="_IDGenTextView4" text="{role}" />
+                    </table:template>
+                </table:Column>
+            </table:columns>
+      </table:Table>
+      
+    </f:content>
+  </f:DynamicPage>
+
+  
+</mvc:View>

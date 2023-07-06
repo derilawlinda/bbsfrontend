@@ -1,0 +1,71 @@
+<mvc:View xmlns:cards="sap.f.cards" 
+controllerName="frontend.bbs.controller.materialIssue.Index"
+xmlns:mvc="sap.ui.core.mvc"
+xmlns="sap.m"
+xmlns:f="sap.f"
+xmlns:table="sap.ui.table" 
+>
+  <f:DynamicPage  id="_IDGenDynamicPage1" headerExpanded="true" toggleHeaderOnTitleClick="true" class="sapUiContentPadding">
+    
+    <f:content>
+      <Table 
+        id="_IDGenTable1" 
+        inset="false"
+        selectionChange="handleSelectionChange"
+        items="{
+					path: 'materialIssue>/MI',
+					sorter: {
+						path: 'ID'
+					}
+				}">
+         	<headerToolbar>
+			<OverflowToolbar id="_IDGenOverflowToolbar1">
+                <Title id="title" text="Material Issue"/>
+                <ToolbarSpacer id="_IDGenToolbarSpacer1" ></ToolbarSpacer>
+            </OverflowToolbar>
+            </headerToolbar>
+            <columns>
+                <Column id="_IDGenColumn1"
+                	width="12em">
+                        <Text id="_IDGenTextView1" text="ID" />
+                </Column>
+                <Column id="_IDGenColumn2" minScreenWidth="Desktop" demandPopin="true">
+                        <Text id="_IDGenTextView2" text="Date"  />
+                </Column>
+                <Column id="_IDGenColumn3" minScreenWidth="Desktop" demandPopin="true">
+                        <Text id="_IDGenTextView3" text="Name" />
+                </Column>
+               
+                <Column id="_IDGenColumn7" >
+                        <Text id="_IDGenTextView8" text="Amount" />
+                </Column>
+                 <Column id="_IDGenColumn9">
+                        <Text id="_IDGenTextView0" text="Status" />
+                </Column>
+            </columns>
+
+             <items>
+             <ColumnListItem id="_IDGenColumnListItem1" vAlign="Middle" type="Navigation" press=".onPress">
+                <cells>
+                    	<ObjectIdentifier id="_IDGenObjectIdentifier1"
+						    text="{materialIssue>ID}"/>
+                        <Text id="_IDGenText1"
+						    text="{materialIssue>date}" />
+                        <Text id="_IDGenText2" text="{materialIssue>name}" />
+                        <ObjectNumber id="_IDGenObjectNumber1" 
+                        	number="{
+								parts:[{path:'materialIssue>amount'}]
+							}"/>
+                        <Button id="_IDGenButton1" text="{materialIssue>status}" type="{path:'materialIssue>status', formatter:'.buttonFormatter'}"/>
+
+                </cells>
+             </ColumnListItem>
+                
+            </items>
+      </Table>
+      
+    </f:content>
+  </f:DynamicPage>
+
+  
+</mvc:View>

@@ -1,0 +1,2093 @@
+[
+    {
+        "text": "BBS",
+        "subheader": "Company",
+        "is_editable": false,
+        "is_company" : true,
+        "nodes": [
+            {
+                "text": "Football",
+                "subheader": "Pillar",
+                "is_editable": false,
+                "nodes": [
+                    {
+                        "text": "Teknis 2023",
+                        "subheader": "Classification",
+                        "is_editable": false,
+                        "nodes": [
+                            {
+                                "text": "Youth 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Operational cost",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "text": "Sponsorship 2023",
+                        "subheader": "Classification",
+                        "is_editable": false,
+                        "nodes": [
+                            {
+                                "text": "CBN 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Sponsorship BOLA",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Smartfren 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Sponsorship BOLA",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Bank Ina 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Sponsorship BOLA",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Indofood 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Sponsorship BOLA",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "YCAB 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Sponsorship BOLA",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Internal Sponsor BBS 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Aboard",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Leads Project",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Product Licensing",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Media",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Kukubima 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Sponsorship BOLA",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Riung Grup 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Sponsorship BOLA",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Vidio 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Sponsorship BOLA",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "TVC Vidio",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "text": "Activations 2023",
+                        "subheader": "Classification",
+                        "is_editable": false,
+                        "nodes": [
+                            {
+                                "text": "Event IP 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Operational cost",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "text": "Marcomm 2023",
+                        "subheader": "Classification",
+                        "is_editable": false,
+                        "nodes": [
+                            {
+                                "text": "Digital Asset 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Perjalanan dinas Media",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Research and Reporting",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Social Media",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Event IP 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Operational cost",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "text": "Baliverse",
+                "subheader": "Pillar",
+                "is_editable": false,
+                "nodes": [
+                    {
+                        "text": "Baliverse 2023",
+                        "subheader": "Classification",
+                        "is_editable": false,
+                        "nodes": [
+                            {
+                                "text": "NFT/web3 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Operational cost",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Sewa Alat 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Operational cost",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "text": "Distribution",
+                "subheader": "Pillar",
+                "is_editable": false,
+                "nodes": [
+                    {
+                        "text": "Distribution 2023",
+                        "subheader": "Classification",
+                        "is_editable": false,
+                        "nodes": [
+                            {
+                                "text": "Product Distribution 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Eneos 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Indomie 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Popmie 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Smartfren 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Smartfren Banjar Agen",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "OVO 2022",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Donation Distribution 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Alderon 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "text": "Stadion",
+                "subheader": "Pillar",
+                "is_editable": false,
+                "nodes": [
+                    {
+                        "text": "Stadion 2023",
+                        "subheader": "Classification",
+                        "is_editable": false,
+                        "nodes": [
+                            {
+                                "text": "Panpel 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Liga 1 - 2022/2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Liga 1 - 2023/2024",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Operational cost",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Dipta Rental 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Rental 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Stadium Tour",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Pantai Purnama Rental 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Rental 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "text": "Store",
+                "subheader": "Pillar",
+                "is_editable": false,
+                "nodes": [
+                    {
+                        "text": "Store 2023",
+                        "subheader": "Classification",
+                        "is_editable": false,
+                        "nodes": [
+                            {
+                                "text": "Offline Store 2023",
+                                "subheader": "Subclass",
+                                "is_editable": true,
+                                "nodes": [
+                                    {
+                                        "text": "Operational cost",
+                                        "subheader": "Subclass2",
+                                        "is_editable": true,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Airport Store - Domestic",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Airport Store - International",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "text": "KKB",
+        "subheader": "Company",
+        "is_company" : true,
+        "is_editable": false,
+        "nodes": [
+            {
+                "text": "United Sports",
+                "subheader": "Pillar",
+                "is_editable": false,
+                "nodes": [
+                    {
+                        "text": "Sports Agency 2023",
+                        "subheader": "Classification",
+                        "is_editable": false,
+                        "nodes": [
+                            {
+                                "text": "Sponsorship Indomie 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Indomie X Persija",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Indomie X PSS Sleman",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Indomie X PSIS Semarang",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Indomie X AREMA",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Indomie X Bali United",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Sponsorship Vidio 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Vidio X Persis Solo",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Vidio X Persija",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Vidio X AREMA",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Vidio X IBL",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Sponsorship Gurih 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Gurih X Persis Solo",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Sponsorship Celebest 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Celebest",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Internal Sponsor 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Leads Project",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "text": "Own Assets 2023",
+                        "subheader": "Classification",
+                        "is_editable": false,
+                        "nodes": [
+                            {
+                                "text": "Teknis Bali United 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Liga 1 2022/2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Nobar Gudang Garam",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Sponsorship BOLA",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Kopi Kenangan X IOG",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "text": "Basketball 2023",
+                        "subheader": "Classification",
+                        "is_editable": false,
+                        "nodes": [
+                            {
+                                "text": "Basketball 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Launching Jersey",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Operational cost",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "CBN Fiber",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "text": "United Live",
+                "subheader": "Pillar",
+                "is_editable": false,
+                "nodes": [
+                    {
+                        "text": "Live Streaming 2023",
+                        "subheader": "Classification",
+                        "is_editable": false,
+                        "nodes": [
+                            {
+                                "text": "Liga Nasional 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Liga 1",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Liga 2",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Operational cost",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "CAPEX ENG",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "CAPEX EFP",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Other Client 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Operational cost",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Survey FIFA WC U20 Bali",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "U20 Patriot Bekasi",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Piala Presiden 2022",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Garnier X Gadis 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "IBL 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "text": "United Studio",
+                "subheader": "Pillar",
+                "is_editable": true,
+                "nodes": [
+                    {
+                        "text": "BU Studio 2023",
+                        "subheader": "Classification",
+                        "is_editable": false,
+                        "nodes": [
+                            {
+                                "text": "BU Studio Rental 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "BU Studio Rental",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "text": "Activations 2023",
+                        "subheader": "Classification",
+                        "is_editable": false,
+                        "nodes": [
+                            {
+                                "text": "Event Ad. Hoc 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Prima Protect",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Indostation Indomobil Batch 1-4",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Indostation Indomobil Batch 5-8",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Indostation Jabar Jateng Feb-Mar (Batch 1-4)",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "text": "Distribution",
+                "subheader": "Pillar",
+                "is_editable": false,
+                "nodes": [
+                    {
+                        "text": "Distribution 2023",
+                        "subheader": "Classification",
+                        "is_editable": false,
+                        "nodes": [
+                            {
+                                "text": "Sponsorship 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "CSR Indomie 2022/2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "OVO 2022",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Product Distribution 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Eneos 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Indomie 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Popmie 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Smartfren 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Alderon 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Bogasari 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Prima Protect-Project Sampling 2022",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Proling Prima Protect",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Bank Ina",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Fortuna",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Guinness 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Gudang Garam 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Operational cost",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "text": "Entertainment",
+                "subheader": "Pillar",
+                "is_editable": false,
+                "nodes": [
+                    {
+                        "text": "Talent Mgmt 2023",
+                        "subheader": "Classification",
+                        "is_editable": false,
+                        "nodes": [
+                            {
+                                "text": "KKB X Paragon Technology 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Emina",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "KKB X Initiative  Media Indonesia 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Good Day Gaul Creation",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Good Day X Truffle Belly",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Good Day X BT21",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Relaxa  Play",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "KKB X Vidio.com 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Nonton TV di Vidio",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "EPL is Back!",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Cupcake Untuk Rain 2/2022",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Nonton TV di Vidio/2022",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Surat Cinta Untuk Starla/2022",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Scandal 2/2022",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Drama Ratu Drama/2022",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Serigala Terakhir 2/2022",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "My Ice Girl/2022",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Jingga dan Senja S2/2022",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Can You Hear Me",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "World Cup",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Diva",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Suka Duka Berduka 2022",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Anti Piracy 2022",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Kitab Kencan",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Katarsis",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Literasi Video di Sekolah 2022",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Switchover",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Slate 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Doa Mengancam 2022",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Happy Go Jenny 2022",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Vidio Up & Above 2022",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Open BO",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "BRI Liga 1 - 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "World Cup U20",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "TSDIM 2022",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "KKB X Tiga Pilar Sejahtera 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Mie Kremezz (Shorr&Stikz) 2022",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Bihunku Ikatan Cinta 2022",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Bihunku Korean Series 2022",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "KKB X I-Style 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "i-Style Retainer 2022",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "KKB X Sari Murni Abadi 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Momogi X Foodies 2022",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "KKB X Mandiri Andal Sejahtera 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Talent X Noraevibes 2022",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Talent X JVIBES Helloweebs 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "KKB X Gadis 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "RG X Eversince",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "RG X Garnier",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "KKB X Dentsu Team 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Mari Oppa Jan - Feb 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "KKB X Indofood CBP Sukses Makmur 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Talent TVC Indomie - Ricky F",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Internal Talent 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Operational cost",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "text": "Event 2023",
+                        "subheader": "Classification",
+                        "is_editable": false,
+                        "nodes": [
+                            {
+                                "text": "Event IP 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Operational cost",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Kendaraan Operasional",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "LED Event",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Laptop Staff 3 D",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Additional Asset Event 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Event Ad. Hoc 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Ichitan Prescon 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Indomilk Your Way X BlakPink 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Freelance 3 D",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Indomilk Knockdown SPIT",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Hers Protex X Rahasia Gadis",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "text": "Digital 2023",
+                        "subheader": "Classification",
+                        "is_editable": false,
+                        "nodes": [
+                            {
+                                "text": "Digital Services 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Michelin Indonesia",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Motul X UC Project Retainer",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "TAF X UC Project Retainer",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Seekmax Product Launch 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Operational cost",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "BNI Diaspora 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Campaign YCAB 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Production House 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Video Creation Nakes UI",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Production Video Goodcar",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "BNI Diaspora 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "text": "KVibes 2023",
+                        "subheader": "Classification",
+                        "is_editable": false,
+                        "nodes": [
+                            {
+                                "text": "Brand Campaign 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Maybelline X Rahasia Gadis",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Indomilk 180ml X Kvibes",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Community Project iStyle 2022",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "BNI Diaspora 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Operational cost",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Seekmax Product Launch 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Main Yo x Giveaway Kvibes",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "OREO WM Blackpink x KVIBES",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Oreo Blackpink x Community Kvibes",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Event IP 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Festivibes - Rewind 2022",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Event Festivibes 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Event Noraevibes 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Event Helloweebs 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Event Hearts 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Event Ad. Hoc 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Blackpink Sponsorship",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Apps/Website 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Merchandise",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Voting",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Events",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Fandom Fest",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Give Away",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Community Project",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Ads",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Operational cost",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Digital Asset 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Paid Promote",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "One Step Closer",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Debat Korea",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Ma em Juseyo",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "KVIBES & JVIBES Social Media",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Talent 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Blackpink X Oreo",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "text": "Foodies 2023",
+                        "subheader": "Classification",
+                        "is_editable": false,
+                        "nodes": [
+                            {
+                                "text": "Brand Campaign 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Momogi X Foodies 2022",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Operational cost",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Menu 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Operational cost",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Event Ad. Hoc 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Operational cost",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Digital Asset 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Paid Promote",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "text": "Drama Ojol 2023",
+                        "subheader": "Classification",
+                        "is_editable": false,
+                        "nodes": [
+                            {
+                                "text": "Brand Campaign 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Trimegah x Millenials",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Operational cost",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Event IP 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Operational cost",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Event Ad. Hoc 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Operational cost",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Digital Asset 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Paid Promote",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Drama Ojol Series",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "text": "Tulisan Alam/Musicamp 2023",
+                        "subheader": "Classification",
+                        "is_editable": false,
+                        "nodes": [
+                            {
+                                "text": "Brand Campaign 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Seekmax Product Launch 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Lili Style X United Creative",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Oreo WM Blackpink x KVIBES",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Event IP 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "BPH Reguler Event",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Gendangplo - Festival",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "BPH Festival 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Lokalin - Reguler Event",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Event Ad. Hoc 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Operational cost",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Digital Asset 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Tulisan Alam - Digital Assets",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Musicamp - Digital Assests",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Paid Promote",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "text": "Pengamat Sepakbola 2023",
+                        "subheader": "Classification",
+                        "is_editable": false,
+                        "nodes": [
+                            {
+                                "text": "Brand Campaign 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Sidomuncul X Pengamat",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Event IP 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Kongres PSSI Feb 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Event Ad. Hoc 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Operational cost",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Apps/Website 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Operational cost",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Digital Asset 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Operational cost",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "text": "Samaveta & Anime 2023",
+                        "subheader": "Classification",
+                        "is_editable": false,
+                        "nodes": [
+                            {
+                                "text": "Brand Campaign 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Operational cost",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "text": "Trivia & Memes 2023",
+                        "subheader": "Classification",
+                        "is_editable": false,
+                        "nodes": [
+                            {
+                                "text": "Brand Campaign 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Operational cost",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "text": "Health 2023",
+                        "subheader": "Classification",
+                        "is_editable": false,
+                        "nodes": [
+                            {
+                                "text": "Brand Campaign 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Operational cost",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Health X RG 2023",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            },
+                            {
+                                "text": "Digital Asset 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Paid Promote",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "text": "Balitren 2023",
+                        "subheader": "Classification",
+                        "is_editable": false,
+                        "nodes": [
+                            {
+                                "text": "Brand Campaign 2023",
+                                "subheader": "Subclass",
+                                "is_editable": false,
+                                "nodes": [
+                                    {
+                                        "text": "Operational cost",
+                                        "subheader": "Subclass2",
+                                        "is_editable": false,
+                                        "nodes": []
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]

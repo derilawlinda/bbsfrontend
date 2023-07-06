@@ -1,0 +1,130 @@
+<mvc:View xmlns:cards="sap.f.cards" 
+controllerName="frontend.bbs.controller.reimbursement.Detail"
+xmlns:mvc="sap.ui.core.mvc"
+xmlns="sap.m"
+xmlns:f="sap.f"
+xmlns:form="sap.ui.layout.form"
+xmlns:table="sap.ui.table"
+xmlns:core="sap.ui.core"
+>
+  <Page  id="_IDGenDynamicPage1" showNavButton="true"
+		navButtonPress=".onNavBack"
+		showFooter="{= ${budgeting>status} === 'Pending' ? true : false }">
+    
+    <content>
+      <VBox class="sapUiSmallMargin" id="formContainer">
+				<form:SimpleForm id="SimpleFormChangeColumn_twoGroups234"
+						editable="true"
+                        layout="ColumnLayout"
+                        columnsM="2"
+                        columnsL="2"
+                        columnsXL="2">
+					<form:content>
+                    <core:Title id="_IDGenTitle1" text="Information" />
+
+						<Label id="_IDGenLabel101" text="ID" />
+						<Text id="_IDGenText101" text="{budgeting>ID}" />
+
+                        <Label id="_IDGenLabel1" text="Date" />
+						<Text id="_IDGenText1" text="{budgeting>date}" />
+
+                        <Label id="_IDGenLabel2" text="Name" />
+						<Input id="name" value="{budgeting>name}"
+						editable="{= ${budgeting>status} === 'Pending' ? true : false }"></Input>
+
+						<Label id="_IDGenLabel3" text="Company" />
+						<ComboBox id="company" 
+									value="{budgeting>company}"
+									maxWidth="8rem"
+									items="{companies>/Items}"
+									editable="{= ${budgeting>status} === 'Pending' ? true : false }">
+									<core:Item id="_IDGenItem441" key="{companies>Value}" text="{companies>Value}" />
+						</ComboBox>
+
+						<Label id="_IDGenLabel4" text="Sales Order" />
+
+						<ComboBox id="SalesOrder" 
+								  editable="{= ${budgeting>status} === 'Pending' ? true : false }"
+									selectedKey="{budgeting>sales_order}"
+									maxWidth="8rem"
+									items="{salesOrder>/Items}">
+									<core:Item id="_IDGenItem111" key="{salesOrder>Value}" text="{salesOrder>Value}" />
+						</ComboBox>
+						
+						 <Label id="_IDGenLabelAmunt" text="Amount" />
+						<Input id="amount" value="{budgeting>amount}"
+						editable="{= ${budgeting>status} === 'Pending' ? true : false }"></Input>
+
+
+						<core:Title id="_IDGenTitle2" text="Category Information" />
+
+                        <Label id="_IDGenLabel5" text="Project" />
+						<Select id="project"
+						editable="{= ${budgeting>status} === 'Pending' ? true : false }" >
+                            <layoutData>
+								<form:ColumnElementData id="_IDGenColumnElementData1" cellsSmall="12" cellsLarge="8" />
+							</layoutData>
+							<items>
+								<core:Item id="_IDGenItem5" text="BLIF 2023" key="BLIF2023" />
+								<core:Item id="_IDGenItem6" text="Finance Dept." key="FICO" />
+							</items>
+						</Select>
+
+                        <Label id="_IDGenLabel441" text="Pillar" />
+
+						<ComboBox id="CreatePillar" 
+									items="{oPillarModel>/}"
+									selectedKey="{budgeting>pillar}"
+									editable="{= ${budgeting>status} === 'Pending' ? true : false }">
+									
+									<core:Item id="_IDGenItem442" key="{oPillarModel>text}" text="{oPillarModel>text}" />
+						</ComboBox>
+
+
+                       <Label id="_IDGenLabel442" text="Classification" />
+
+						<ComboBox id="CreateClassification" 
+									items="{oClassificationModel>/}"
+									selectedKey="{budgeting>class}"
+									editable="{= ${budgeting>status} === 'Pending' ? true : false }">
+									<core:Item id="_IDGenItem443" key="{oClassificationModel>text}" text="{oClassificationModel>text}" />
+						</ComboBox>
+
+                       <Label id="_IDGenLabel443" text="Subclass" />
+
+						<ComboBox id="CreateSubClassification" 
+									items="{oSubClassModel>/}"
+									selectedKey="{budgeting>subclass}"
+									editable="{= ${budgeting>status} === 'Pending' ? true : false }">
+									<core:Item id="_IDGenItem444" key="{oSubClassModel>text}" text="{oSubClassModel>text}" />
+						</ComboBox>
+						
+                        <Label id="_IDGenLabel444" text="Subclass2" />
+
+						<ComboBox id="CreateSubClassification2" 
+									items="{oSubClass2Model>/}"
+									selectedKey="{budgeting>subclass2}"
+									editable="{= ${budgeting>status} === 'Pending' ? true : false }">
+									<core:Item key="{oSubClass2Model>text}" text="{oSubClass2Model>text}" />
+						</ComboBox>
+						
+						
+						
+						
+					</form:content>
+				</form:SimpleForm>
+
+                
+			</VBox>
+    </content>
+	<footer  >
+				<Toolbar>
+					<ToolbarSpacer />
+                    <Button type="Emphasized" text="Save Budget" press="onSaveButtonClick" />
+				    <Button text="Cancel" press="._closeDialog" />
+				</Toolbar>
+		</footer>
+  </Page>
+
+  
+</mvc:View>

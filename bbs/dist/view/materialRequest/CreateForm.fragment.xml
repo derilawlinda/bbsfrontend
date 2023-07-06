@@ -1,0 +1,154 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:f="sap.ui.layout.form"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout"
+	xmlns:table="sap.ui.table"
+    
+    height="100%">
+	<Dialog
+		id="mainDialog"
+		title="Create Material Request">
+			<VBox class="sapUiSmallMargin" id="formContainer">
+				<f:SimpleForm id="SimpleFormChangeColumn_twoGroups234"
+						editable="true"
+                        layout="ColumnLayout"
+                        columnsM="2"
+                        columnsL="2"
+                        columnsXL="2">
+					<f:content>
+                    <core:Title id="_IDGenTitle1" text="Information" />
+
+                        <Label id="_IDGenLabel1" text="Date" />
+						<Text id="_IDGenText11" text="{newMR>date}" />
+
+                        <Label id="_IDGenLabel2" text="Name" />
+						<Input id="name" value="{newMR>name}"></Input>
+
+						<Label id="_IDGenLabel4" text="Budget#" />
+						<ComboBox width="100%"
+								change="onBudgetChange"
+								value="{newMR>budget_id}"
+								items="{
+								path: 'budgeting>/data',
+								templateShareable: false
+								}"
+							>
+
+								<core:Item
+									key="{budgeting>ID}"
+									text="{budgeting>ID}"
+								/>
+
+						</ComboBox>
+
+						<Label id="_IDGenLabel3" text="Company" />
+						<Text id="_IDGenText5"  />
+
+						<Label id="_IDGenLabe20" text="Remaining Budget" />
+						<ObjectNumber binding="{/}" number="{ parts:[{path:'Price'},{path:'CurrencyCode'}], type: 'sap.ui.model.type.Currency', formatOptions: {showMeasure: false,decimalSeparator : ',', groupingSeparator : '.'} }" unit="IDR" />
+
+						<core:Title id="_IDGenTitle2" text="Category Information" />
+
+                        <Label id="_IDGenLabel5" text="Project" />
+						<Text id="_IDGenText15" text="BLIF 2023" />
+						
+
+                        <Label id="_IDGenLabel6" text="Pillar" />
+						<Text id="_IDGenText16" text="Distribution" />
+
+                        <Label id="_IDGenLabel7" text="Class" />
+						<Text id="_IDGenText17" text="Baliverse 2023" />
+
+                        <Label id="_IDGenLabel8" text="Subclass" />
+						<Text id="_IDGenText18" text="Panpel 2023" />
+						
+                        <Label id="_IDGenLabel9" text="Subclass2" />
+						<Text id="_IDGenText19" text="Liga 1 - 2023/2024" />
+						
+						
+						
+						
+					</f:content>
+				</f:SimpleForm>
+
+                 <table:Table id="tableId" 
+                        rows="{new_mr_items>/itemRow}"
+						visibleRowCount="7"
+						 
+				>
+				
+				<table:extension>
+					<OverflowToolbar  class="sapMTBHeader-CTX">
+						<Title text="Items"/>
+						<ToolbarSpacer />
+						<Button 
+							icon="sap-icon://add"
+							press=".onAddPress"
+							type="Transparent"
+						/>
+					</OverflowToolbar>
+				</table:extension>
+                  
+				<table:columns>
+					<table:Column >
+						<Text text="Account Code" />
+						<table:template>
+							<ComboBox width="100%"
+								selectedKey="{new_mr_items>account_code}"
+								items="{
+								path: 'accounts>/data',
+								templateShareable: false
+								}"
+							>
+
+								<core:Item
+									key="{accounts>account_code}"
+									text="{accounts>account_code} - {accounts>account_name}"
+								/>
+
+							</ComboBox>
+						</table:template>
+					</table:Column>
+
+					<table:Column >
+						<Text text="Item Name" />
+						<table:template>
+							<Input
+								type="Text"
+								placeholder="Enter item"
+								value="{new_mr_items>item_name}"
+								ariaLabelledBy="InputNumberLabel"/>
+						</table:template>
+					</table:Column>
+
+					<table:Column >
+						<Text text="Amount" />
+						<table:template>
+							<Input
+								id="inputNumber"
+								type="Number"
+								placeholder="Enter number"
+								value="{new_mr_items>amount}"
+								ariaLabelledBy="InputNumberLabel"/>
+						</table:template>
+					</table:Column>
+
+				</table:columns>
+
+				
+                </table:Table>
+			</VBox>
+        <Page id="_IDGenPage1">
+			
+		<footer>
+				<Toolbar id="_IDGenToolbar12">
+					<ToolbarSpacer id="_IDGenToolbarSpacer12" />
+                    <Button id="_IDGenButton12" type="Emphasized" text="Create Material Request" press="onSaveButtonClick" />
+				    <Button id="_IDGenButton13" text="Cancel" press="._closeDialog" />
+				</Toolbar>
+		</footer>
+         </Page>
+	</Dialog>
+</core:FragmentDefinition>

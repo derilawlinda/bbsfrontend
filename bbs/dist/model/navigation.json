@@ -1,0 +1,95 @@
+{
+	"selectedKey": "dashboard",
+	"navigation": [
+		{
+			"title": "Home",
+			"icon": "sap-icon://home",
+			"expanded": true,
+			"key": "dashboard"
+		},
+		{
+			"title": "User Administration",
+			"icon": "sap-icon://employee",
+			"expanded": false,
+			"items": [
+				{
+					"title": "User",
+					"key": "userAdministration_User"
+				},
+				{
+					"title": "Role",
+					"key": "userAdministration_Role"
+				}
+			]
+		},
+		{
+			"title": "Pillar Settings",
+			"icon": "sap-icon://tree",
+			"expanded": false,
+			"key": "pillarSettings"
+			
+		},
+		{
+			"title": "Budgeting",
+			"icon": "sap-icon://batch-payments",
+			"expanded": false,
+			"key": "budgetingList"
+		},
+		{
+			"title": "Material Request",
+			"icon": "sap-icon://request",
+			"key": "materialRequestList",
+			"expanded": false
+		},
+		{
+			"title": "Material Issue",
+			"icon": "sap-icon://product",
+			"expanded": false,
+			"key": "materialIssue"
+			
+		},
+		{
+			"title": "Employee Advance",
+			"icon": "sap-icon://loan",
+			"expanded": false,
+			"key": "advanceEmployee"
+		},
+		{
+			"title": "Advance Realization",
+			"icon": "sap-icon://payment-approval",
+			"expanded": false,
+			"key": "advanceRealization"
+			
+		},
+		{
+			"title": "Reimbursement",
+			"icon": "sap-icon://travel-expense-report",
+			"expanded": false,
+			"key": "reimbursement"
+			
+		}
+	],
+	"fixedNavigation": [
+		{
+			"title": "Log Out",
+			"icon": "sap-icon://log"
+		}
+	],
+	"headerItems": [
+		{
+			"text": "File"
+		},
+		{
+			"text": "Edit"
+		},
+		{
+			"text": "View"
+		},
+		{
+			"text": "Settings"
+		},
+		{
+			"text": "Help"
+		}
+	]
+}

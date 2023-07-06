@@ -1,0 +1,50 @@
+<mvc:View xmlns:form="sap.ui.layout.form" controllerName="frontend.bbs.controller.Login"
+    xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:main="sap.ui.webc.main">
+        <Page id="page" title="{i18n>title}" showHeader="false" class="pgBckClass">
+        <VBox id="_IDGenVBox1" class="sapUiSmallMargin loginForm">
+        
+        </VBox>
+            <FlexBox id="_IDGenFlexBox1"
+                height="100%"
+                alignItems="Center"
+                justifyContent="Center">
+                <form:SimpleForm id="LoginForm" 
+                    editable="true" 
+                    layout="ResponsiveGridLayout" 
+                    adjustLabelSpan="false" 
+                    labelSpanL="4" 
+                    labelSpanS="4"
+                    labelSpanM="12"
+                    columnsL="1"
+                    columnsM="1">
+                        <form:content>
+                            <l:VerticalLayout id="_IDGenHorizontalLayout1" >
+                            
+                                    <Image id="_IDGenImage1" src="images/logo_bbs.png" width="300px" />
+
+                                    <Label id="labelUsername" text="Username" labelFor="username" class="labelMargin" ></Label>
+                                    <Input id="username"></Input>   
+
+                                    <Label id="labelPassword" text="Password" labelFor="password" class="labelMargin"></Label>
+                                    <Input id="password" type="Password"></Input>
+
+                                     <Button id="_IDGenButton1" text="Login" width="100%" class="labelMargin" type="Emphasized" press="onLoginPressed"></Button>   
+                           
+                           <main:Toast
+		id="loginError"
+		duration="2000"
+		text="Error login"></main:Toast>
+                            </l:VerticalLayout>
+                        </form:content>
+                </form:SimpleForm>
+            </FlexBox>
+
+            
+	</Page>
+    
+</mvc:View>
+
+

@@ -1,0 +1,1 @@
+sap.ui.define(["frontend/bbs/controller/BBSSAPAddOnDashboard.controller"],function(n){"use strict";QUnit.module("BBSSAPAddOnDashboard Controller");QUnit.test("I should test the BBSSAPAddOnDashboard controller",function(o){var t=new n;t.onInit();o.ok(t)})});

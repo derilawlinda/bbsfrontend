@@ -1,0 +1,23 @@
+{
+    "Users" :[
+        {
+            "ID": 123456,
+            "username": "johndoe",
+            "email": "johndoe@example.com",
+            "role": "admin"
+          },
+          {
+            "ID": 789012,
+            "username": "janedoe",
+            "email": "janedoe@example.com",
+            "role": "Sales"
+          },
+          {
+            "ID": 345678,
+            "username": "bobsmith",
+            "email": "bobsmith@example.com",
+            "role": "Manager"
+          }
+    ]
+}
+

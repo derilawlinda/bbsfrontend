@@ -74,7 +74,7 @@ xmlns:core="sap.ui.core"
 
 						<ComboBox id="CreatePillar" 
 									items="{oPillarModel>/}"
-									selectedKey="{budgeting>pillar}"
+									selectedKey="{budgeting>U_Pillar}"
 									editable="{= ${budgeting>status} === 'Pending' ? true : false }">
 									
 									<core:Item id="_IDGenItem442" key="{oPillarModel>text}" text="{oPillarModel>text}" />

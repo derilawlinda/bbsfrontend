@@ -13,7 +13,7 @@ xmlns:table="sap.ui.table"
         inset="false"
         selectionChange="handleSelectionChange"
         items="{
-					path: 'budgeting>/getBudget'
+					path: 'budgeting>/value'
 				}">
          	<headerToolbar>
 			<OverflowToolbar id="_IDGenOverflowToolbar1">
@@ -57,15 +57,15 @@ xmlns:table="sap.ui.table"
              <ColumnListItem id="_IDGenColumnListItem1" vAlign="Middle" type="Navigation" press=".onPress">
                 <cells>
                     	<ObjectIdentifier id="_IDGenObjectIdentifier1"
-						    text="{value>Code}"/>
+						    text="{budgeting>Code}"/>
                         <Text id="_IDGenText10"
-						    text="{name}" />
+						    text="{budgeting>Name}" />
                         <Text id="_IDGenText1"
 						    text="{date}" />
-                        <Text id="_IDGenText2" text="{project}" />
-                        <Text id="_IDGenText3" text="{pillar}" />
-                        <Text id="_IDGenText4" text="{class}" />
-                        <Text id="_IDGenText5" text="{subclass}" />
+                        <Text id="_IDGenText2" text="{budgeting>U_Project}" />
+                        <Text id="_IDGenText3" text="{budgeting>U_Pillar}" />
+                        <Text id="_IDGenText4" text="{budgeting>U_Classification}" />
+                        <Text id="_IDGenText5" text="{budgeting>U_SubClass}" />
                         <ObjectNumber id="_IDGenObjectNumber1" 
                         	number="{
 								parts:[{path:'amount'}]

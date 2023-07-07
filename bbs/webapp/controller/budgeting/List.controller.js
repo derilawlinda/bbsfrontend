@@ -13,23 +13,10 @@ sap.ui.define([
        onInit: function () {
 		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 		var oJWT = oStore.get("jwt");
-		var oModel = new ODataModel({
-			/* send requests directly. Use $auto for batch request wich will be send automatically on before rendering */
-		  groupId : "$direct",
-			/* I'll just quote the API documentary:
-		  Controls synchronization between different bindings which refer to the same data for the case data changes in one binding.
-		  Must be set to 'None' which means bindings are not synchronized at all; all other values are not supported and lead to an error.
-		  */
-		  synchronizationMode : "None",
-		  /*
-		  Root URL of the service to request data from.
-		  */
-			serviceUrl : backendUrl,
-			httpHeaders : {
-				'Authorization': 'Bearer ' + oJWT 
-			}
-		  });
-		  console.log(oModel);
+		var oModel = new JSONModel();
+		oModel.loadData(backendUrl+"getBudget", { key: "value" }, true, "GET",false,false,{
+			'Authorization': 'Bearer ' + oJWT
+		});
 		  this.getView().setModel(oModel,"budgeting");
 		var oBudgetingAccount = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/budgeting_accounts.json"));
 		this.getView().setModel(oBudgetingAccount,"budgeting_accounts");

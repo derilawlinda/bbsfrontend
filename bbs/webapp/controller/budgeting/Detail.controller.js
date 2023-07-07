@@ -18,8 +18,9 @@ sap.ui.define([
 			this.getView().setModel(oCompaniesModel,"companies");
 		},
 		_onObjectMatched: function (oEvent) {
+			console.log(oEvent.getParameter("arguments").budgetID);
 			this.getView().bindElement({
-				path: "/data/" + window.decodeURIComponent(oEvent.getParameter("arguments").budgetID),
+				path: "/value/" + window.decodeURIComponent(oEvent.getParameter("arguments").Code),
 				model: "budgeting"
 			});
 		},

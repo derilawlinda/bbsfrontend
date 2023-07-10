@@ -23,28 +23,28 @@ xmlns:core="sap.ui.core"
                     <core:Title id="_IDGenTitle1" text="Information" />
 
 						<Label id="_IDGenLabel101" text="ID" />
-						<Text id="_IDGenText101" text="{budgeting>ID}" />
+						<Text id="_IDGenText101" text="{budgeting>Code}" />
 
                         <Label id="_IDGenLabel1" text="Date" />
-						<Text id="_IDGenText1" text="{budgeting>date}" />
+						<Text id="_IDGenText1" text="{budgeting>CreateDate}" />
 
                         <Label id="_IDGenLabel2" text="Name" />
-						<Input id="name" value="{budgeting>name}"
-						editable="{= ${budgeting>status} === 'Pending' ? true : false }"></Input>
+						<Input id="name" value="{budgeting>Name}"
+						editable="{= ${budgeting>U_Status} === 1 ? true : false }"></Input>
 
 						<Label id="_IDGenLabel3" text="Company" />
 						<ComboBox id="company" 
 									value="{budgeting>company}"
 									maxWidth="8rem"
 									items="{companies>/Items}"
-									editable="{= ${budgeting>status} === 'Pending' ? true : false }">
+									editable="{= ${budgeting>U_Status} === 1 ? true : false }">
 									<core:Item id="_IDGenItem441" key="{companies>Value}" text="{companies>Value}" />
 						</ComboBox>
 
 						<Label id="_IDGenLabel4" text="Sales Order" />
 
 						<ComboBox id="SalesOrder" 
-								  editable="{= ${budgeting>status} === 'Pending' ? true : false }"
+								  editable="{= ${budgeting>U_Status} === 1 ? true : false }"
 									selectedKey="{budgeting>sales_order}"
 									maxWidth="8rem"
 									items="{salesOrder>/Items}">
@@ -53,14 +53,14 @@ xmlns:core="sap.ui.core"
 						
 						 <Label id="_IDGenLabelAmunt" text="Amount" />
 						<Input id="amount" value="{budgeting>amount}"
-						editable="{= ${budgeting>status} === 'Pending' ? true : false }"></Input>
+						editable="{= ${budgeting>U_Status} === 1 ? true : false }"></Input>
 
 
 						<core:Title id="_IDGenTitle2" text="Category Information" />
 
                         <Label id="_IDGenLabel5" text="Project" />
 						<Select id="project"
-						editable="{= ${budgeting>status} === 'Pending' ? true : false }" >
+						editable="{= ${budgeting>U_Status} === 1 ? true : false }" >
                             <layoutData>
 								<form:ColumnElementData id="_IDGenColumnElementData1" cellsSmall="12" cellsLarge="8" />
 							</layoutData>
@@ -75,7 +75,7 @@ xmlns:core="sap.ui.core"
 						<ComboBox id="CreatePillar" 
 									items="{oPillarModel>/}"
 									selectedKey="{budgeting>U_Pillar}"
-									editable="{= ${budgeting>status} === 'Pending' ? true : false }">
+									editable="{= ${budgeting>U_Status} === 1 ? true : false }">
 									
 									<core:Item id="_IDGenItem442" key="{oPillarModel>text}" text="{oPillarModel>text}" />
 						</ComboBox>
@@ -85,8 +85,8 @@ xmlns:core="sap.ui.core"
 
 						<ComboBox id="CreateClassification" 
 									items="{oClassificationModel>/}"
-									selectedKey="{budgeting>class}"
-									editable="{= ${budgeting>status} === 'Pending' ? true : false }">
+									selectedKey="{budgeting>U_Classification}"
+									editable="{= ${budgeting>U_Status} === 1 ? true : false }">
 									<core:Item id="_IDGenItem443" key="{oClassificationModel>text}" text="{oClassificationModel>text}" />
 						</ComboBox>
 
@@ -94,8 +94,8 @@ xmlns:core="sap.ui.core"
 
 						<ComboBox id="CreateSubClassification" 
 									items="{oSubClassModel>/}"
-									selectedKey="{budgeting>subclass}"
-									editable="{= ${budgeting>status} === 'Pending' ? true : false }">
+									selectedKey="{budgeting>U_SubClass}"
+									editable="{= ${budgeting>U_Status} === 1 ? true : false }">
 									<core:Item id="_IDGenItem444" key="{oSubClassModel>text}" text="{oSubClassModel>text}" />
 						</ComboBox>
 						
@@ -103,8 +103,8 @@ xmlns:core="sap.ui.core"
 
 						<ComboBox id="CreateSubClassification2" 
 									items="{oSubClass2Model>/}"
-									selectedKey="{budgeting>subclass2}"
-									editable="{= ${budgeting>status} === 'Pending' ? true : false }">
+									selectedKey="{budgeting>U_SubClass2}"
+									editable="{= ${budgeting>U_Status} === 1 ? true : false }">
 									<core:Item key="{oSubClass2Model>text}" text="{oSubClass2Model>text}" />
 						</ComboBox>
 						

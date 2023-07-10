@@ -61,7 +61,7 @@ xmlns:table="sap.ui.table"
                         <Text id="_IDGenText10"
 						    text="{budgeting>Name}" />
                         <Text id="_IDGenText1"
-						    text="{date}" />
+						    text="{budgeting>CreateDate}" />
                         <Text id="_IDGenText2" text="{budgeting>U_Project}" />
                         <Text id="_IDGenText3" text="{budgeting>U_Pillar}" />
                         <Text id="_IDGenText4" text="{budgeting>U_Classification}" />
@@ -70,7 +70,7 @@ xmlns:table="sap.ui.table"
                         	number="{
 								parts:[{path:'amount'}]
 							}"/>
-                        <Button id="_IDGenButton1" text="{status}" type="{path:'status', formatter:'.buttonFormatter'}"/>
+                        <Button id="_IDGenButton1" text="{path : 'budgeting>U_Status', formatter:'.textFormatter'}" type="{path:'budgeting>U_Status', formatter:'.buttonFormatter'}"/>
 
                 </cells>
              </ColumnListItem>

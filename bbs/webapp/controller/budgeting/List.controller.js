@@ -14,16 +14,12 @@ sap.ui.define([
 		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 		var oJWT = oStore.get("jwt");
 		var oModel = new JSONModel();
-		oModel.loadData(backendUrl+"getBudget", { key: "value" }, true, "GET",false,false,{
+		oModel.loadData(backendUrl+"getBudget", null, true, "GET",false,false,{
 			'Authorization': 'Bearer ' + oJWT
 		});
-		  this.getView().setModel(oModel,"budgeting");
+		this.getOwnerComponent().setModel(oModel,"budgeting");
 		var oBudgetingAccount = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/budgeting_accounts.json"));
 		this.getView().setModel(oBudgetingAccount,"budgeting_accounts");
-		
-		
-		
-		
        },
 
 	   search : function (arr, term) {
@@ -79,12 +75,25 @@ sap.ui.define([
 		buttonFormatter: function(sStatus) {
 			if(sStatus == 'Approved'){
 				return 'Accept'
-			}else if(sStatus == 'Pending'){
+			}else if(sStatus == 1){
 				return 'Attention'
 			}else{
 				return 'Reject'
 			}
 		  },
+		
+		textFormatter : function(sStatus){
+			if(sStatus == 1){
+				return 'Pending'
+			}else if(sStatus == 2){
+				return 'Approved by Manager'
+			}else if(sStatus == 3){
+				return 'Approved by Director'
+			}else{
+				return 'Rejected'
+			}
+		  
+		},
        onNavBack: function (oEvent) {
 			var oHistory, sPreviousHash;
 			oHistory = History.getInstance();
@@ -97,6 +106,7 @@ sap.ui.define([
 		},
 		onPress: function (oEvent) {
 			
+			var oItem = oEvent.getSource(); //Get the Selected Item
 			var oRouter = this.getOwnerComponent().getRouter();
 			var oPath = oEvent.getSource().getBindingContextPath();
 			var budget = oPath.split("/").slice(-1).pop();

@@ -24,33 +24,13 @@ sap.ui.define([
        onInit: function () {
 		var oModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/material_issue.json"));
 		this.getOwnerComponent().setModel(oModel,"materialIssue");
+		var oNewMaterialIssueAccounts = new sap.ui.model.json.JSONModel();
+		var oBudgetingModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/budgeting.json"));
+		this.getView().setModel(oBudgetingModel,"budgeting");
+		this.getView().setModel(oNewMaterialIssueAccounts,"new_mi_items");
+		this.getView().getModel("new_mi_items").setProperty("/itemRow", []);
 
        },
-	   onCreateButtonClick : function(oEvent) {
-		if (!this.createUserDialog) {
-			this.createUserDialog = new Dialog({
-				type: DialogType.Message,
-				title: "Confirm",
-				content: new Text({ text: "Do you want to submit this order?" }),
-				beginButton: new Button({
-					type: ButtonType.Emphasized,
-					text: "Submit",
-					press: function () {
-						MessageToast.show("Submit pressed!");
-						this.createUserDialog.close();
-					}.bind(this)
-				}),
-				endButton: new Button({
-					text: "Cancel",
-					press: function () {
-						this.createUserDialog.close();
-					}.bind(this)
-				})
-			});
-		}
-
-		this.createUserDialog.open();
-	   },
 	    getRouter : function () {
 			return sap.ui.core.UIComponent.getRouterFor(this);
 		},
@@ -79,6 +59,41 @@ sap.ui.define([
 			} else {
 				this.getRouter().navTo("login", {}, true /*no history*/);
 			}
+		},
+		onCreateButtonClick : function(oEvent) {
+			if (!this.createMaterialIssueDialog) {
+				this.createMaterialIssueDialog = this.loadFragment({
+					name: "frontend.bbs.view.materialIssue.CreateForm"
+				});
+			}
+			this.createMaterialIssueDialog.then(function (oDialog) {
+				this.oDialog = oDialog;
+				this.oDialog.open();
+				var oMaterialIssueDetailModel = new sap.ui.model.json.JSONModel();
+				var dynamicProperties = [];
+				oMaterialIssueDetailModel.setData(dynamicProperties);
+				this.getView().setModel(oMaterialIssueDetailModel,"materialIssueModel");
+				this.getView().getModel("new_mi_items").setProperty("/itemRow", []);
+	
+			}.bind(this));
+		   },
+		_closeDialog: function () {
+			this.oDialog.close();
+		},
+		onAddPress : function(oEvent){
+			const oModel = this.getView().getModel("new_mi_items");
+			var oModelData = oModel.getData();
+			var oNewObject = {
+				"account_code": "",
+				"item_name": "",
+				"amount": ""
+			};
+			oModelData.itemRow.push(oNewObject);
+			console.log(oModelData.itemRow);
+			var f = new sap.ui.model.json.JSONModel(oModelData);
+			this.getView().setModel(f, 'new_mi_items');
+			f.refresh();
+		
 		}
     });
  });

@@ -13,41 +13,35 @@ xmlns:table="sap.ui.table"
         inset="false"
         selectionChange="handleSelectionChange"
         items="{
-					path: 'budgeting>/data',
+					path: 'reimbursement>/data',
 					sorter: {
 						path: 'ID'
 					}
 				}">
          	<headerToolbar>
 			<OverflowToolbar id="_IDGenOverflowToolbar1">
-                <Title id="title" text="Budgeting"/>
+                <Title id="title" text="Reimbursement"/>
                 <ToolbarSpacer id="_IDGenToolbarSpacer1" ></ToolbarSpacer>
-                <Button id="_IDGenButton2" text=" + Create Budget" press="onCreateButtonClick" type="Emphasized"/>
+                <Button id="_IDGenButton2" text=" + Create Reimbursement" press="onCreateButtonClick" type="Emphasized"/>
             </OverflowToolbar>
             </headerToolbar>
             <columns>
                 <Column id="_IDGenColumn1"
-                	width="6em">
+                	width="12em">
                         <Text id="_IDGenTextView1" text="ID" />
                 </Column>
-                 <Column id="_IDGenColumn10" minScreenWidth="Desktop" demandPopin="true">
-                        <Text id="_IDGenTextView10" text="Name"  />
-                </Column>
                 <Column id="_IDGenColumn2" minScreenWidth="Desktop" demandPopin="true">
-                        <Text id="_IDGenTextView2" text="Date"  />
+                        <Text id="_IDGenTextView2" text="Request Date"  />
                 </Column>
+
+                <Column id="_IDGenColumn4" minScreenWidth="Desktop" demandPopin="true">
+                        <Text id="_IDGenTextView4" text="Disbursed Date"  />
+                </Column>
+
                 <Column id="_IDGenColumn3" minScreenWidth="Desktop" demandPopin="true">
-                        <Text id="_IDGenTextView3" text="Project" />
+                        <Text id="_IDGenTextView3" text="Name" />
                 </Column>
-                <Column id="_IDGenColumn4" minScreenWidth="Desktop">
-                        <Text id="_IDGenTextView4" text="Pillar" />
-                </Column>
-                <Column id="_IDGenColumn5" minScreenWidth="Desktop" demandPopin="true">
-                        <Text id="_IDGenTextView5" text="Class" />
-                </Column>
-                <Column id="_IDGenColumn6" minScreenWidth="Desktop" demandPopin="true">
-                        <Text id="_IDGenTextView6" text="SubClass" />
-                </Column>
+               
                 <Column id="_IDGenColumn7" >
                         <Text id="_IDGenTextView8" text="Amount" />
                 </Column>
@@ -57,23 +51,20 @@ xmlns:table="sap.ui.table"
             </columns>
 
              <items>
-             <ColumnListItem id="_IDGenColumnListItem1" vAlign="Middle" type="Navigation" press=".onPress">
+             <ColumnListItem id="_IDGenColumnListItem1" vAlign="Middle" type="Navigation" press=".onPress" >
                 <cells>
                     	<ObjectIdentifier id="_IDGenObjectIdentifier1"
-						    text="{budgeting>ID}"/>
-                        <Text id="_IDGenText10"
-						    text="{budgeting>name}" />
+						    text="{reimbursement>ID}"/>
                         <Text id="_IDGenText1"
-						    text="{budgeting>date}" />
-                        <Text id="_IDGenText2" text="{budgeting>project}" />
-                        <Text id="_IDGenText3" text="{budgeting>pillar}" />
-                        <Text id="_IDGenText4" text="{budgeting>class}" />
-                        <Text id="_IDGenText5" text="{budgeting>subclass}" />
+						    text="{reimbursement>date}" />
+                          <Text id="_IDGenText3"
+						    text="{reimbursement>disbursed_date}" />
+                        <Text id="_IDGenText2" text="{reimbursement>name}" />
                         <ObjectNumber id="_IDGenObjectNumber1" 
                         	number="{
-								parts:[{path:'budgeting>amount'}]
+								parts:[{path:'reimbursement>amount'}]
 							}"/>
-                        <Button id="_IDGenButton1" text="{budgeting>status}" type="{path:'budgeting>status', formatter:'.buttonFormatter'}"/>
+                        <Button id="_IDGenButton1" text="{reimbursement>status}" type="{path:'reimbursement>status', formatter:'.buttonFormatter'}"/>
 
                 </cells>
              </ColumnListItem>

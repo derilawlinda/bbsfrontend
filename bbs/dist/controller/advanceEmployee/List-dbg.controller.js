@@ -24,20 +24,25 @@ sap.ui.define([
        onInit: function () {
 		var oModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/employee_advance.json"));
 		this.getOwnerComponent().setModel(oModel,"advanceEmployee");
+		var oBudgetingModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/budgeting.json"));
+		this.getView().setModel(oBudgetingModel,"budgeting");
        },
 	   onCreateButtonClick : function(oEvent) {
-		if (!this.createBudgetingDialog) {
-			this.createBudgetingDialog = this.loadFragment({
-				name: "frontend.bbs.view.budgeting.CreateForm"
+		if (!this.createEmployeeAdvanceDialog) {
+			this.createEmployeeAdvanceDialog = this.loadFragment({
+				name: "frontend.bbs.view.advanceEmployee.CreateForm"
 			});
 		}
-		this.createBudgetingDialog.then(function (oDialog) {
+		this.createEmployeeAdvanceDialog.then(function (oDialog) {
 			this.oDialog = oDialog;
 			this.oDialog.open();
-			var oBudgetingDetailModel = new sap.ui.model.json.JSONModel();
+			var oEmployeeAdvanceDetailModel = new sap.ui.model.json.JSONModel();
 			var dynamicProperties = [];
-			oBudgetingDetailModel.setData(dynamicProperties);
-			this.getView().setModel(oBudgetingDetailModel,"budgetingDetailModel");
+			oEmployeeAdvanceDetailModel.setData(dynamicProperties);
+			this.getView().setModel(oEmployeeAdvanceDetailModel,"EmployeeAdvanceDetailModel");
+			var oNewAdvanceEmployeeItems = new sap.ui.model.json.JSONModel();
+			this.getView().setModel(oNewAdvanceEmployeeItems,"new_ea_items");
+			this.getView().getModel("new_ea_items").setProperty("/itemRow", []);
 
 		}.bind(this));
 	   },
@@ -66,6 +71,11 @@ sap.ui.define([
 				return 'Reject'
 			}
 		},
+		dateFormatter : function(date){
+			var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({pattern : "YYYY/MM/DD" });   
+			var dateFormatted = dateFormat.format(date);
+			return dateFormatted;
+		},
 		onPress: function (oEvent) {
 			var oRouter = this.getOwnerComponent().getRouter();
 			var oPath = oEvent.getSource().getBindingContextPath();
@@ -75,5 +85,20 @@ sap.ui.define([
 			});
 
 		},
+		onAddPress : function(oEvent){
+			const oModel = this.getView().getModel("new_ea_items");
+			var oModelData = oModel.getData();
+			var oNewObject = {
+				"account_code": "",
+				"item_name": "",
+				"amount": ""
+			};
+			oModelData.itemRow.push(oNewObject);
+			console.log(oModelData.itemRow);
+			var f = new sap.ui.model.json.JSONModel(oModelData);
+			this.getView().setModel(f, 'new_ea_items');
+			f.refresh();
+		
+		}
     });
  });

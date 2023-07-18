@@ -9,7 +9,7 @@
     height="100%">
 	<Dialog
 		id="mainDialog"
-		title="Create Employee Advance">
+		title="Create Material Issue">
 			<VBox class="sapUiSmallMargin" id="formContainer">
 				<f:SimpleForm id="SimpleFormChangeColumn_twoGroups234"
 						editable="true"
@@ -21,15 +21,15 @@
                     <core:Title id="_IDGenTitle1" text="Information" />
 
                         <Label id="_IDGenLabel1" text="Date" />
-						<Text id="_IDGenText11" text="{newEA>date}" />
+						<Text id="_IDGenText11" text="{newMR>date}" />
 
                         <Label id="_IDGenLabel2" text="Name" />
-						<Input id="name" value="{newEA>name}"></Input>
+						<Input id="name" value="{newMR>name}"></Input>
 
 						<Label id="_IDGenLabel4" text="Budget#" />
 						<ComboBox width="100%"
 								change="onBudgetChange"
-								value="{newEA>budget_id}"
+								value="{newMR>budget_id}"
 								items="{
 								path: 'budgeting>/data',
 								templateShareable: false
@@ -74,7 +74,7 @@
 				</f:SimpleForm>
 
                  <table:Table id="tableId" 
-                        rows="{new_ea_items>/itemRow}"
+                        rows="{new_mi_items>/itemRow}"
 						visibleRowCount="7"
 						 
 				>
@@ -96,7 +96,7 @@
 						<Text text="Account Code" />
 						<table:template>
 							<ComboBox width="100%"
-								selectedKey="{new_ea_items>account_code}"
+								selectedKey="{new_mi_items>account_code}"
 								items="{
 								path: 'accounts>/data',
 								templateShareable: false
@@ -118,7 +118,7 @@
 							<Input
 								type="Text"
 								placeholder="Enter item"
-								value="{new_ea_items>item_name}"
+								value="{new_mi_items>item_name}"
 								ariaLabelledBy="InputNumberLabel"/>
 						</table:template>
 					</table:Column>
@@ -130,7 +130,7 @@
 								id="inputNumber"
 								type="Number"
 								placeholder="Enter number"
-								value="{new_ea_items>amount}"
+								value="{new_mi_items>amount}"
 								ariaLabelledBy="InputNumberLabel"/>
 						</table:template>
 					</table:Column>
@@ -145,7 +145,7 @@
 		<footer>
 				<Toolbar id="_IDGenToolbar12">
 					<ToolbarSpacer id="_IDGenToolbarSpacer12" />
-                    <Button id="_IDGenButton12" type="Emphasized" text="Create Employee Advance" press="onSaveButtonClick" />
+                    <Button id="_IDGenButton12" type="Emphasized" text="Create Material Issue" press="onSaveButtonClick" />
 				    <Button id="_IDGenButton13" text="Cancel" press="._closeDialog" />
 				</Toolbar>
 		</footer>

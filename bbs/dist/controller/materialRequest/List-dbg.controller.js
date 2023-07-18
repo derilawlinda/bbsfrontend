@@ -29,29 +29,41 @@ sap.ui.define([
 		this.getView().setModel(oSalesOrderModel,"salesOrder");
 		var oCompaniesModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/companies.json"));
 		this.getView().setModel(oCompaniesModel,"companies");
-		var oBudgetingModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/budgeting.json"));
-		this.getView().setModel(oBudgetingModel,"budgeting");
-		var oNewBudgetingAccounts = new sap.ui.model.json.JSONModel();
-		this.getView().setModel(oNewBudgetingAccounts,"new_mr_items");
-		this.getView().getModel("new_mr_items").setProperty("/itemRow", []);
+		var oBudgetingModel = new JSONModel();
+		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
+			var oJWT = oStore.get("jwt");
+		oBudgetingModel.loadData(backendUrl+"getBudget", null, true, "GET",false,false,{
+			'Authorization': 'Bearer ' + oJWT
+		});
+		this.getOwnerComponent().setModel(oBudgetingModel,"budgeting");
+		var oNewMaterialRequestItems = new sap.ui.model.json.JSONModel();
+		this.getView().setModel(oNewMaterialRequestItems,"new_mr_items");
+		this.getView().getModel("new_mr_items").setProperty("/MATERIALREQLINESCollection", []);
 		
 		
 
        },
 	   onCreateButtonClick : function(oEvent) {
-		if (!this.createBudgetingDialog) {
-			this.createBudgetingDialog = this.loadFragment({
+		console.log(this.getView().getModel("budgeting"));
+		if (!this.createMaterialRequestDialog) {
+			this.createMaterialRequestDialog = this.loadFragment({
 				name: "frontend.bbs.view.materialRequest.CreateForm"
 			});
 		}
-		this.createBudgetingDialog.then(function (oDialog) {
+		this.createMaterialRequestDialog.then(function (oDialog) {
+			var oCreateFragmentViewModel = new sap.ui.model.json.JSONModel({
+				Date : new Date()
+			});
+			this.getView().setModel(oCreateFragmentViewModel,"createFragmentViewModel");
+			oCreateFragmentViewModel.setProperty("/Date", new Date());
+			console.log(oCreateFragmentViewModel);
 			this.oDialog = oDialog;
 			this.oDialog.open();
-			var oBudgetingDetailModel = new sap.ui.model.json.JSONModel();
+			var oMaterialRequestDetailModel = new sap.ui.model.json.JSONModel();
 			var dynamicProperties = [];
-			oBudgetingDetailModel.setData(dynamicProperties);
-			this.getView().setModel(oBudgetingDetailModel,"budgetingDetailModel");
-			this._oMessageManager.registerObject(this.oView.byId("formContainer"), true);
+			oMaterialRequestDetailModel.setData(dynamicProperties);
+			this.getView().setModel(oMaterialRequestDetailModel,"budgetingDetailModel");
+			this.getView().getModel("new_mr_items").setProperty("/itemRow", []);
 
 		}.bind(this));
 	   },
@@ -95,26 +107,18 @@ sap.ui.define([
 		  },
 		  onBudgetChange : function(oEvent){
 			var budgetingModel = this.getView().getModel("budgeting");
-			var budgetingData = budgetingModel.getData().data;
-			// console.log(budgetingData);
-			// var result = _.find(budgetingData, function(obj) {
-			// 	if (obj.ID == oEvent.getParameters('selectedItem')) {
-			// 		return true;
-			// 	}
-			// });
-			// console.log(result);
-			
-			 var selectedID = parseInt(oEvent.getParameters('selectedItem').value);
+			var budgetingData = budgetingModel.getData().value;
+			var selectedID = parseInt(oEvent.getParameters('selectedItem').value);
 			let result = _.find(budgetingData, function(obj) {
-				if (obj.ID == selectedID) {
+				if (obj.Code == selectedID) {
 					return true;
 				}
 			});
-			console.log(result)
+			var materialRequestHeader = new sap.ui.model.json.JSONModel(result);
+			this.getView().setModel(materialRequestHeader,"materialRequestHeader");
 
 		  },
 		  onAddPress : function(oEvent){
-			console.log("Aaaa");
 			const oModel = this.getView().getModel("new_mr_items");
 			var oModelData = oModel.getData();
 			var oNewObject = {
@@ -122,8 +126,7 @@ sap.ui.define([
 				"item_name": "",
 				"amount": ""
 			};
-			oModelData.itemRow.push(oNewObject);
-			console.log(oModelData.itemRow);
+			oModelData.MATERIALREQLINESCollection.push(oNewObject);
 			var f = new sap.ui.model.json.JSONModel(oModelData);
 			this.getView().setModel(f, 'new_mr_items');
 			f.refresh();

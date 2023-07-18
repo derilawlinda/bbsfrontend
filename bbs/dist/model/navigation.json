@@ -72,7 +72,8 @@
 	"fixedNavigation": [
 		{
 			"title": "Log Out",
-			"icon": "sap-icon://log"
+			"icon": "sap-icon://log",
+			"key" : "logout"
 		}
 	],
 	"headerItems": [

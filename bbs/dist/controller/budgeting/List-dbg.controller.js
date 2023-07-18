@@ -10,34 +10,33 @@ sap.ui.define([
 	var matches = [];
 
     return Controller.extend("frontend.bbs.controller.budgeting.List", {
-       onInit: function () {
+		
+       onInit: async function () {
+		this.getView().byId("idBudgetTable").setBusy(true);
+		var currentRoute = this.getRouter().getHashChanger().getHash();
 		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 		var oJWT = oStore.get("jwt");
-		var oModel = new ODataModel({
-			/* send requests directly. Use $auto for batch request wich will be send automatically on before rendering */
-		  groupId : "$direct",
-			/* I'll just quote the API documentary:
-		  Controls synchronization between different bindings which refer to the same data for the case data changes in one binding.
-		  Must be set to 'None' which means bindings are not synchronized at all; all other values are not supported and lead to an error.
-		  */
-		  synchronizationMode : "None",
-		  /*
-		  Root URL of the service to request data from.
-		  */
-			serviceUrl : backendUrl,
-			httpHeaders : {
-				'Authorization': 'Bearer ' + oJWT 
-			}
-		  });
-		  console.log(oModel);
-		  this.getView().setModel(oModel,"budgeting");
+		// var userData = await this.getOwnerComponent().checkToken(oJWT,currentRoute);
+		// if(userData.status == "Error"){
+		// 	window.location.href = "../index.html"
+		// 	return;
+		// }
+		
+		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
+		var oJWT = oStore.get("jwt");
+		var oModel = new JSONModel();
+		oModel.loadData(backendUrl+"getBudget", null, true, "GET",false,false,{
+			'Authorization': 'Bearer ' + oJWT
+		});
+		oModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
+			this.getView().byId("idBudgetTable").setBusy(false);
+		}.bind(this));
+		this.getOwnerComponent().setModel(oModel,"budgeting");
 		var oBudgetingAccount = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/budgeting_accounts.json"));
 		this.getView().setModel(oBudgetingAccount,"budgeting_accounts");
 		
 		
-		
-		
-       },
+	},
 
 	   search : function (arr, term) {
 		
@@ -70,18 +69,48 @@ sap.ui.define([
 		this.createBudgetingDialog.then(function (oDialog) {
 			this.oDialog = oDialog;
 			this.oDialog.open();
-			var oBudgetingDetailModel = new sap.ui.model.json.JSONModel();
-			var dynamicProperties = [];
-			oBudgetingDetailModel.setData(dynamicProperties);
+			var oCreateFragmentViewModel = new sap.ui.model.json.JSONModel({
+				Date : new Date()
+			});
+			this.getView().setModel(oCreateFragmentViewModel,"createFragmentViewModel");
+			var oBudgetingDetailModel = new sap.ui.model.json.JSONModel({
+				U_TotalAmount : 0,
+			});
+			// var dynamicProperties = [];
+			// oBudgetingDetailModel.setData(dynamicProperties);
+			
 			this.getView().setModel(oBudgetingDetailModel,"budgetingDetailModel");
 			var oNewBudgetingAccounts = new sap.ui.model.json.JSONModel();
 			this.getView().setModel(oNewBudgetingAccounts,"new_budgeting_accounts");
-			this.getView().getModel("new_budgeting_accounts").setProperty("/accountRow", []);
+			this.getView().getModel("new_budgeting_accounts").setProperty("/BUDGETREQLINESCollection", []);
 
 		}.bind(this));
 	   },
 	   onSaveButtonClick : function(oEvent) {
-		console.log(oEvent);
+			const oModel = this.getView().getModel("budgetingDetailModel");
+			const oModelAccounts = this.getView().getModel("new_budgeting_accounts");
+			oModel.setProperty("/BUDGETREQLINESCollection", oModelAccounts.getData().BUDGETREQLINESCollection);
+			var oProperty = oModel.getProperty("/");
+			var view = this.getView();
+			var oDialog = this.oDialog;
+
+			$.ajax({
+				type: "POST",
+				data: JSON.stringify(oProperty),
+				crossDomain: true,
+				url: backendUrl+'budget/createBudget',
+				contentType: "application/json",
+				success: function (res, status, xhr) {
+					  //success code
+					console.log("Success");
+					oDialog.close();
+					view.getModel('budgeting').refresh();
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+				  	console.log("Got an error response: " + textStatus + errorThrown);
+				}
+			  });
+			// alert(JSON.stringify(oProperty));
 	   },
 	    getRouter : function () {
 			return sap.ui.core.UIComponent.getRouterFor(this);
@@ -92,12 +121,31 @@ sap.ui.define([
 		buttonFormatter: function(sStatus) {
 			if(sStatus == 'Approved'){
 				return 'Accept'
-			}else if(sStatus == 'Pending'){
+			}else if(sStatus == 1){
 				return 'Attention'
 			}else{
 				return 'Reject'
 			}
 		  },
+		
+		textFormatter : function(sStatus){
+			if(sStatus == 1){
+				return 'Pending'
+			}else if(sStatus == 2){
+				return 'Approved by Manager'
+			}else if(sStatus == 3){
+				return 'Approved by Director'
+			}else{
+				return 'Rejected'
+			}
+		  
+		},
+		dateFormatter : function(date){
+			var unformattedDate = new Date(date);
+			var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({pattern : "YYYY-MM-dd" });   
+			var dateFormatted = dateFormat.format(unformattedDate);
+			return dateFormatted;
+		},
        onNavBack: function (oEvent) {
 			var oHistory, sPreviousHash;
 			oHistory = History.getInstance();
@@ -119,21 +167,34 @@ sap.ui.define([
 
 			
 		},
+
 		onAddPress : function(oEvent){
 			
 			const oModel = this.getView().getModel("new_budgeting_accounts");
-			const oAccounts = console.log(this.getView().getModel("accounts"));
 			var oModelData = oModel.getData();
 			var oNewObject = {
-				"account_code": "",
-				"account_name": "",
-				"amount": ""
+				"U_AccountCode": "",
+				"U_Amount": ""
 			};
-			oModelData.accountRow.push(oNewObject);
+			oModelData.BUDGETREQLINESCollection.push(oNewObject);
 			var f = new sap.ui.model.json.JSONModel(oModelData);
 			this.getView().setModel(f, 'new_budgeting_accounts');
 			f.refresh();
 		
+		},
+
+		onAmountChange : function(event){
+			const oModel = this.getView().getModel("new_budgeting_accounts");
+			var oModelData = oModel.getData().BUDGETREQLINESCollection;
+			let sum = 0;
+			for (let i = 0; i < oModelData.length; i++ ) {
+				sum += oModelData[i]["U_Amount"];
+			}
+			const oModelHeader = this.getView().getModel("budgetingDetailModel");
+			console.log(oModelHeader.getData());
+			oModelHeader.setProperty("/U_TotalAmount", sum);
+			console.log(oModelHeader.getData());
+
 		}
     });
  });

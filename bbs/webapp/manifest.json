@@ -114,7 +114,11 @@
             "name": "Login",
             "target": "login",
             "viewLevel": 1
-            
+          },
+          {
+            "pattern": "login",
+            "name": "LoginPage",
+            "target": "login"
           },
           {
             "pattern": "reimbursement",
@@ -352,7 +356,7 @@
         },
         "reimbursement" : {
           "viewId": "reimbursement",
-          "viewName": "budgeting.List",
+          "viewName": "reimbursement.List",
           "parent": "TargetBBSSAPAddOnDashboard",
           "controlId": "modulContainer",
           "controlAggregation": "pages"

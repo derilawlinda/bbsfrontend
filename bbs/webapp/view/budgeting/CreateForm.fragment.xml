@@ -21,14 +21,15 @@
                     <core:Title text="Information" />
 
                         <Label text="Date" />
-						<Text text="18/04/2023" />
+						<Text text="{createFragmentViewModel>/Date}"  />
 
                         <Label text="Name" />
-						<Input id="name"></Input>
+						<Input value="{budgetingDetailModel>/Name}" id="name" > </Input>
 
 						<Label id="_IDGenLabel44" text="Company" />
 
 						<ComboBox id="CreateCompany" 
+						value="{budgetingDetailModel>/U_Company}"
 									items="{companies>/Items}">
 									<core:Item id="_IDGenItem441" key="{companies>Value}" text="{companies>Value}" />
 						</ComboBox>
@@ -36,22 +37,26 @@
 						<Label id="_IDGenLabel45" text="Sales Order" />
 
 						<ComboBox id="CreateSalesOrder" 
+						value="{budgetingDetailModel>/U_SalesOrder}"
 									items="{salesOrder>/Items}">
 									<core:Item id="_IDGenItem451" key="{salesOrder>Value}" text="{salesOrder>Value}" />
 						</ComboBox>
 
+						<Label id="_IDGenLabe20" text="Amount" />
+						<ObjectNumber binding="{budgetingDetailModel>/U_TotalAmount}"  number="{ parts:[{path:'budgetingDetailModel>/U_TotalAmount'},{path:'CurrencyCode'}], type: 'sap.ui.model.type.Currency', formatOptions: {showMeasure: false,decimalSeparator : ',', groupingSeparator : '.'} }" unit="IDR" />
+
+
 						<core:Title text="Category Information" />
 
                         <Label text="Project" />
-						<Select id="project" >
-                            <layoutData>
-								<f:ColumnElementData cellsSmall="12" cellsLarge="8" />
-							</layoutData>
-							<items>
-								<core:Item text="BLIF 2023" key="BLIF2023" />
-								<core:Item text="Finance Dept." key="FICO" />
-							</items>
-						</Select>
+
+						<ComboBox id="budgetingProjects" 
+						value="{budgetingDetailModel>/U_Project}"
+									>
+									<core:Item text="BLIF 2023" key="BLIF2023" />
+									<core:Item text="Finance Dept." key="FICO" />
+						</ComboBox>
+						
 
                         <!-- <Label text="Pillar" />
 						<Select id="Pillar" >
@@ -65,7 +70,8 @@
 						<Label id="_IDGenLabel441" text="Pillar" />
 
 						<ComboBox id="CreatePillar" 
-									items="{oPillarModel>/}">
+									items="{oPillarModel>/}"
+									value="{budgetingDetailModel>/U_Pillar}">
 									<core:Item id="_IDGenItem442" key="{oPillarModel>text}" text="{oPillarModel>text}" />
 						</ComboBox>
 
@@ -73,21 +79,25 @@
                        <Label id="_IDGenLabel442" text="Classification" />
 
 						<ComboBox id="CreateClassification" 
-									items="{oClassificationModel>/}">
+									items="{oClassificationModel>/}"
+									value="{budgetingDetailModel>/U_Classification}">
 									<core:Item id="_IDGenItem443" key="{oClassificationModel>text}" text="{oClassificationModel>text}" />
 						</ComboBox>
 
                        <Label id="_IDGenLabel443" text="Subclass" />
 
 						<ComboBox id="CreateSubClassification" 
-									items="{oSubClassModel>/}">
+									items="{oSubClassModel>/}"
+									value="{budgetingDetailModel>/U_SubClass}">
+									
 									<core:Item id="_IDGenItem444" key="{oSubClassModel>text}" text="{oSubClassModel>text}" />
 						</ComboBox>
 						
                         <Label id="_IDGenLabel444" text="Subclass2" />
 
 						<ComboBox id="CreateSubClassification2" 
-									items="{oSubClass2Model>/}">
+									items="{oSubClass2Model>/}"
+									value="{budgetingDetailModel>/U_SubClass2}">
 									<core:Item key="{oSubClass2Model>text}" text="{oSubClass2Model>text}" />
 						</ComboBox>
 						
@@ -98,7 +108,7 @@
 				</f:SimpleForm>
 
                 <table:Table id="tableId" 
-                        rows="{new_budgeting_accounts>/accountRow}"
+                        rows="{new_budgeting_accounts>/BUDGETREQLINESCollection}"
 						visibleRowCount="7"
 						 
 				>
@@ -120,16 +130,19 @@
 						<Text text="Account Code" />
 						<table:template>
 							<ComboBox width="100%"
-								selectedKey="{new_budgeting_accounts>account_code}"
+								showSecondaryValues= "true"
+								filterSecondaryValues= "true"
+								value="{new_budgeting_accounts>U_AccountCode}"
 								items="{
 								path: 'accounts>/data',
 								templateShareable: false
 								}"
 							>
 
-								<core:Item
+								<core:ListItem
 									key="{accounts>account_code}"
-									text="{accounts>account_code} - {accounts>account_name}"
+									text="{accounts>account_code}"
+									additionalText="{accounts>account_name}"
 								/>
 
 							</ComboBox>
@@ -143,10 +156,18 @@
 						<table:template>
 							<Input
 								id="inputNumber"
-								type="Number"
 								placeholder="Enter number"
-								value="{new_budgeting_accounts>amount}"
-								ariaLabelledBy="InputNumberLabel"/>
+								value="{
+									parts: [
+										{path:'new_budgeting_accounts>U_Amount'}, 
+										 'EUR',
+										 'TwoWay'], 
+									type:'sap.ui.model.type.Currency',
+									formatOptions: {showMeasure: true}
+								}"
+								ariaLabelledBy="InputNumberLabel"
+								change="onAmountChange"
+								/>
 						</table:template>
 					</table:Column>
 

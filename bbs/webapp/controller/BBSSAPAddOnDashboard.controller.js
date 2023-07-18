@@ -20,23 +20,33 @@ sap.ui.define([
         return BaseController.extend("frontend.bbs.controller.BBSSAPAddOnDashboard", {
 
 		_bExpanded: false,
-			
+		getRouter : function () {
+			return sap.ui.core.UIComponent.getRouterFor(this);
+		},	
 		onInit: async function () {
-			this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
 			var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 			var oJWT = oStore.get("jwt");
+			var userData = await this.getOwnerComponent().checkToken(oJWT,currentRoute);
+			if(userData.status == "Error"){
+				window.location.href = "../index.html"
+				return;
+			}
+			this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
 			var oModel = this.getOwnerComponent().getModel("navigationList");
 			this.getView().setModel(oModel);
 			this._setToggleButtonTooltip(!Device.system.desktop);
 			var currentRoute = this.getRouter().getHashChanger().getHash();
-			var userData = await this.getOwnerComponent().checkToken(oJWT,currentRoute);
-			var oViewModel = new JSONModel({userName: userData.data.user.name});
-			var userData = this.getOwnerComponent().setModel(oViewModel,"userModel");
-			this.getView().setModel(oViewModel,"view");
+			console.log(userData);
+			var oUserModel = new JSONModel({
+				userName: userData.data.user.name,
+				roleId : userData.data.user.role_id,
+				roleName : userData.data.role[0].name
+			});
+			this.getOwnerComponent().setModel(oUserModel,"userModel");
+			this.getView().setModel(oUserModel,"view");
 			Device.media.attachHandler(this._handleWindowResize, this);
 			this.getRouter().attachRouteMatched(this.onRouteChange.bind(this));
 			this.getOwnerComponent().getModel("navigationList").setProperty('/selectedKey', currentRoute);
-			this.getView().byId('_IDGenNavigationList1').getSelectedItem().oParent.setProperty("expanded",true);
 		},
 
 		onRouteChange: function (oEvent) {
@@ -47,10 +57,38 @@ sap.ui.define([
 			}
 		},
 
+		onLogoutItemSelect: function(event){
+			var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
+			var oJWT = oStore.get("jwt");
+			console.log(oJWT);
+			var oRouter = this.getRouter();
+			$.ajax({url : backendUrl+"logout",
+                type: 'POST',
+                headers: {"Authorization": "Bearer "+oJWT},
+                contentType:"application/json; charset=utf-8",
+                dataType:"json",
+                success: function(result){
+                    jQuery.sap.storage.clear();
+					window.location.href = '../index.html';
+                },
+                statusCode: {    
+                    401: function(request,status,errorThrown){ 
+						window.location.href = '../index.html';
+
+                    },
+                    404: function(request,status,errorThrown){ 
+                        loginErrorToast.show();
+                    }
+                },
+                
+                });
+			
+		},
+
 		onParentItemSelect: function(event){
 			var oNavItem = event.getSource();
 			var router = this.getRouter();
-
+			
 			if(oNavItem.getItems().length == 0){
 				oNavItem.setHref("#/"+oNavItem.mProperties.key)
 			}

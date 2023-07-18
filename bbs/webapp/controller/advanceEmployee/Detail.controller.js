@@ -14,6 +14,7 @@ sap.ui.define([
 
         },
 		_onObjectMatched: function (oEvent) {
+			console.log(oEvent);
 			this.getView().bindElement({
 				path: "/data/" + window.decodeURIComponent(oEvent.getParameter("arguments").ID),
 				model: "advanceEmployee"

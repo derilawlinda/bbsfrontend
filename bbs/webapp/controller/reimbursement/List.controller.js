@@ -22,8 +22,8 @@ sap.ui.define([
 
     return Controller.extend("frontend.bbs.controller.reimbursement.List", {
        onInit: async function () {
-		var oModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/budgeting.json"));
-		this.getView().setModel(oModel,"budgeting");
+		var oModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/reimbursements.json"));
+		this.getView().setModel(oModel,"reimbursement");
 		var oBudgetingAccount = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/budgeting_accounts.json"));
 		this.getView().setModel(oBudgetingAccount,"budgeting_accounts");
 		var oAccount = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/accounts.json"));
@@ -58,7 +58,7 @@ sap.ui.define([
 	   onCreateButtonClick : function(oEvent) {
 		if (!this.createBudgetingDialog) {
 			this.createBudgetingDialog = this.loadFragment({
-				name: "frontend.bbs.view.budgeting.CreateForm"
+				name: "frontend.bbs.view.reimbursement.CreateForm"
 			});
 		}
 		this.createBudgetingDialog.then(function (oDialog) {
@@ -106,9 +106,9 @@ sap.ui.define([
 			
 			var oRouter = this.getOwnerComponent().getRouter();
 			var oPath = oEvent.getSource().getBindingContextPath();
-			var budget = oPath.split("/").slice(-1).pop();
-			oRouter.navTo("budgetingDetail",{
-				budgetID : budget
+			var reimburseID = oPath.split("/").slice(-1).pop();
+			oRouter.navTo("reimbursementDetail",{
+				ID : reimburseID
 			});
 
 			
@@ -128,6 +128,10 @@ sap.ui.define([
 			this.getView().setModel(f, 'new_budgeting_accounts');
 			f.refresh();
 		
+		},
+		onSelectionChange : function(oEvent){
+
+			console.log(oEvent.getParameters("selected"));
 		}
     });
  });

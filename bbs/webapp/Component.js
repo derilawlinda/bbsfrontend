@@ -46,6 +46,10 @@ sap.ui.define([
                 // set the device model
                 this.setModel(models.createDeviceModel(), "device");
                 window.backendUrl = this.getManifestEntry("/sap.app/dataSources/bbsbackend/uri");
+                window.BUDGET_APPROVAL_STATUS = {
+                    "APPROVED_BY_MANAGER" : 2, 
+                    "APPROVED_BY_DIRECTOR" : 3
+                };
                 this.setModel(models.createPillarModel(), "oPillarModel");
                 this.setModel(models.createClassificationModel(), "oClassificationModel");
                 this.setModel(models.createSubClassModel(), "oSubClassModel");
@@ -53,6 +57,7 @@ sap.ui.define([
                 this.setModel(models.createSalesOrderModel(), "salesOrder");
 			    this.setModel(models.createCompanyModel(),"companies");
 		        this.setModel(models.createAccountModel(),"accounts");
+
                 
             },
 
@@ -67,8 +72,8 @@ sap.ui.define([
                 return this._sContentDensityClass;
             },
 
-            checkToken : function(oJWT,navTo){
-                let router = this.getRouter();
+            checkToken : function (oJWT){
+
                 return new Promise(function(resolve, reject) {
                     $.ajaxSetup({
                         headers: { 'Authorization': 'Bearer ' + oJWT }
@@ -79,15 +84,19 @@ sap.ui.define([
                         contentType:"application/json; charset=utf-8",
                         dataType:"json",
                         success: function(result) {
-                            resolve({data: result});
-                            router.navTo(navTo);
+                            resolve({
+                                status : "Success",
+                                data: result});
                         },
                         error: function(xhr, status, error) {
                           if (xhr.status === 401) {
-                            console.log(status); 
+                            resolve({
+                                status : "Error",
+                                data: status});
                           }
                         }
-                    });
+                    })
+
                 });
 
                 

@@ -9,7 +9,7 @@ xmlns:table="sap.ui.table"
     
     <f:content>
       <Table 
-        id="_IDGenTable1" 
+        id="idBudgetTable" 
         inset="false"
         selectionChange="handleSelectionChange"
         items="{
@@ -60,16 +60,24 @@ xmlns:table="sap.ui.table"
 						    text="{budgeting>Code}"/>
                         <Text id="_IDGenText10"
 						    text="{budgeting>Name}" />
-                        <Text id="_IDGenText1"
-						    text="{budgeting>CreateDate}" />
+                        <Text id="_IDGenText1" 
+                        text="{
+                                path:'budgeting>CreateDate',
+                                formatter:'.dateFormatter'
+			}" />
                         <Text id="_IDGenText2" text="{budgeting>U_Project}" />
                         <Text id="_IDGenText3" text="{budgeting>U_Pillar}" />
                         <Text id="_IDGenText4" text="{budgeting>U_Classification}" />
                         <Text id="_IDGenText5" text="{budgeting>U_SubClass}" />
                         <ObjectNumber id="_IDGenObjectNumber1" 
                         	number="{
-								parts:[{path:'amount'}]
-							}"/>
+                                        parts: [
+                                                {path:'budgeting>U_TotalAmount'}, 
+                                                        'IDR',
+                                                        'TwoWay'], 
+                                        type:'sap.ui.model.type.Currency',
+                                        formatOptions: {showMeasure: true}
+                                }"/>
                         <Button id="_IDGenButton1" text="{path : 'budgeting>U_Status', formatter:'.textFormatter'}" type="{path:'budgeting>U_Status', formatter:'.buttonFormatter'}"/>
 
                 </cells>

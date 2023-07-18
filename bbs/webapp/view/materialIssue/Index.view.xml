@@ -22,6 +22,7 @@ xmlns:table="sap.ui.table"
 			<OverflowToolbar id="_IDGenOverflowToolbar1">
                 <Title id="title" text="Material Issue"/>
                 <ToolbarSpacer id="_IDGenToolbarSpacer1" ></ToolbarSpacer>
+                <Button id="_IDGenButton2" text=" + Create Material Issue" press="onCreateButtonClick" type="Emphasized"/>
             </OverflowToolbar>
             </headerToolbar>
             <columns>

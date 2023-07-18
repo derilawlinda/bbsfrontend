@@ -63,7 +63,7 @@
 				</tnt:NavigationList>
 				<tnt:fixedItem>
 					<tnt:NavigationList id="_IDGenNavigationList2" items="{path: '/fixedNavigation'}">
-						<tnt:NavigationListItem id="_IDGenNavigationListItem3" text="{title}" icon="{icon}" />
+						<tnt:NavigationListItem id="_IDGenNavigationListItem3" key="{key}" text="{title}" icon="{icon}" select="onLogoutItemSelect"    />
 					</tnt:NavigationList>
 				</tnt:fixedItem>
 			</tnt:SideNavigation>

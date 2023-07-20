@@ -30,7 +30,7 @@ xmlns:core="sap.ui.core"
 
                         <Label id="_IDGenLabel2" text="Name" />
 						<Input id="name" value="{budgetingDetailModel>/Name}"
-						editable="{= ${budgetingDetailModel>/U_Status} === 1  ? true : false }"></Input>
+						editable="{= ${materialRequestDetailModel>/U_Status} === 1  ? true : false }"></Input>
 
 						<Label id="_IDGenLabel3" text="Company" />
 						<ComboBox id="company" 

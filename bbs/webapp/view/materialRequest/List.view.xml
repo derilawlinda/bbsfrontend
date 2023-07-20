@@ -13,9 +13,9 @@ xmlns:table="sap.ui.table"
         inset="false"
         selectionChange="handleSelectionChange"
         items="{
-					path: 'materialRequest>/MR',
+					path: 'materialRequest>/value',
 					sorter: {
-						path: 'ID'
+						path: 'Code'
 					}
 				}">
          	<headerToolbar>
@@ -49,15 +49,15 @@ xmlns:table="sap.ui.table"
              <ColumnListItem id="_IDGenColumnListItem1" vAlign="Middle" type="Navigation" press=".onPress">
                 <cells>
                     	<ObjectIdentifier id="_IDGenObjectIdentifier1"
-						    text="{materialRequest>ID}"/>
+						    text="{materialRequest>Code}"/>
                         <Text id="_IDGenText1"
-						    text="{materialRequest>date}" />
-                        <Text id="_IDGenText2" text="{materialRequest>name}" />
+						    text="{materialRequest>CreateDate}" />
+                        <Text id="_IDGenText2" text="{materialRequest>Name}" />
                         <ObjectNumber id="_IDGenObjectNumber1" 
                         	number="{
-								parts:[{path:'materialRequest>amount'}]
+								parts:[{path:'materialRequest>U_Qty'}]
 							}"/>
-                        <Button id="_IDGenButton1" text="{materialRequest>status}" type="{path:'materialRequest>status', formatter:'.buttonFormatter'}"/>
+                        <Button id="_IDGenButton1" text="{path : 'materialRequest>U_Status', formatter:'.textFormatter'}" type="{path:'materialRequest>U_Status', formatter:'.buttonFormatter'}"/>
 
                 </cells>
              </ColumnListItem>

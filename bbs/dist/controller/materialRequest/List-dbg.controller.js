@@ -23,17 +23,29 @@ sap.ui.define([
 	var DialogType = mobileLibrary.DialogType;
     return Controller.extend("frontend.bbs.controller.materialRequest.List", {
        onInit: async function () {
-		var oModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/material_request.json"));
+		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
+		this.oJWT = oStore.get("jwt");
+		var oModel = new JSONModel();
+		oModel.loadData(backendUrl+"materialRequest/getMaterialRequests", null, true, "GET",false,false,{
+			'Authorization': 'Bearer ' + this.oJWT
+		});
 		this.getOwnerComponent().setModel(oModel,"materialRequest");
 		var oSalesOrderModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/sales_order.json"));
 		this.getView().setModel(oSalesOrderModel,"salesOrder");
 		var oCompaniesModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/companies.json"));
 		this.getView().setModel(oCompaniesModel,"companies");
+		var oMaterialRequestHeader = new sap.ui.model.json.JSONModel();
+		// var dynamicProperties = [];
+		// oBudgetingDetailModel.setData(dynamicProperties);
+		
+		this.getView().setModel(oMaterialRequestHeader,"materialRequestHeader");
+		var budgetRequestHeader = new sap.ui.model.json.JSONModel({
+			U_RemainingBudget : 0
+		});
+		this.getView().setModel(budgetRequestHeader,"budgetHeader");
 		var oBudgetingModel = new JSONModel();
-		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
-			var oJWT = oStore.get("jwt");
 		oBudgetingModel.loadData(backendUrl+"getBudget", null, true, "GET",false,false,{
-			'Authorization': 'Bearer ' + oJWT
+			'Authorization': 'Bearer ' + this.oJWT
 		});
 		this.getOwnerComponent().setModel(oBudgetingModel,"budgeting");
 		var oNewMaterialRequestItems = new sap.ui.model.json.JSONModel();
@@ -56,14 +68,13 @@ sap.ui.define([
 			});
 			this.getView().setModel(oCreateFragmentViewModel,"createFragmentViewModel");
 			oCreateFragmentViewModel.setProperty("/Date", new Date());
-			console.log(oCreateFragmentViewModel);
 			this.oDialog = oDialog;
 			this.oDialog.open();
 			var oMaterialRequestDetailModel = new sap.ui.model.json.JSONModel();
 			var dynamicProperties = [];
 			oMaterialRequestDetailModel.setData(dynamicProperties);
-			this.getView().setModel(oMaterialRequestDetailModel,"budgetingDetailModel");
-			this.getView().getModel("new_mr_items").setProperty("/itemRow", []);
+			this.getView().setModel(oMaterialRequestDetailModel,"materialRequestgDetailModel");
+			this.getView().getModel("new_mr_items").setProperty("/MATERIALREQLINESCollection", []);
 
 		}.bind(this));
 	   },
@@ -97,14 +108,26 @@ sap.ui.define([
 			
 		},
 		buttonFormatter: function(sStatus) {
-			if(sStatus == 'Approved'){
+			if(sStatus == 2){
 				return 'Accept'
-			}else if(sStatus == 'Pending'){
+			}else if(sStatus == 1){
 				return 'Attention'
 			}else{
 				return 'Reject'
 			}
 		  },
+		  textFormatter : function(sStatus){
+			if(sStatus == 1){
+				return 'Pending'
+			}else if(sStatus == 2){
+				return 'Approved by Manager'
+			}else if(sStatus == 3){
+				return 'Approved by Director'
+			}else{
+				return 'Rejected'
+			}
+		  
+		},
 		  onBudgetChange : function(oEvent){
 			var budgetingModel = this.getView().getModel("budgeting");
 			var budgetingData = budgetingModel.getData().value;
@@ -114,17 +137,54 @@ sap.ui.define([
 					return true;
 				}
 			});
-			var materialRequestHeader = new sap.ui.model.json.JSONModel(result);
-			this.getView().setModel(materialRequestHeader,"materialRequestHeader");
+			var approvedBudget = result.U_TotalAmount;
+			var usedBudget = result.BUDGETUSEDCollection;
+			let sumUsedBudget = 0;
+			for (let i = 0; i < usedBudget.length; i++ ) {
+				sumUsedBudget += usedBudget[i]["U_Amount"];
+			};
+			result.U_RemainingBudget = approvedBudget - sumUsedBudget;
+			var budgetRequestHeader = this.getView().getModel("budgetHeader");
+			budgetRequestHeader.setData(result);
 
 		  },
+		  onSaveButtonClick : function(oEvent) {
+			const oModel = this.getView().getModel("materialRequestHeader");
+			const oModelAccounts = this.getView().getModel("new_mr_items");
+			var materialRequestModel = this.getView().getModel("materialRequest");
+			oModel.setProperty("/METERIALREQLINESCollection", oModelAccounts.getData().MATERIALREQLINESCollection);
+			var oProperty = oModel.getProperty("/");
+			var view = this.getView();
+			var oDialog = this.oDialog;
+			var oJWT = this.oJWT;
+
+			$.ajax({
+				type: "POST",
+				data: JSON.stringify(oProperty),
+				crossDomain: true,
+				url: backendUrl+'materialRequest/createMaterialRequest',
+				contentType: "application/json",
+				success: function (res, status, xhr) {
+					  //success code
+					oDialog.close();
+					materialRequestModel.loadData(backendUrl+"materialRequest/getMaterialRequests", null, true, "GET",false,false,{
+						'Authorization': 'Bearer ' + oJWT
+					});
+					view.getModel('materialRequest').refresh();
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+				  	console.log("Got an error response: " + textStatus + errorThrown);
+				}
+			  });
+			// alert(JSON.stringify(oProperty));
+	   },
 		  onAddPress : function(oEvent){
 			const oModel = this.getView().getModel("new_mr_items");
 			var oModelData = oModel.getData();
 			var oNewObject = {
-				"account_code": "",
-				"item_name": "",
-				"amount": ""
+				"U_AccountCode": "",
+				"U_ItemCode": "",
+				"U_Qty": ""
 			};
 			oModelData.MATERIALREQLINESCollection.push(oNewObject);
 			var f = new sap.ui.model.json.JSONModel(oModelData);

@@ -23,10 +23,10 @@ sap.ui.define([
 		// }
 		
 		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
-		var oJWT = oStore.get("jwt");
+		this.oJWT = oStore.get("jwt");
 		var oModel = new JSONModel();
 		oModel.loadData(backendUrl+"getBudget", null, true, "GET",false,false,{
-			'Authorization': 'Bearer ' + oJWT
+			'Authorization': 'Bearer ' + this.oJWT
 		});
 		oModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
 			this.getView().byId("idBudgetTable").setBusy(false);
@@ -89,10 +89,12 @@ sap.ui.define([
 	   onSaveButtonClick : function(oEvent) {
 			const oModel = this.getView().getModel("budgetingDetailModel");
 			const oModelAccounts = this.getView().getModel("new_budgeting_accounts");
+			var budgetingModel = this.getView().getModel("budgeting");
 			oModel.setProperty("/BUDGETREQLINESCollection", oModelAccounts.getData().BUDGETREQLINESCollection);
 			var oProperty = oModel.getProperty("/");
 			var view = this.getView();
 			var oDialog = this.oDialog;
+			var oJWT = this.oJWT;
 
 			$.ajax({
 				type: "POST",
@@ -102,8 +104,10 @@ sap.ui.define([
 				contentType: "application/json",
 				success: function (res, status, xhr) {
 					  //success code
-					console.log("Success");
 					oDialog.close();
+					budgetingModel.loadData(backendUrl+"getBudget", null, true, "GET",false,false,{
+						'Authorization': 'Bearer ' + oJWT
+					});
 					view.getModel('budgeting').refresh();
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
@@ -119,7 +123,7 @@ sap.ui.define([
 			this.oDialog.close();
 		},
 		buttonFormatter: function(sStatus) {
-			if(sStatus == 'Approved'){
+			if(sStatus == 2 || sStatus == 3){
 				return 'Accept'
 			}else if(sStatus == 1){
 				return 'Attention'

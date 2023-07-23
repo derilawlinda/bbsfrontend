@@ -20,9 +20,10 @@ sap.ui.loader.config({
 sap.ui.define([
         "sap/ui/core/UIComponent",
         "sap/ui/Device",
-        "frontend/bbs/model/models"
+        "frontend/bbs/model/models",
+        "sap/ui/model/json/JSONModel",
     ],
-    function (UIComponent, Device, models) {
+    function (UIComponent, Device, models,JSONModel) {
         "use strict";
 
         return UIComponent.extend("frontend.bbs.Component", {
@@ -57,6 +58,9 @@ sap.ui.define([
                 this.setModel(models.createSalesOrderModel(), "salesOrder");
 			    this.setModel(models.createCompanyModel(),"companies");
 		        this.setModel(models.createAccountModel(),"accounts");
+                // this.checkToken();
+
+                this.router = this.getRouter();
 
                 
             },
@@ -72,31 +76,32 @@ sap.ui.define([
                 return this._sContentDensityClass;
             },
 
-            checkToken : function (oJWT){
-
-                return new Promise(function(resolve, reject) {
-                    $.ajaxSetup({
-                        headers: { 'Authorization': 'Bearer ' + oJWT }
-                    });
-                    $.ajax({
-                        url: backendUrl+"checkToken",
-                        method: 'POST',
-                        contentType:"application/json; charset=utf-8",
-                        dataType:"json",
-                        success: function(result) {
-                            resolve({
-                                status : "Success",
-                                data: result});
-                        },
-                        error: function(xhr, status, error) {
-                          if (xhr.status === 401) {
-                            resolve({
-                                status : "Error",
-                                data: status});
-                          }
-                        }
-                    })
-
+            checkToken : async function (oJWT,route){
+                
+                var oRouter = this.router;
+                var that = this;
+                $.ajaxSetup({
+                    headers: { 'Authorization': 'Bearer ' + oJWT }
+                });
+                $.ajax({
+                    url: backendUrl+"checkToken",
+                    method: 'POST',
+                    contentType:"application/json; charset=utf-8",
+                    dataType:"json",
+                    success: function(result) {
+                        console.log(result);
+                        var oUserModel = new JSONModel({
+                            userName: result.user.name,
+                            roleId : result.user.role_id,
+                            roleName : result.role[0].name
+                        });
+                        that.setModel(oUserModel,"userModel");
+                    },
+                    error: function(xhr, status, error) {
+                      if (xhr.status === 401) {
+                        oRouter.navTo("Login", {}, true /*no history*/);
+                      }
+                    }
                 });
 
                 

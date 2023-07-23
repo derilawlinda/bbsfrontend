@@ -7,9 +7,8 @@ xmlns:form="sap.ui.layout.form"
 xmlns:table="sap.ui.table"
 xmlns:core="sap.ui.core"
 >
-  <Page  id="_IDGenDynamicPage1" showNavButton="true"
-		navButtonPress=".onNavBack"
-		showFooter="{= ${budgetingDetailModel>/U_Status} === 1 ? true : false }">
+  <Page  id="budgetingPageId" showNavButton="true"
+		navButtonPress=".onNavBack">
     
     <content>
       <VBox class="sapUiSmallMargin" id="formContainer">
@@ -30,21 +29,23 @@ xmlns:core="sap.ui.core"
 
                         <Label id="_IDGenLabel2" text="Name" />
 						<Input id="name" value="{budgetingDetailModel>/Name}"
-						editable="{= ${materialRequestDetailModel>/U_Status} === 1  ? true : false }"></Input>
+						editable="{viewModel>/editable}"></Input>
 
 						<Label id="_IDGenLabel3" text="Company" />
 						<ComboBox id="company" 
 									value="{budgetingDetailModel>/U_Company}"
 									maxWidth="8rem"
 									items="{companies>/Items}"
-									editable="{= ${budgetingDetailModel>/U_Status} === 1 ? true : false }">
+									editable="{viewModel>/editable}"
+						>
 									<core:Item id="_IDGenItem441" key="{companies>Value}" text="{companies>Value}" />
 						</ComboBox>
 
 						<Label id="_IDGenLabel4" text="Sales Order" />
 
 						<ComboBox id="SalesOrder" 
-								  editable="{= ${budgetingDetailModel>/U_Status} === 1 ? true : false }"
+								  editable="{viewModel>/editable}"
+								  
 									selectedKey="{budgetingDetailModel>/sales_order}"
 									maxWidth="8rem"
 									items="{salesOrder>/Items}">
@@ -66,7 +67,7 @@ xmlns:core="sap.ui.core"
 
                         <Label id="_IDGenLabel5" text="Project" />
 						<Select id="project"
-						editable="{= ${budgetingDetailModel>/U_Status} === 1 ? true : false }" >
+						editable="{viewModel>/editable}" >
                             <layoutData>
 								<form:ColumnElementData id="_IDGenColumnElementData1" cellsSmall="12" cellsLarge="8" />
 							</layoutData>
@@ -81,7 +82,7 @@ xmlns:core="sap.ui.core"
 						<ComboBox id="CreatePillar" 
 									items="{oPillarModel>/}"
 									selectedKey="{budgetingDetailModel>/U_Pillar}"
-									editable="{= ${budgetingDetailModel>/U_Status} === 1 ? true : false }">
+									editable="{viewModel>/editable}">
 									
 									<core:Item id="_IDGenItem442" key="{oPillarModel>text}" text="{oPillarModel>text}" />
 						</ComboBox>
@@ -92,7 +93,7 @@ xmlns:core="sap.ui.core"
 						<ComboBox id="CreateClassification" 
 									items="{oClassificationModel>/}"
 									selectedKey="{budgetingDetailModel>/U_Classification}"
-									editable="{= ${budgetingDetailModel>/U_Status} === 1 ? true : false }">
+									editable="{viewModel>/editable}">
 									<core:Item id="_IDGenItem443" key="{oClassificationModel>text}" text="{oClassificationModel>text}" />
 						</ComboBox>
 
@@ -101,7 +102,7 @@ xmlns:core="sap.ui.core"
 						<ComboBox id="CreateSubClassification" 
 									items="{oSubClassModel>/}"
 									selectedKey="{budgetingDetailModel>/U_SubClass}"
-									editable="{= ${budgetingDetailModel>/U_Status} === 1 ? true : false }">
+									editable="{viewModel>/editable}">
 									<core:Item id="_IDGenItem444" key="{oSubClassModel>text}" text="{oSubClassModel>text}" />
 						</ComboBox>
 						
@@ -110,7 +111,7 @@ xmlns:core="sap.ui.core"
 						<ComboBox id="CreateSubClassification2" 
 									items="{oSubClass2Model>/}"
 									selectedKey="{budgetingDetailModel>/U_SubClass2}"
-									editable="{= ${budgetingDetailModel>/U_Status} === 1 ? true : false }">
+									editable="{viewModel>/editable}">
 									<core:Item key="{oSubClass2Model>text}" text="{oSubClass2Model>text}" />
 						</ComboBox>
 						
@@ -141,6 +142,7 @@ xmlns:core="sap.ui.core"
 								filterSecondaryValues= "true"
 								selectedKey="{budgetingDetailModel>U_AccountCode}"
 								value="{budgetingDetailModel>U_AccountCode}"
+								editable="{viewModel>/editable}"
 								items="{
 								path: 'accounts>/data',
 								templateShareable: true
@@ -165,7 +167,7 @@ xmlns:core="sap.ui.core"
 							<Input
 								id="inputNumber"
 								placeholder="Enter number"
-								
+								editable="{viewModel>/editable}"
 								value="{
 									parts: [
 										{path:'budgetingDetailModel>U_Amount'}, 
@@ -191,9 +193,9 @@ xmlns:core="sap.ui.core"
 	<footer  >
 				<Toolbar>
 					<ToolbarSpacer />
-                    <Button type="Emphasized" text="Save Budget" press="onSaveButtonClick" visible="{= ${userModel>/roleName} === 'Sales' || ${userModel>/roleName} === 'Finance' ? true : false }" />
-					<Button type="Accept" text="Approve" press="onApproveButtonClick" visible="{= ${userModel>/roleName} === 'Manager' || ${userModel>/roleName} === 'Director' ? true : false }" />
-					<Button type="Reject" text="Reject" press="onRejectButtonClick" visible="{= ${userModel>/roleName} === 'Manager' || ${userModel>/roleName} === 'Director' ? true : false }" />
+                    <Button type="Emphasized" text="Save Budget" press="onSaveButtonClick" visible="{viewModel>/is_requestor}" />
+					<Button type="Accept" text="Approve" press="onApproveButtonClick" visible="{viewModel>/is_approver}" />
+					<Button type="Reject" text="Reject" press="onRejectButtonClick" visible="{viewModel>/is_approver}" />
 				</Toolbar>
 		</footer>
   </Page>

@@ -15,28 +15,45 @@ sap.ui.define([
 		this.getView().byId("idBudgetTable").setBusy(true);
 		var currentRoute = this.getRouter().getHashChanger().getHash();
 		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
-		var oJWT = oStore.get("jwt");
-		// var userData = await this.getOwnerComponent().checkToken(oJWT,currentRoute);
-		// if(userData.status == "Error"){
-		// 	window.location.href = "../index.html"
-		// 	return;
-		// }
-		
-		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 		this.oJWT = oStore.get("jwt");
 		var oModel = new JSONModel();
 		oModel.loadData(backendUrl+"getBudget", null, true, "GET",false,false,{
 			'Authorization': 'Bearer ' + this.oJWT
 		});
+		var viewModel = new sap.ui.model.json.JSONModel({
+			showCreateButton : true
+		});
+		this.getView().setModel(viewModel,"viewModel");
 		oModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
 			this.getView().byId("idBudgetTable").setBusy(false);
 		}.bind(this));
 		this.getOwnerComponent().setModel(oModel,"budgeting");
 		var oBudgetingAccount = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/budgeting_accounts.json"));
 		this.getView().setModel(oBudgetingAccount,"budgeting_accounts");
+
+		var userModel = this.getOwnerComponent().getModel("userModel");
+		if(userModel === undefined){
+			const bus = this.getOwnerComponent().getEventBus();
+			bus.subscribe("username", "checktoken", this.toggleCreateButton, this);
+		}else{
+			var userData = userModel.getData();
+			var a = { "userName" : userData.user.name,
+			  "roleId" : userData.user.role_id,
+			  "roleName" : userData.role[0].name,
+			  "status" : "success"
+			};
+			this.toggleCreateButton("username","checkToken",a);
+		}
 		
 		
 	},
+
+	toggleCreateButton : function(channelId, eventId, parametersMap){
+		console.log(parametersMap);
+			if(parametersMap.roleId == 4 || parametersMap.roleId == 5){
+				this.getView().getModel("viewModel").setProperty("/showCreateButton",false)
+			}
+	   },
 
 	   search : function (arr, term) {
 		
@@ -96,25 +113,25 @@ sap.ui.define([
 			var oDialog = this.oDialog;
 			var oJWT = this.oJWT;
 
-			$.ajax({
-				type: "POST",
-				data: JSON.stringify(oProperty),
-				crossDomain: true,
-				url: backendUrl+'budget/createBudget',
-				contentType: "application/json",
-				success: function (res, status, xhr) {
-					  //success code
-					oDialog.close();
-					budgetingModel.loadData(backendUrl+"getBudget", null, true, "GET",false,false,{
-						'Authorization': 'Bearer ' + oJWT
-					});
-					view.getModel('budgeting').refresh();
-				},
-				error: function (jqXHR, textStatus, errorThrown) {
-				  	console.log("Got an error response: " + textStatus + errorThrown);
-				}
-			  });
-			// alert(JSON.stringify(oProperty));
+			// $.ajax({
+			// 	type: "POST",
+			// 	data: JSON.stringify(oProperty),
+			// 	crossDomain: true,
+			// 	url: backendUrl+'budget/createBudget',
+			// 	contentType: "application/json",
+			// 	success: function (res, status, xhr) {
+			// 		  //success code
+			// 		oDialog.close();
+			// 		budgetingModel.loadData(backendUrl+"getBudget", null, true, "GET",false,false,{
+			// 			'Authorization': 'Bearer ' + oJWT
+			// 		});
+			// 		view.getModel('budgeting').refresh();
+			// 	},
+			// 	error: function (jqXHR, textStatus, errorThrown) {
+			// 	  	console.log("Got an error response: " + textStatus + errorThrown);
+			// 	}
+			//   });
+			alert(JSON.stringify(oProperty));
 	   },
 	    getRouter : function () {
 			return sap.ui.core.UIComponent.getRouterFor(this);
@@ -163,10 +180,10 @@ sap.ui.define([
 		onPress: function (oEvent) {
 			
 			var oRouter = this.getOwnerComponent().getRouter();
-			var oPath = oEvent.getSource().getBindingContextPath();
-			var budget = oPath.split("/").slice(-1).pop();
+			var oRow = oEvent.getSource();
+			var id = oRow.getCells()[0].getText();
 			oRouter.navTo("budgetingDetail",{
-				budgetID : budget
+				budgetID : id
 			});
 
 			

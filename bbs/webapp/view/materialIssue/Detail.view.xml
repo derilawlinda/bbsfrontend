@@ -7,9 +7,9 @@ xmlns:form="sap.ui.layout.form"
 xmlns:table="sap.ui.table"
 xmlns:core="sap.ui.core"
 >
-  <Page  id="_IDGenDynamicPage1" showNavButton="true"
+  <Page  id="materialIssuePage" showNavButton="true"
 		navButtonPress=".onNavBack"
-		showFooter="{= ${materialIssue>status} === 'Requested' ? true : false }">
+		showFooter="{= ${materialIssueDetailModel>U_Status} === 1 ? true : false }">
     
     <content>
       <VBox class="sapUiSmallMargin" id="formContainer">
@@ -22,90 +22,137 @@ xmlns:core="sap.ui.core"
 					<form:content>
                     <core:Title id="_IDGenTitle1" text="Information" />
 
+                        <Label id="_IDGenLabel101" text="ID" />
+						<Text id="_IDGenText101" text="{materialIssueDetailModel>/Code}" />
+
                         <Label id="_IDGenLabel1" text="Date" />
-						<Text id="_IDGenText1" text="{materialIssue>date}" />
+						<Text id="_IDGenText1" text="{materialIssueDetailModel>/CreateDate}" />
 
                         <Label id="_IDGenLabel2" text="Name" />
-						<Input id="name" value="{materialIssue>name}"
-						editable="{= ${materialIssue>status} === 'Pending' ? true : false }"></Input>
+						<Input id="name" value="{materialIssueDetailModel>/Name}"
+						editable="{viewModel>/editable}"></Input>
 
 						<Label id="_IDGenLabel3" text="Company" />
-						<ComboBox id="company" 
-									value="{materialIssue>company}"
-									maxWidth="8rem"
-									items="{companies>/Items}"
-									editable="{= ${materialIssue>status} === 'Pending' ? true : false }">
-									<core:Item id="_IDGenItem441" key="{companies>Value}" text="{companies>Value}" />
-						</ComboBox>
+						<Text id="_IDGenText5"  text="{budget>/U_Company}"/>
 
 						<Label id="_IDGenLabel4" text="Sales Order" />
-
-						<ComboBox id="SalesOrder" 
-								  editable="{= ${materialIssue>status} === 'Pending' ? true : false }"
-									selectedKey="{materialIssue>sales_order}"
-									maxWidth="8rem"
-									items="{salesOrder>/Items}">
-									<core:Item id="_IDGenItem111" key="{salesOrder>Value}" text="{salesOrder>Value}" />
-						</ComboBox>
+						<Text id="_IDGenText4"  text="{budget>/U_SalesOrder}"/>
 						
 						 <Label id="_IDGenLabelAmunt" text="Amount" />
-						<Input id="amount" value="{materialIssue>amount}"
-						editable="{= ${materialIssue>status} === 'Pending' ? true : false }"></Input>
+						<Text text="{materialIssueDetailModel>/U_Amount}"/>
 
 
 						<core:Title id="_IDGenTitle2" text="Category Information" />
 
-                        <Label id="_IDGenLabel5" text="Project" />
-						<Select id="project"
-						editable="{= ${materialIssue>status} === 'Pending' ? true : false }" >
-                            <layoutData>
-								<form:ColumnElementData id="_IDGenColumnElementData1" cellsSmall="12" cellsLarge="8" />
-							</layoutData>
-							<items>
-								<core:Item id="_IDGenItem5" text="BLIF 2023" key="BLIF2023" />
-								<core:Item id="_IDGenItem6" text="Finance Dept." key="FICO" />
-							</items>
-						</Select>
+						<Label text="Budget#" />
+						<ComboBox width="100%"
+								change="onBudgetChange"
+								value="{materialIssueDetailModel>/U_BudgetCode}"
+								selectionChange="onSelectionChange"
+								showSecondaryValues="true"
+								editable="{viewModel>/editable}"
+								items="{
+								path: 'budgeting>/value',
+								templateShareable: false
+								}"
+							>
+
+								<core:ListItem
+									key="{budgeting>Code}"
+									text="{budgeting>Code}"
+									additionalText="{budgeting>Name}"
+								/>
+
+						</ComboBox>
+						
+						<Label id="_IDGenLabel5" text="Project" />
+						<Text text="{budget>/U_Project}"/>
 
                         <Label id="_IDGenLabel441" text="Pillar" />
-
-						<ComboBox id="CreatePillar" 
-									items="{oPillarModel>/}"
-									selectedKey="{materialIssue>pillar}"
-									editable="{= ${materialIssue>status} === 'Pending' ? true : false }">
-									
-									<core:Item id="_IDGenItem442" key="{oPillarModel>text}" text="{oPillarModel>text}" />
-						</ComboBox>
+						<Text text="{budget>/U_Pillar}"/>
 
 
                        <Label id="_IDGenLabel442" text="Classification" />
-
-						<ComboBox id="CreateClassification" 
-									items="{oClassificationModel>/}"
-									selectedKey="{materialIssue>class}"
-									editable="{= ${materialIssue>status} === 'Pending' ? true : false }">
-									<core:Item id="_IDGenItem443" key="{oClassificationModel>text}" text="{oClassificationModel>text}" />
-						</ComboBox>
+						<Text text="{budget>/U_Classification}"/>
 
                        <Label id="_IDGenLabel443" text="Subclass" />
 
-						<ComboBox id="CreateSubClassification" 
-									items="{oSubClassModel>/}"
-									selectedKey="{materialIssue>subclass}"
-									editable="{= ${materialIssue>status} === 'Pending' ? true : false }">
-									<core:Item id="_IDGenItem444" key="{oSubClassModel>text}" text="{oSubClassModel>text}" />
-						</ComboBox>
+						<Text text="{budget>/U_SubClass}"/>
 						
                         <Label id="_IDGenLabel444" text="Subclass2" />
-
-						<ComboBox id="CreateSubClassification2" 
-									items="{oSubClass2Model>/}"
-									selectedKey="{materialIssue>subclass2}"
-									editable="{= ${materialIssue>status} === 'Pending' ? true : false }">
-									<core:Item key="{oSubClass2Model>text}" text="{oSubClass2Model>text}" />
-						</ComboBox>
+						<Text text="{budget>/U_SubClass2}"/>
 					</form:content>
 				</form:SimpleForm>
+
+				<table:Table id="tableId" 
+                        rows="{materialIssueDetailModel>/MATERIALISSUELINESCollection}"
+						visibleRowCount="7"
+						 
+				>
+
+				<table:extension>
+					<OverflowToolbar  class="sapMTBHeader-CTX">
+						<Title text="Items"/>
+					</OverflowToolbar>
+				</table:extension>
+		                  
+				<table:columns>
+					<table:Column >
+						<Text text="Account Code" />
+						<table:template>
+							<ComboBox width="100%"
+								showSecondaryValues= "true"
+								filterSecondaryValues= "true"
+								selectedKey="{materialIssueDetailModel>U_AccountCode}"
+								value="{materialIssueDetailModel>U_AccountCode}"
+								editable="{viewModel>/editable}"
+								items="{
+								path: 'accounts>/data',
+								templateShareable: true
+								}"
+							>
+
+								<core:ListItem
+									key="{accounts>account_code}"
+									text="{accounts>account_code}"
+									additionalText="{accounts>account_name}"
+								/>
+
+							</ComboBox>
+						</table:template>
+					</table:Column>
+
+					<table:Column >
+						<Text text="Item Name" />
+						<table:template>
+							<Input
+								type="Text"
+								placeholder="Enter item"
+								editable="{viewModel>/editable}"
+								value="{materialIssueDetailModel>U_ItemCode}"
+								ariaLabelledBy="InputNumberLabel"/>
+						</table:template>
+					</table:Column>
+
+					
+
+					<table:Column >
+						<Text text="Quantity" />
+						<table:template>
+							<Input
+								type="Number"
+								placeholder="Enter Quantity"
+								editable="{viewModel>/editable}"
+								value="{materialIssueDetailModel>U_Qty}"
+								ariaLabelledBy="InputNumberLabel"
+								/>
+						</table:template>
+					</table:Column>
+
+				</table:columns>
+
+				
+                </table:Table>
 
                 
 			</VBox>
@@ -113,7 +160,7 @@ xmlns:core="sap.ui.core"
 	<footer  >
 				<Toolbar>
 					<ToolbarSpacer />
-                    <Button type="Emphasized" text="Issue" press="onSaveButtonClick" />
+                    <Button type="Emphasized" text="Save" press="onSaveButtonClick" />
 				    <Button text="Cancel" press="._closeDialog" />
 				</Toolbar>
 		</footer>

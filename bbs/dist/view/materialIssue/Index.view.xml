@@ -9,13 +9,13 @@ xmlns:table="sap.ui.table"
     
     <f:content>
       <Table 
-        id="_IDGenTable1" 
+        id="materialIssueTableID" 
         inset="false"
         selectionChange="handleSelectionChange"
         items="{
-					path: 'materialIssue>/MI',
+					path: 'materialIssue>/value',
 					sorter: {
-						path: 'ID'
+						path: 'Code'
 					}
 				}">
          	<headerToolbar>
@@ -49,15 +49,15 @@ xmlns:table="sap.ui.table"
              <ColumnListItem id="_IDGenColumnListItem1" vAlign="Middle" type="Navigation" press=".onPress">
                 <cells>
                     	<ObjectIdentifier id="_IDGenObjectIdentifier1"
-						    text="{materialIssue>ID}"/>
+						    text="{materialIssue>Code}"/>
                         <Text id="_IDGenText1"
-						    text="{materialIssue>date}" />
-                        <Text id="_IDGenText2" text="{materialIssue>name}" />
+						    text="{materialIssue>CreateDate}" />
+                        <Text id="_IDGenText2" text="{materialIssue>Name}" />
                         <ObjectNumber id="_IDGenObjectNumber1" 
                         	number="{
-								parts:[{path:'materialIssue>amount'}]
+								parts:[{path:'materialIssue>U_Qty'}]
 							}"/>
-                        <Button id="_IDGenButton1" text="{materialIssue>status}" type="{path:'materialIssue>status', formatter:'.buttonFormatter'}"/>
+                        <Button id="_IDGenButton1" text="{path : 'materialIssue>U_Status', formatter:'.textFormatter'}" type="{path:'materialIssue>U_Status', formatter:'.buttonFormatter'}"/>
 
                 </cells>
              </ColumnListItem>

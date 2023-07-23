@@ -23,6 +23,8 @@ sap.ui.define([
 	var DialogType = mobileLibrary.DialogType;
     return Controller.extend("frontend.bbs.controller.materialRequest.List", {
        onInit: async function () {
+		this.getView().byId("materialRequestTableID").setBusy(true);
+		var currentRoute = this.getRouter().getHashChanger().getHash();
 		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 		this.oJWT = oStore.get("jwt");
 		var oModel = new JSONModel();
@@ -30,11 +32,19 @@ sap.ui.define([
 			'Authorization': 'Bearer ' + this.oJWT
 		});
 		this.getOwnerComponent().setModel(oModel,"materialRequest");
+		oModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
+			this.getView().byId("materialRequestTableID").setBusy(false);
+		}.bind(this));
+
 		var oSalesOrderModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/sales_order.json"));
 		this.getView().setModel(oSalesOrderModel,"salesOrder");
 		var oCompaniesModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/companies.json"));
 		this.getView().setModel(oCompaniesModel,"companies");
 		var oMaterialRequestHeader = new sap.ui.model.json.JSONModel();
+		var viewModel = new sap.ui.model.json.JSONModel({
+			showCreateButton : true
+		});
+		this.getView().setModel(viewModel,"viewModel");
 		// var dynamicProperties = [];
 		// oBudgetingDetailModel.setData(dynamicProperties);
 		
@@ -48,15 +58,37 @@ sap.ui.define([
 			'Authorization': 'Bearer ' + this.oJWT
 		});
 		this.getOwnerComponent().setModel(oBudgetingModel,"budgeting");
+
+		//NEW MR ITEM MODEL
 		var oNewMaterialRequestItems = new sap.ui.model.json.JSONModel();
 		this.getView().setModel(oNewMaterialRequestItems,"new_mr_items");
 		this.getView().getModel("new_mr_items").setProperty("/MATERIALREQLINESCollection", []);
+
+		var userModel = this.getOwnerComponent().getModel("userModel");
+		if(userModel === undefined){
+			const bus = this.getOwnerComponent().getEventBus();
+			bus.subscribe("username", "checktoken", this.toggleCreateButton, this);
+		}else{
+			var userData = userModel.getData();
+			var a = { "userName" : userData.user.name,
+			  "roleId" : userData.user.role_id,
+			  "roleName" : userData.role[0].name,
+			  "status" : "success"
+			};
+			this.toggleCreateButton("username","checkToken",a);
+		}
 		
 		
 
        },
+
+	   toggleCreateButton : function(channelId, eventId, parametersMap){
+		console.log(parametersMap);
+			if(parametersMap.roleId == 4 || parametersMap.roleId == 5){
+				this.getView().getModel("viewModel").setProperty("/showCreateButton",false)
+			}
+	   },
 	   onCreateButtonClick : function(oEvent) {
-		console.log(this.getView().getModel("budgeting"));
 		if (!this.createMaterialRequestDialog) {
 			this.createMaterialRequestDialog = this.loadFragment({
 				name: "frontend.bbs.view.materialRequest.CreateForm"
@@ -67,7 +99,6 @@ sap.ui.define([
 				Date : new Date()
 			});
 			this.getView().setModel(oCreateFragmentViewModel,"createFragmentViewModel");
-			oCreateFragmentViewModel.setProperty("/Date", new Date());
 			this.oDialog = oDialog;
 			this.oDialog.open();
 			var oMaterialRequestDetailModel = new sap.ui.model.json.JSONModel();
@@ -99,12 +130,11 @@ sap.ui.define([
 		},
 		onPress: function (oEvent) {
 			var oRouter = this.getOwnerComponent().getRouter();
-			var oPath = oEvent.getSource().getBindingContextPath();
-			var id = oPath.split("/").slice(-1).pop();
+			var oRow = oEvent.getSource();
+			var id = oRow.getCells()[0].getText();
 			oRouter.navTo("materialRequestDetail",{
 				materialRequestID : id
 			});
-
 			
 		},
 		buttonFormatter: function(sStatus) {
@@ -191,6 +221,24 @@ sap.ui.define([
 			this.getView().setModel(f, 'new_mr_items');
 			f.refresh();
 		
+		},
+		textFormatter : function(sStatus){
+			if(sStatus == 1){
+				return 'Pending'
+			}else if(sStatus == 2){
+				return 'Approved by Manager'
+			}else if(sStatus == 3){
+				return 'Approved by Director'
+			}else{
+				return 'Rejected'
+			}
+		  
+		},
+		dateFormatter : function(date){
+			var unformattedDate = new Date(date);
+			var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({pattern : "YYYY-MM-dd" });   
+			var dateFormatted = dateFormat.format(unformattedDate);
+			return dateFormatted;
 		}
     });
  });

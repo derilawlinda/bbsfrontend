@@ -7,9 +7,9 @@ xmlns:form="sap.ui.layout.form"
 xmlns:table="sap.ui.table"
 xmlns:core="sap.ui.core"
 >
-  <Page  id="_IDGenDynamicPage1" showNavButton="true"
+  <Page  id="materialRequestPageID" showNavButton="true"
 		navButtonPress=".onNavBack"
-		showFooter="{= ${materialRequest>status} === 'Pending' ? true : false }">
+		showFooter="{viewModel>/showFooter}">
     
     <content>
       <VBox class="sapUiSmallMargin" id="formContainer">
@@ -30,7 +30,7 @@ xmlns:core="sap.ui.core"
 
                         <Label id="_IDGenLabel2" text="Name" />
 						<Input id="name" value="{materialRequestDetailModel>/Name}"
-						editable="{= ${materialRequestDetailModel>/U_Status} === 1  ? true : false }"></Input>
+						editable="{viewModel>/editable}"></Input>
 
 						<Label id="_IDGenLabel3" text="Company" />
 						<Text id="_IDGenText5"  text="{budget>/U_Company}"/>
@@ -47,6 +47,7 @@ xmlns:core="sap.ui.core"
 						<Label text="Budget#" />
 						<ComboBox width="100%"
 								change="onBudgetChange"
+								editable="{viewModel>/editable}"
 								value="{materialRequestDetailModel>/U_BudgetCode}"
 								selectionChange="onSelectionChange"
 								showSecondaryValues="true"
@@ -102,6 +103,7 @@ xmlns:core="sap.ui.core"
 							<ComboBox width="100%"
 								showSecondaryValues= "true"
 								filterSecondaryValues= "true"
+								editable="{viewModel>/editable}"
 								selectedKey="{materialRequestDetailModel>U_AccountCode}"
 								value="{materialRequestDetailModel>U_AccountCode}"
 								items="{
@@ -112,7 +114,7 @@ xmlns:core="sap.ui.core"
 
 								<core:ListItem
 									key="{accounts>account_code}"
-									text="{accounts>account_code}"
+									text="{accounts>account_code} - {accounts>account_name}"
 									additionalText="{accounts>account_name}"
 								/>
 
@@ -125,6 +127,7 @@ xmlns:core="sap.ui.core"
 						<table:template>
 							<Input
 								type="Text"
+								editable="{viewModel>/editable}"
 								placeholder="Enter item"
 								value="{materialRequestDetailModel>U_ItemCode}"
 								ariaLabelledBy="InputNumberLabel"/>
@@ -139,6 +142,7 @@ xmlns:core="sap.ui.core"
 							<Input
 								type="Number"
 								placeholder="Enter Quantity"
+								editable="{viewModel>/editable}"
 								value="{materialRequestDetailModel>U_Qty}"
 								ariaLabelledBy="InputNumberLabel"
 								/>
@@ -156,8 +160,10 @@ xmlns:core="sap.ui.core"
 	<footer  >
 				<Toolbar>
 					<ToolbarSpacer />
-                    <Button type="Emphasized" text="Save" press="onSaveButtonClick" />
-				    <Button text="Cancel" press="._closeDialog" />
+					<Button type="Emphasized" text="Save MR" press="onSaveButtonClick" visible="{viewModel>/is_requestor}" />
+					<Button type="Accept" text="Approve" press="onApproveButtonClick" visible="{viewModel>/is_approver}" />
+					<Button type="Reject" text="Reject" press="onRejectButtonClick" visible="{viewModel>/is_approver}" />
+              
 				</Toolbar>
 		</footer>
   </Page>

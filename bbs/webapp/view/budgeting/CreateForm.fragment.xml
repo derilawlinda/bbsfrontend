@@ -130,19 +130,16 @@
 						<Text text="Account Code" />
 						<table:template>
 							<ComboBox width="100%"
-								showSecondaryValues= "true"
-								filterSecondaryValues= "true"
-								value="{new_budgeting_accounts>U_AccountCode}"
+								selectedKey="{new_budgeting_accounts>U_AccountCode}"
 								items="{
 								path: 'accounts>/data',
 								templateShareable: false
 								}"
 							>
 
-								<core:ListItem
+								<core:Item
 									key="{accounts>account_code}"
-									text="{accounts>account_code}"
-									additionalText="{accounts>account_name}"
+									text="{accounts>account_code} - {accounts>account_name}"
 								/>
 
 							</ComboBox>

@@ -19,7 +19,7 @@ xmlns:table="sap.ui.table"
 			<OverflowToolbar id="_IDGenOverflowToolbar1">
                 <Title id="title" text="Budgeting"/>
                 <ToolbarSpacer id="_IDGenToolbarSpacer1" ></ToolbarSpacer>
-                <Button id="_IDGenButton2" text=" + Create Budget" press="onCreateButtonClick" type="Emphasized"/>
+                <Button id="_IDGenButton2" visible="{viewModel>/showCreateButton}" text=" + Create Budget" press="onCreateButtonClick" type="Emphasized"/>
             </OverflowToolbar>
             </headerToolbar>
             <columns>

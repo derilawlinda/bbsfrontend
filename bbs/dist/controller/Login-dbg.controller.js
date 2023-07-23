@@ -32,6 +32,7 @@ sap.ui.define(
             this.oHistory = History.getInstance();
             var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
             var sPreviousHash = oStore.get("prevHash");
+            console.log(sPreviousHash);
 
             $.ajax({url : backendUrl+"login",
                 type: 'POST',
@@ -43,9 +44,13 @@ sap.ui.define(
                 dataType:"json",
                 success: function(result){
 				    oStore.put("jwt", result.jwt );
-                    if (sPreviousHash !== undefined || sPreviousHash !== '') {
+                    if (sPreviousHash !== null) {
+                        alert("ke sini?");
+                        console.log("atau ke sini ?");
                         window.history.go(-1);
+
                     } else {
+                        console.log("ke sini kah ?");
                         router.navTo("dashboard", {}, true /*no history*/);
                     }
                 },

@@ -43,7 +43,7 @@ sap.ui.define(
                 dataType:"json",
                 success: function(result){
 				    oStore.put("jwt", result.jwt );
-                    if (sPreviousHash !== undefined) {
+                    if (sPreviousHash !== undefined || sPreviousHash !== '') {
                         window.history.go(-1);
                     } else {
                         router.navTo("dashboard", {}, true /*no history*/);

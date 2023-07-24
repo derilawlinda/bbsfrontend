@@ -93,6 +93,9 @@ sap.ui.define([
 			materialRequestDetailModel.dataLoaded().then(function(){
 				
 				var materialRequestDetailData = this.getView().getModel("materialRequestDetailModel").getData();
+				if(parametersMap.roleId == 3 && ( materialRequestDetailData.U_Status != 1 || materialRequestDetailData.U_Status != 4)){
+					viewModel.setProperty("/showFooter", false);
+				}
 				if(parametersMap.roleId == 5 && materialRequestDetailData.U_Status == 2){
 					viewModel.setProperty("/showFooter", false);
 				}

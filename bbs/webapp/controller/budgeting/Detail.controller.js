@@ -94,6 +94,18 @@ sap.ui.define([
 			
 			this.getView().setModel(budgetingDetailModel,"budgetingDetailModel");
 			budgetingDetailModel.dataLoaded().then(function(){
+				var budgetingDetailData = budgetingDetailModel.getData();
+				console.log(budgetingDetailData.U_Status);
+				if(parametersMap.roleId == 3 && ( budgetingDetailData.U_Status != 1 || budgetingDetailData.U_Status != 4)){
+					viewModel.setProperty("/showFooter", false);
+					viewModel.setProperty("/editable", false);
+				}
+				if(parametersMap.roleId == 5 && budgetingDetailData.U_Status == 2){
+					viewModel.setProperty("/showFooter", false);
+				}
+				if(parametersMap.roleId == 4 && budgetingDetailData.U_Status == 3){
+					viewModel.setProperty("/showFooter", false);
+				}
 				
 				this.getView().byId("budgetingPageId").setBusy(false);
 

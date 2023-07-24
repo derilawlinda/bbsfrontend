@@ -84,7 +84,7 @@ sap.ui.define([
             return oCompanyModel;
         },
         createAccountModel : function () {
-            var oAccountModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/accounts.json"));
+            var oAccountModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/new_accounts.json"));
             return oAccountModel;
         },
 

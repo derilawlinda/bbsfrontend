@@ -1,0 +1,348 @@
+{
+    "data": [
+      {
+        "AccountCode": 50100.01,
+        "AccountName": "HPP RAW MATERIAL"
+       },
+       {
+        "AccountCode": 50100.03,
+        "AccountName": "HPP FINISHED GOOD DISTRIBUTION"
+       },
+       {
+        "AccountCode": 60101,
+        "AccountName": "BIAYA GAJI"
+       },
+       {
+        "AccountCode": 60102,
+        "AccountName": "BIAYA BONUS"
+       },
+       {
+        "AccountCode": 60103,
+        "AccountName": "BIAYA TUNJANGAN"
+       },
+       {
+        "AccountCode": 60200.01,
+        "AccountName": "BIAYA PEMAIN"
+       },
+       {
+        "AccountCode": 60200.02,
+        "AccountName": "BIAYA OLAHRAGA DAN REKREASI"
+       },
+       {
+        "AccountCode": 60200.03,
+        "AccountName": "BIAYA PELATIHAN DAN PENGEMBANGAN"
+       },
+       {
+        "AccountCode": 60200.04,
+        "AccountName": "BIAYA SERAGAM DAN PERLENGKAPAN PEMAIN"
+       },
+       {
+        "AccountCode": 60200.05,
+        "AccountName": "BIAYA RUMAH SAKIT DAN PENGOBATAN TEKNIS"
+       },
+       {
+        "AccountCode": 60200.06,
+        "AccountName": "BIAYA PERLENGKAPAN MEDIS TEKNIS"
+       },
+       {
+        "AccountCode": 60300.01,
+        "AccountName": "BIAYA RUMAH SAKIT DAN PENGOBATAN MANAJEMEN"
+       },
+       {
+        "AccountCode": 60300.02,
+        "AccountName": "BIAYA PERLENGKAPAN MEDIS MANAJEMEN"
+       },
+       {
+        "AccountCode": 60400.01,
+        "AccountName": "JARINGAN - INTERNET"
+       },
+       {
+        "AccountCode": 60400.02,
+        "AccountName": "JARINGAN - SNG & TRANSPONDER"
+       },
+       {
+        "AccountCode": 60500.01,
+        "AccountName": "TIKET PESAWAT"
+       },
+       {
+        "AccountCode": 60500.02,
+        "AccountName": "TIKET LAIN (BIS, KERETA, KAPAL, DLL)"
+       },
+       {
+        "AccountCode": 60500.03,
+        "AccountName": "OPERASIONAL DINAS"
+       },
+       {
+        "AccountCode": 60500.04,
+        "AccountName": "BBM, PARKIR DAN TOL"
+       },
+       {
+        "AccountCode": 60500.05,
+        "AccountName": "HOTEL DAN PENGINAPAN"
+       },
+       {
+        "AccountCode": 60600.01,
+        "AccountName": "KONSUMSI - OPERASIONAL"
+       },
+       {
+        "AccountCode": 60600.02,
+        "AccountName": "KONSUMSI - NON-OPERASIONAL"
+       },
+       {
+        "AccountCode": 60600.03,
+        "AccountName": "KONSUMSI - PERJAMUAN DAN REPRESENTASI"
+       },
+       {
+        "AccountCode": 60700.01,
+        "AccountName": "DONASI\/HADIAH - HADIAH"
+       },
+       {
+        "AccountCode": 60700.02,
+        "AccountName": "DONASI\/HADIAH - SUMBANGAN"
+       },
+       {
+        "AccountCode": 60700.03,
+        "AccountName": "DONASI\/HADIAH - HADIAH PERTANDINGAN"
+       },
+       {
+        "AccountCode": 60700.04,
+        "AccountName": "DONASI\/HADIAH - HARI KEAGAMAAN"
+       },
+       {
+        "AccountCode": 60700.05,
+        "AccountName": "DONASI\/HADIAH - PR PACKAGE"
+       },
+       {
+        "AccountCode": 60800.01,
+        "AccountName": "PROFESSIONAL FEE - ADVISORY"
+       },
+       {
+        "AccountCode": 60800.02,
+        "AccountName": "PROFESSIONAL FEE - TALENT KOL"
+       },
+       {
+        "AccountCode": 60800.03,
+        "AccountName": "PROFESSIONAL FEE - BUZZER"
+       },
+       {
+        "AccountCode": 60800.04,
+        "AccountName": "PROFESSIONAL FEE - KONTRIBUTOR"
+       },
+       {
+        "AccountCode": 60800.05,
+        "AccountName": "PROFESSIONAL FEE - FREELANCE"
+       },
+       {
+        "AccountCode": 60800.06,
+        "AccountName": "PROFESSIONAL FEE - RUNNER"
+       },
+       {
+        "AccountCode": 60800.07,
+        "AccountName": "PROFESSIONAL FEE - DRIVER\/ART"
+       },
+       {
+        "AccountCode": 60900.01,
+        "AccountName": "PERIJINAN"
+       },
+       {
+        "AccountCode": 60900.02,
+        "AccountName": "PERIZINAN - VISA & PERMIT"
+       },
+       {
+        "AccountCode": 61000.01,
+        "AccountName": "IKLAN DIGITAL MEDIA"
+       },
+       {
+        "AccountCode": 61000.02,
+        "AccountName": "IKLAN MEDIA TRADISIONAL"
+       },
+       {
+        "AccountCode": 61000.03,
+        "AccountName": "BIAYA SPONSORSHIP"
+       },
+       {
+        "AccountCode": 61100.01,
+        "AccountName": "PEMELIHARAAN DAN PERAWATAN - BANGUNAN"
+       },
+       {
+        "AccountCode": 61100.02,
+        "AccountName": "PEMELIHARAAN DAN PERAWATAN - INSTALASI"
+       },
+       {
+        "AccountCode": 61100.03,
+        "AccountName": "PEMELIHARAAN DAN PERAWATAN - MESIN DAN PERALATAN"
+       },
+       {
+        "AccountCode": 61100.04,
+        "AccountName": "PEMELIHARAAN DAN PERAWATAN - KENDARAAN BERMOTOR"
+       },
+       {
+        "AccountCode": 61100.05,
+        "AccountName": "PEMELIHARAAN DAN PERAWATAN - PERLENGKAPAN KANTOR"
+       },
+       {
+        "AccountCode": 61100.06,
+        "AccountName": "PEMELIHARAAN DAN PERAWATAN - IT DAN SOFTWARE"
+       },
+       {
+        "AccountCode": 61100.07,
+        "AccountName": "PEMELIHARAAN DAN PERAWATAN - MATERIAL DAN SPAREPART"
+       },
+       {
+        "AccountCode": 61200.01,
+        "AccountName": "SEWA - HOUSING"
+       },
+       {
+        "AccountCode": 61200.02,
+        "AccountName": "SEWA - EQUIPMENT"
+       },
+       {
+        "AccountCode": 61200.03,
+        "AccountName": "SEWA - CAR\/MOTOR\/BUS"
+       },
+       {
+        "AccountCode": 61200.04,
+        "AccountName": "SEWA - VENUE"
+       },
+       {
+        "AccountCode": 61200.05,
+        "AccountName": "SEWA - EVENT PROPS"
+       },
+       {
+        "AccountCode": 61200.06,
+        "AccountName": "SEWA - KONSESI"
+       },
+       {
+        "AccountCode": 61300.01,
+        "AccountName": "ASURANSI RUMAH, BANGUNAN, DAN ARENA"
+       },
+       {
+        "AccountCode": 61300.02,
+        "AccountName": "ASURANSI MESIN DAN PERALATAN"
+       },
+       {
+        "AccountCode": 61300.03,
+        "AccountName": "ASURANSI KENDARAAN BERMOTOR"
+       },
+       {
+        "AccountCode": 61300.04,
+        "AccountName": "ASURANSI - MANPOWER"
+       },
+       {
+        "AccountCode": 61401,
+        "AccountName": "PENYUSUTAN BANGUNAN"
+       },
+       {
+        "AccountCode": 61402,
+        "AccountName": "PENYUSUTAN INSTALASI"
+       },
+       {
+        "AccountCode": 61403,
+        "AccountName": "PENYUSUTAN MESIN DAN PERALATAN"
+       },
+       {
+        "AccountCode": 61404,
+        "AccountName": "PENYUSUTAN PERLENGKAPAN KANTOR"
+       },
+       {
+        "AccountCode": 61405,
+        "AccountName": "PENYUSUTAN FURNITURE KANTOR"
+       },
+       {
+        "AccountCode": 61406,
+        "AccountName": "PENYUSUTAN KENDARAAN"
+       },
+       {
+        "AccountCode": 61407,
+        "AccountName": "PENYUSUTAN ASET HAK GUNA"
+       },
+       {
+        "AccountCode": 61500.01,
+        "AccountName": "AMORTISASI REGISTRASI"
+       },
+       {
+        "AccountCode": 61500.02,
+        "AccountName": "AMORTISASI SEWA"
+       },
+       {
+        "AccountCode": 61500.03,
+        "AccountName": "AMORTISASI KONSULTASI"
+       },
+       {
+        "AccountCode": 61500.04,
+        "AccountName": "AMORTISASI NFT"
+       },
+       {
+        "AccountCode": 61500.05,
+        "AccountName": "AMORTISASI SOCIAL MEDIA"
+       },
+       {
+        "AccountCode": 61500.06,
+        "AccountName": "AMORTISASI LISENSI"
+       },
+       {
+        "AccountCode": 61600.01,
+        "AccountName": "ACTIVATION\/SHOOTING MATERIAL - DECORATION"
+       },
+       {
+        "AccountCode": 61600.02,
+        "AccountName": "ACTIVATION\/SHOOTING MATERIAL - POP MATERIAL"
+       },
+       {
+        "AccountCode": 61600.03,
+        "AccountName": "ACTIVATION\/SHOOTING MATERIAL - PROPS"
+       },
+       {
+        "AccountCode": 61600.04,
+        "AccountName": "MATERIAL KEBERSIHAN GEDUNG"
+       },
+       {
+        "AccountCode": 61600.05,
+        "AccountName": "PRODUCTION COST - MERCHANDISE NON COMMERCIAL"
+       },
+       {
+        "AccountCode": 61700.01,
+        "AccountName": "LISTRIK"
+       },
+       {
+        "AccountCode": 61700.02,
+        "AccountName": "SOLAR (GENSET\/MACHINE ONLY)"
+       },
+       {
+        "AccountCode": 61800.01,
+        "AccountName": "EKSPEDISI"
+       },
+       {
+        "AccountCode": 61800.02,
+        "AccountName": "POS REGULER DAN MATERAI"
+       },
+       {
+        "AccountCode": 61800.03,
+        "AccountName": "KORAN, MAJALAH, DAN BUKU"
+       },
+       {
+        "AccountCode": 61800.04,
+        "AccountName": "ATK & FOTOCOPY"
+       },
+       {
+        "AccountCode": 61800.05,
+        "AccountName": "BIAYA PLATFORM"
+       },
+       {
+        "AccountCode": 61800.06,
+        "AccountName": "TELEPON, FAX, DAN KOMUNIKASI"
+       },
+       {
+        "AccountCode": 61800.07,
+        "AccountName": "AIR"
+       },
+       {
+        "AccountCode": 61800.08,
+        "AccountName": "BIAYA PLATFORM"
+       },
+       {
+        "AccountCode": 50100.02,
+        "AccountName": "HPP FINISHED GOOD STORE"
+       }
+    ]
+  }

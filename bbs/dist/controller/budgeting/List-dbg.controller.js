@@ -113,25 +113,26 @@ sap.ui.define([
 			var oDialog = this.oDialog;
 			var oJWT = this.oJWT;
 
-			// $.ajax({
-			// 	type: "POST",
-			// 	data: JSON.stringify(oProperty),
-			// 	crossDomain: true,
-			// 	url: backendUrl+'budget/createBudget',
-			// 	contentType: "application/json",
-			// 	success: function (res, status, xhr) {
-			// 		  //success code
-			// 		oDialog.close();
-			// 		budgetingModel.loadData(backendUrl+"getBudget", null, true, "GET",false,false,{
-			// 			'Authorization': 'Bearer ' + oJWT
-			// 		});
-			// 		view.getModel('budgeting').refresh();
-			// 	},
-			// 	error: function (jqXHR, textStatus, errorThrown) {
-			// 	  	console.log("Got an error response: " + textStatus + errorThrown);
-			// 	}
-			//   });
-			alert(JSON.stringify(oProperty));
+			$.ajax({
+				type: "POST",
+				data: JSON.stringify(oProperty),
+				crossDomain: true,
+				headers: { 'Authorization': 'Bearer ' + oJWT },
+				url: backendUrl+'budget/createBudget',
+				contentType: "application/json",
+				success: function (res, status, xhr) {
+					  //success code
+					oDialog.close();
+					budgetingModel.loadData(backendUrl+"getBudget", null, true, "GET",false,false,{
+						'Authorization': 'Bearer ' + oJWT
+					});
+					view.getModel('budgeting').refresh();
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+				  	console.log("Got an error response: " + textStatus + errorThrown);
+				}
+			  });
+			// alert(JSON.stringify(oProperty));
 	   },
 	    getRouter : function () {
 			return sap.ui.core.UIComponent.getRouterFor(this);

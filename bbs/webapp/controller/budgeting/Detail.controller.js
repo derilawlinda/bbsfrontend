@@ -68,11 +68,6 @@ sap.ui.define([
 			}
 			var budgetCode = this.budgetCode;
 			var viewModel = this.getView().getModel("viewModel");
-			if(parametersMap.roleId == 3 ){
-				viewModel.setProperty("/editable", true);
-			}else{
-				viewModel.setProperty("/editable", false);
-			}
 
 			if(parametersMap.roleId == 4 || parametersMap.roleId == 5 ){
 				viewModel.setProperty("/is_approver", true);
@@ -96,13 +91,20 @@ sap.ui.define([
 			budgetingDetailModel.dataLoaded().then(function(){
 				var budgetingDetailData = budgetingDetailModel.getData();
 				console.log(budgetingDetailData.U_Status);
-				if(parametersMap.roleId == 3 && ( budgetingDetailData.U_Status != 1 || budgetingDetailData.U_Status != 4)){
-					viewModel.setProperty("/showFooter", false);
-					viewModel.setProperty("/editable", false);
+				if(parametersMap.roleId == 3){
+					viewModel.setProperty("/showFooter", true);
+					viewModel.setProperty("/editable", true);
+
+					if(budgetingDetailData.U_Status != 1){
+						viewModel.setProperty("/showFooter", false);
+						viewModel.setProperty("/editable", false);
+					}
 				}
+
 				if(parametersMap.roleId == 5 && budgetingDetailData.U_Status == 2){
 					viewModel.setProperty("/showFooter", false);
 				}
+
 				if(parametersMap.roleId == 4 && budgetingDetailData.U_Status == 3){
 					viewModel.setProperty("/showFooter", false);
 				}

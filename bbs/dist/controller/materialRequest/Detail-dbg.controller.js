@@ -130,6 +130,7 @@ sap.ui.define([
 		},
 		onApproveButtonClick : function (){
 			var pageDOM = this.getView().byId("materialRequestPageID");
+			var viewModel = this.getView().getModel("viewModel");
 			// pageDOM.setBusy(true);
 			var code = this.getView().byId("_IDGenText101").getText();
 			const oModel = this.getView().getModel("materialRequestDetailModel");

@@ -138,8 +138,8 @@
 							>
 
 								<core:Item
-									key="{accounts>account_code}"
-									text="{accounts>account_code} - {accounts>account_name}"
+									key="{accounts>AccountCode}"
+									text="{accounts>AccountCode} - {accounts>AccountName}"
 								/>
 
 							</ComboBox>

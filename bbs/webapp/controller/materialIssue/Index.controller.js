@@ -18,7 +18,8 @@ sap.ui.define([
 		var currentRoute = this.getRouter().getHashChanger().getHash();
 		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 		this.oJWT = oStore.get("jwt");
-		
+		var oItemsModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/items.json"));
+		this.getView().setModel(oItemsModel,"items");
 		var oModel = new JSONModel();
 		oModel.loadData(backendUrl+"materialIssue/getMaterialIssues", null, true, "GET",false,false,{
 			'Authorization': 'Bearer ' + this.oJWT

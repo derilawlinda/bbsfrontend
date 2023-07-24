@@ -138,7 +138,7 @@ xmlns:core="sap.ui.core"
 						<Text text="Account Code" />
 						<table:template>
 							<ComboBox width="100%"
-								showSecondaryValues= "true"
+								showSecondaryValues= "false"
 								filterSecondaryValues= "true"
 								selectedKey="{budgetingDetailModel>U_AccountCode}"
 								value="{budgetingDetailModel>U_AccountCode}"
@@ -150,9 +150,9 @@ xmlns:core="sap.ui.core"
 							>
 
 								<core:ListItem
-									key="{accounts>account_code}"
-									text="{accounts>account_code}"
-									additionalText="{accounts>account_name}"
+									key="{accounts>AccountCode}"
+									text="{accounts>AccountCode} - {accounts>AccountName}"
+									additionalText="{accounts>AccountName}"
 								/>
 
 							</ComboBox>

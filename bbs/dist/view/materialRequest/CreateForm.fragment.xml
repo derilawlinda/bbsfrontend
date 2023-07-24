@@ -114,8 +114,8 @@
 							>
 
 								<core:Item
-									key="{accounts>account_code}"
-									text="{accounts>account_code} - {accounts>account_name}"
+									key="{accounts>AccountCode}"
+									text="{accounts>AccountCode} - {accounts>AccountName}"
 								/>
 
 							</ComboBox>
@@ -125,11 +125,20 @@
 					<table:Column >
 						<Text text="Item Name" />
 						<table:template>
-							<Input
-								type="Text"
-								placeholder="Enter item"
-								value="{new_mr_items>U_ItemCode}"
-								ariaLabelledBy="InputNumberLabel"/>
+							<ComboBox width="100%"
+								selectedKey="{new_mr_items>U_ItemCode}"
+								items="{
+								path: 'items>/data',
+								templateShareable: false
+								}"
+							>
+
+								<core:Item
+									key="{items>ItemCode}"
+									text="{items>ItemCode} - {items>ItemName}"
+								/>
+
+							</ComboBox>
 						</table:template>
 					</table:Column>
 

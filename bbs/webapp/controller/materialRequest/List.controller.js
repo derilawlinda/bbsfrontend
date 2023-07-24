@@ -40,6 +40,8 @@ sap.ui.define([
 		this.getView().setModel(oSalesOrderModel,"salesOrder");
 		var oCompaniesModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/companies.json"));
 		this.getView().setModel(oCompaniesModel,"companies");
+		var oItemsModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/items.json"));
+		this.getView().setModel(oItemsModel,"items");
 		var oMaterialRequestHeader = new sap.ui.model.json.JSONModel();
 		var viewModel = new sap.ui.model.json.JSONModel({
 			showCreateButton : true
@@ -192,6 +194,7 @@ sap.ui.define([
 				type: "POST",
 				data: JSON.stringify(oProperty),
 				crossDomain: true,
+				headers: { 'Authorization': 'Bearer ' + oJWT },
 				url: backendUrl+'materialRequest/createMaterialRequest',
 				contentType: "application/json",
 				success: function (res, status, xhr) {

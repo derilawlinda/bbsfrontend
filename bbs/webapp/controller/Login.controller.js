@@ -45,12 +45,9 @@ sap.ui.define(
                 success: function(result){
 				    oStore.put("jwt", result.jwt );
                     if (sPreviousHash !== null) {
-                        alert("ke sini?");
-                        console.log("atau ke sini ?");
                         window.history.go(-1);
 
                     } else {
-                        console.log("ke sini kah ?");
                         router.navTo("dashboard", {}, true /*no history*/);
                     }
                 },

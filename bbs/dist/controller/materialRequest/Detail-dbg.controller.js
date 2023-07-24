@@ -130,16 +130,20 @@ sap.ui.define([
 		},
 		onApproveButtonClick : function (){
 			var pageDOM = this.getView().byId("materialRequestPageID");
-			pageDOM.setBusy(true);
+			// pageDOM.setBusy(true);
 			var code = this.getView().byId("_IDGenText101").getText();
+			const oModel = this.getView().getModel("materialRequestDetailModel");
+			var oProperty = oModel.getProperty("/");
+			var view = this.getView();
+			var oDialog = this.oDialog;
+			var oJWT = this.oJWT;
 			$.ajax({
 				type: "POST",
-				data: {
-					"Code": code
-				},
-				headers: {"Authorization": "Bearer "+ this.oJWT},
+				data: JSON.stringify(oProperty),
+				headers: {"Authorization": "Bearer "+ oJWT},
 				crossDomain: true,
 				url: backendUrl+'materialRequest/approveMR',
+				contentType: "application/json",
 				success: function (res, status, xhr) {
 					  //success code
 					  pageDOM.setBusy(false);

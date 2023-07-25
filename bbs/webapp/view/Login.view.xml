@@ -19,11 +19,16 @@
                     labelSpanS="4"
                     labelSpanM="12"
                     columnsL="1"
-                    columnsM="1">
+                    columnsM="1"
+                    width="500px">
                         <form:content>
                             <l:VerticalLayout id="_IDGenHorizontalLayout1" >
+                                    <FlexBox  alignItems="Center" justifyContent="Center">
+
+                                    <Image id="_IDGenImage1" src="images/logo_bbs.png" width="200px" class="center"/>
+
+                                    </FlexBox>
                             
-                                    <Image id="_IDGenImage1" src="images/logo_bbs.png" width="150px" />
 
                                     <Label id="labelUsername" text="Username" labelFor="username" class="labelMargin" ></Label>
                                     <Input id="username"></Input>   

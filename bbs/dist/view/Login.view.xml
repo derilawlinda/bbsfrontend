@@ -31,10 +31,10 @@
                             
 
                                     <Label id="labelUsername" text="Username" labelFor="username" class="labelMargin" ></Label>
-                                    <Input id="username"></Input>   
+                                    <Input id="username" submit="onLoginPressed"></Input>   
 
                                     <Label id="labelPassword" text="Password" labelFor="password" class="labelMargin"></Label>
-                                    <Input id="password" type="Password"></Input>
+                                    <Input id="password" type="Password" submit="onLoginPressed"></Input>
 
                                      <Button id="_IDGenButton1" text="Login" width="100%" class="labelMargin" type="Emphasized" press="onLoginPressed"></Button>   
                            

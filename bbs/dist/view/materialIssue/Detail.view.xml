@@ -7,9 +7,9 @@ xmlns:form="sap.ui.layout.form"
 xmlns:table="sap.ui.table"
 xmlns:core="sap.ui.core"
 >
-  <Page  id="materialIssuePage" showNavButton="true"
+  <Page  id="materialIssuePageId" showNavButton="true"
 		navButtonPress=".onNavBack"
-		showFooter="{= ${materialIssueDetailModel>U_Status} === 1 ? true : false }">
+		showFooter="{viewModel>/showFooter}">
     
     <content>
       <VBox class="sapUiSmallMargin" id="formContainer">
@@ -103,7 +103,6 @@ xmlns:core="sap.ui.core"
 							<ComboBox width="100%"
 								filterSecondaryValues= "true"
 								selectedKey="{materialIssueDetailModel>U_AccountCode}"
-								value="{materialIssueDetailModel>U_AccountCode}"
 								editable="{viewModel>/editable}"
 								items="{
 								path: 'accounts>/data',
@@ -124,7 +123,7 @@ xmlns:core="sap.ui.core"
 						<Text text="Item Name" />
 						<table:template>
 							<ComboBox width="100%"
-								selectedKey="{new_mi_items>U_ItemCode}"
+								selectedKey="{materialIssueDetailModel>U_ItemCode}"
 								editable="{viewModel>/editable}"
 								items="{
 								path: 'items>/data',
@@ -168,8 +167,10 @@ xmlns:core="sap.ui.core"
 	<footer  >
 				<Toolbar>
 					<ToolbarSpacer />
-                    <Button type="Emphasized" text="Save" press="onSaveButtonClick" />
-				    <Button text="Cancel" press="._closeDialog" />
+                   	<Button type="Emphasized" text="Save MI" press="onSaveButtonClick" visible="{viewModel>/is_requestor}" />
+					<Button type="Accept" text="Approve" press="onApproveButtonClick" visible="{viewModel>/is_approver}" />
+					<Button type="Reject" text="Reject" press="onRejectButtonClick" visible="{viewModel>/is_approver}" />
+              
 				</Toolbar>
 		</footer>
   </Page>

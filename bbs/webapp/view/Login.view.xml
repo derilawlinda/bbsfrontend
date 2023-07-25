@@ -23,7 +23,7 @@
                         <form:content>
                             <l:VerticalLayout id="_IDGenHorizontalLayout1" >
                             
-                                    <Image id="_IDGenImage1" src="images/logo_bbs.png" width="300px" />
+                                    <Image id="_IDGenImage1" src="images/logo_bbs.png" width="150px" />
 
                                     <Label id="labelUsername" text="Username" labelFor="username" class="labelMargin" ></Label>
                                     <Input id="username"></Input>   

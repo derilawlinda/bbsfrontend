@@ -156,6 +156,7 @@ sap.ui.define([
 				type: "POST",
 				data: JSON.stringify(oProperty),
 				crossDomain: true,
+				headers: { 'Authorization': 'Bearer ' + oJWT },
 				url: backendUrl+'materialIssue/createMaterialIssue',
 				contentType: "application/json",
 				success: function (res, status, xhr) {

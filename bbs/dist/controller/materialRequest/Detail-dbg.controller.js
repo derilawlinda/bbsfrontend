@@ -65,19 +65,7 @@ sap.ui.define([
 			}
 			var materialRequestCode = this.materialRequestCode;
 			var viewModel = this.getView().getModel("viewModel");
-			if(parametersMap.roleId == 3 ){
-				viewModel.setProperty("/editable", true);
-			}else{
-				viewModel.setProperty("/editable", false);
-			}
-
-			if(parametersMap.roleId == 4 || parametersMap.roleId == 5 ){
-				viewModel.setProperty("/is_approver", true);
-				viewModel.setProperty("/is_requestor", false);
-			}else if(parametersMap.roleId == 3){
-				viewModel.setProperty("/is_approver", false);
-				viewModel.setProperty("/is_requestor", true);
-			}
+			
 
 			if(this.materialRequestCode === undefined){
 				var url = window.location.href;
@@ -93,15 +81,30 @@ sap.ui.define([
 			materialRequestDetailModel.dataLoaded().then(function(){
 				
 				var materialRequestDetailData = this.getView().getModel("materialRequestDetailModel").getData();
-				if(parametersMap.roleId == 3 && ( materialRequestDetailData.U_Status != 1 || materialRequestDetailData.U_Status != 4)){
-					viewModel.setProperty("/showFooter", false);
+				if(parametersMap.roleId == 4){
+					viewModel.setProperty("/editable", false);
+					viewModel.setProperty("/is_approver", true);
+					viewModel.setProperty("/is_requestor", false);
+					if(materialRequestDetailData.U_Status == 3){
+						viewModel.setProperty("/showFooter", false);
+					}
 				}
-				if(parametersMap.roleId == 5 && materialRequestDetailData.U_Status == 2){
-					viewModel.setProperty("/showFooter", false);
+				else if(parametersMap.roleId == 5){
+					viewModel.setProperty("/editable", false);
+					viewModel.setProperty("/is_approver", true);
+					viewModel.setProperty("/is_requestor", false);
+					if(materialRequestDetailData.U_Status == 2){
+						viewModel.setProperty("/showFooter", false);
+					}
 				}
-				if(parametersMap.roleId == 4 && materialRequestDetailData.U_Status == 3){
-					viewModel.setProperty("/showFooter", false);
-				}
+				else if(parametersMap.roleId == 3){
+					viewModel.setProperty("/is_approver", false);
+					viewModel.setProperty("/is_requestor", true);
+					if(materialRequestDetailData.U_Status != 1){
+						viewModel.setProperty("/showFooter", false);
+						viewModel.setProperty("/editable", false);
+					}
+				};
 				const budget = new JSONModel();
 				this.getView().setModel(budget,"budget");
 				budget.loadData(backendUrl+"budget/getBudgetById?code="+materialRequestDetailData.U_BudgetCode, null, true, "GET",false,false,{

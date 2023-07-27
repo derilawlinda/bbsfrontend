@@ -157,7 +157,7 @@
 								value="{
 									parts: [
 										{path:'new_budgeting_accounts>U_Amount'}, 
-										 'EUR',
+										 'IDR',
 										 'TwoWay'], 
 									type:'sap.ui.model.type.Currency',
 									formatOptions: {showMeasure: true}

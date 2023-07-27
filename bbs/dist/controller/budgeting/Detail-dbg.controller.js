@@ -90,25 +90,31 @@ sap.ui.define([
 			this.getView().setModel(budgetingDetailModel,"budgetingDetailModel");
 			budgetingDetailModel.dataLoaded().then(function(){
 				var budgetingDetailData = budgetingDetailModel.getData();
-				console.log(budgetingDetailData.U_Status);
-				if(parametersMap.roleId == 3){
-					viewModel.setProperty("/showFooter", true);
-					viewModel.setProperty("/editable", true);
 
+				if(parametersMap.roleId == 4){
+					viewModel.setProperty("/editable", false);
+					viewModel.setProperty("/is_approver", true);
+					viewModel.setProperty("/is_requestor", false);
+					if(budgetingDetailData.U_Status == 3){
+						viewModel.setProperty("/showFooter", false);
+					}
+				}
+				else if(parametersMap.roleId == 5){
+					viewModel.setProperty("/editable", false);
+					viewModel.setProperty("/is_approver", true);
+					viewModel.setProperty("/is_requestor", false);
+					if(budgetingDetailData.U_Status == 2){
+						viewModel.setProperty("/showFooter", false);
+					}
+				}
+				else if(parametersMap.roleId == 3){
+					viewModel.setProperty("/is_approver", false);
+					viewModel.setProperty("/is_requestor", true);
 					if(budgetingDetailData.U_Status != 1){
 						viewModel.setProperty("/showFooter", false);
 						viewModel.setProperty("/editable", false);
 					}
-				}
-
-				if(parametersMap.roleId == 5 && budgetingDetailData.U_Status == 2){
-					viewModel.setProperty("/showFooter", false);
-				}
-
-				if(parametersMap.roleId == 4 && budgetingDetailData.U_Status == 3){
-					viewModel.setProperty("/showFooter", false);
-				}
-				
+				};
 				this.getView().byId("budgetingPageId").setBusy(false);
 
 			}.bind(this));

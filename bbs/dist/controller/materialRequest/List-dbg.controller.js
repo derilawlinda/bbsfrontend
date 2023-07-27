@@ -56,7 +56,7 @@ sap.ui.define([
 		});
 		this.getView().setModel(budgetRequestHeader,"budgetHeader");
 		var oBudgetingModel = new JSONModel();
-		oBudgetingModel.loadData(backendUrl+"getBudget", null, true, "GET",false,false,{
+		oBudgetingModel.loadData(backendUrl+"budget/getApprovedBudget", null, true, "GET",false,false,{
 			'Authorization': 'Bearer ' + this.oJWT
 		});
 		this.getOwnerComponent().setModel(oBudgetingModel,"budgeting");

@@ -3,8 +3,10 @@ sap.ui.define([
     "sap/ui/core/routing/History",
 	"sap/m/library",
 	"sap/ui/model/json/JSONModel",
+	"sap/m/MessageToast",
 	'frontend/bbs/libs/lodash'
- ], function (Controller,History,mobileLibrary, JSONModel) {
+	
+ ], function (Controller,History,mobileLibrary, JSONModel,MessageToast) {
     "use strict";
 
 	// shortcut for sap.m.ButtonType
@@ -76,27 +78,24 @@ sap.ui.define([
 				this.getRouter().navTo("login", {}, true /*no history*/);
 			}
 		},
-		onBudgetChange : function(oEvent){
+		onBudgetChange : async function(oEvent){
+			this.getView().byId("createMIForm").setBusy(true);
 			var selectedID = parseInt(oEvent.getParameters('selectedItem').value);
 			var budgetingModel = new JSONModel();
-			budgetingModel.loadData(backendUrl+"budget/getBudgetById?code="+selectedID, null, true, "GET",false,false,{
+			await budgetingModel.loadData(backendUrl+"budget/getBudgetById?code="+selectedID, null, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
 			});
-			var budgetingData = budgetingModel.getData().value;
-			let result = _.find(budgetingData, function(obj) {
-				if (obj.Code == selectedID) {
-					return true;
-				}
-			});
-			var approvedBudget = result.U_TotalAmount;
-			var usedBudget = result.BUDGETUSEDCollection;
+			var budgetingData = budgetingModel.getData();
+			var approvedBudget = budgetingData.U_TotalAmount;
+			var usedBudget = budgetingData.BUDGETUSEDCollection;
 			let sumUsedBudget = 0;
 			for (let i = 0; i < usedBudget.length; i++ ) {
 				sumUsedBudget += usedBudget[i]["U_Amount"];
 			};
-			result.U_RemainingBudget = approvedBudget - sumUsedBudget;
+			budgetingData.U_RemainingBudget = approvedBudget - sumUsedBudget;
 			var budgetRequestHeader = this.getView().getModel("budgetHeader");
-			budgetRequestHeader.setData(result);
+			budgetRequestHeader.setData(budgetingData);
+			this.getView().byId("createMIForm").setBusy(false);
 
 		  },
 		onCreateButtonClick : function(oEvent) {
@@ -146,13 +145,15 @@ sap.ui.define([
 		
 		},
 		onSaveButtonClick : function(oEvent) {
+			var oDialog = this.oDialog;
+			oDialog.setBusy(true);
 			const oModel = this.getView().getModel("materialIssueHeader");
 			const oModelItems = this.getView().getModel("new_mi_items");
 			var materialIssueModel = this.getView().getModel("materialIssue");
 			oModel.setProperty("/MATERIALISSUELINESCollection", oModelItems.getData().MATERIALISSUELINESCollection);
 			var oProperty = oModel.getProperty("/");
 			var view = this.getView();
-			var oDialog = this.oDialog;
+			
 			var oJWT = this.oJWT;
 
 			$.ajax({
@@ -164,10 +165,14 @@ sap.ui.define([
 				contentType: "application/json",
 				success: function (res, status, xhr) {
 					  //success code
+					oDialog.setBusy(false);
 					oDialog.close();
 					materialIssueModel.loadData(backendUrl+"materialIssue/getMaterialIssues", null, true, "GET",false,false,{
 						'Authorization': 'Bearer ' + oJWT
 					});
+					MessageToast.show("Material Issue created");
+					$(".sapMMessageToast").css({"background-color": "#256f3a", "color": "white"});
+					
 					view.getModel('materialIssue').refresh();
 				},
 				error: function (jqXHR, textStatus, errorThrown) {

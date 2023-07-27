@@ -2,8 +2,9 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/core/routing/History",
 	"sap/ui/model/json/JSONModel",
-	"sap/ui/model/odata/v4/ODataModel"
- ], function (Controller,History,JSONModel,ODataModel) {
+	"sap/ui/model/odata/v4/ODataModel",
+	"sap/m/MessageToast"
+ ], function (Controller,History,JSONModel,ODataModel,MessageToast) {
     "use strict";
 	var endTerm;
 	var startTerm;
@@ -104,13 +105,15 @@ sap.ui.define([
 		}.bind(this));
 	   },
 	   onSaveButtonClick : function(oEvent) {
+			var oDialog = this.oDialog;
+			oDialog.setBusy(true);
 			const oModel = this.getView().getModel("budgetingDetailModel");
 			const oModelAccounts = this.getView().getModel("new_budgeting_accounts");
 			var budgetingModel = this.getView().getModel("budgeting");
 			oModel.setProperty("/BUDGETREQLINESCollection", oModelAccounts.getData().BUDGETREQLINESCollection);
 			var oProperty = oModel.getProperty("/");
 			var view = this.getView();
-			var oDialog = this.oDialog;
+			
 			var oJWT = this.oJWT;
 
 			$.ajax({
@@ -122,11 +125,15 @@ sap.ui.define([
 				contentType: "application/json",
 				success: function (res, status, xhr) {
 					  //success code
+					oDialog.setBusy(false);
 					oDialog.close();
+					MessageToast.show("Budget created");
+					$(".sapMMessageToast").css({"background-color": "#256f3a", "color": "white"});
 					budgetingModel.loadData(backendUrl+"getBudget", null, true, "GET",false,false,{
 						'Authorization': 'Bearer ' + oJWT
 					});
 					view.getModel('budgeting').refresh();
+					
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 				  	console.log("Got an error response: " + textStatus + errorThrown);

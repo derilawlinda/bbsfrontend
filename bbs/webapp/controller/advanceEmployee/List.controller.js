@@ -224,7 +224,7 @@ sap.ui.define([
 						'Authorization': 'Bearer ' + oJWT
 					});
 					MessageToast.show("Advance Request created");
-					$(".sapMMessageToast").css("background", "#256f3a");
+					$(".sapMMessageToast").css({"background-color": "#256f3a", "color": "white"});
 					view.getModel('advanceRequests').refresh();
 				},
 				error: function (jqXHR, textStatus, errorThrown) {

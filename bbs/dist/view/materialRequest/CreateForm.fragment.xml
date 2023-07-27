@@ -9,9 +9,9 @@
     height="100%">
 	<Dialog
 		id="mainDialog"
-		title="Create Material Issue">
+		title="Create Material Request">
 			<VBox class="sapUiSmallMargin" id="formContainer">
-				<f:SimpleForm id="SimpleFormChangeColumn_twoGroups234"
+				<f:SimpleForm id="createMRForm"
 						editable="true"
                         layout="ColumnLayout"
                         columnsM="2"

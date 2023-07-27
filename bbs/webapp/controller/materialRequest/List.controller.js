@@ -160,34 +160,35 @@ sap.ui.define([
 			}
 		  
 		},
-		  onBudgetChange : function(oEvent){
-			var budgetingModel = this.getView().getModel("budgeting");
-			var budgetingData = budgetingModel.getData().value;
+		  onBudgetChange : async function(oEvent){
+			this.getView().byId("createMRForm").setBusy(true);
 			var selectedID = parseInt(oEvent.getParameters('selectedItem').value);
-			let result = _.find(budgetingData, function(obj) {
-				if (obj.Code == selectedID) {
-					return true;
-				}
+			var budgetingModel = new JSONModel();
+			await budgetingModel.loadData(backendUrl+"budget/getBudgetById?code="+selectedID, null, true, "GET",false,false,{
+				'Authorization': 'Bearer ' + this.oJWT
 			});
-			var approvedBudget = result.U_TotalAmount;
-			var usedBudget = result.BUDGETUSEDCollection;
+			var budgetingData = budgetingModel.getData();
+			var approvedBudget = budgetingData.U_TotalAmount;
+			var usedBudget = budgetingData.BUDGETUSEDCollection;
 			let sumUsedBudget = 0;
 			for (let i = 0; i < usedBudget.length; i++ ) {
 				sumUsedBudget += usedBudget[i]["U_Amount"];
 			};
-			result.U_RemainingBudget = approvedBudget - sumUsedBudget;
+			budgetingData.U_RemainingBudget = approvedBudget - sumUsedBudget;
 			var budgetRequestHeader = this.getView().getModel("budgetHeader");
-			budgetRequestHeader.setData(result);
+			budgetRequestHeader.setData(budgetingData);
+			this.getView().byId("createMRForm").setBusy(false);
 
 		  },
 		  onSaveButtonClick : function(oEvent) {
+			var oDialog = this.oDialog;
+			oDialog.setBusy(true);
 			const oModel = this.getView().getModel("materialRequestHeader");
 			const oModelAccounts = this.getView().getModel("new_mr_items");
 			var materialRequestModel = this.getView().getModel("materialRequest");
 			oModel.setProperty("/METERIALREQLINESCollection", oModelAccounts.getData().MATERIALREQLINESCollection);
 			var oProperty = oModel.getProperty("/");
 			var view = this.getView();
-			var oDialog = this.oDialog;
 			var oJWT = this.oJWT;
 
 			$.ajax({
@@ -199,11 +200,16 @@ sap.ui.define([
 				contentType: "application/json",
 				success: function (res, status, xhr) {
 					  //success code
+					oDialog.setBusy(false);
 					oDialog.close();
 					materialRequestModel.loadData(backendUrl+"materialRequest/getMaterialRequests", null, true, "GET",false,false,{
 						'Authorization': 'Bearer ' + oJWT
 					});
+					MessageToast.show("Material Request created");
+					$(".sapMMessageToast").css({"background-color": "#256f3a", "color": "white"});
+
 					view.getModel('materialRequest').refresh();
+					
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 				  	console.log("Got an error response: " + textStatus + errorThrown);

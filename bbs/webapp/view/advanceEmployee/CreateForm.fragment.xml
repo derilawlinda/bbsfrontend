@@ -9,9 +9,9 @@
     height="100%">
 	<Dialog
 		id="mainDialog"
-		title="Create Employee Advance">
+		title="Create Employee Advance Request">
 			<VBox class="sapUiSmallMargin" id="formContainer">
-				<f:SimpleForm id="SimpleFormChangeColumn_twoGroups234"
+				<f:SimpleForm id="createARForm"
 						editable="true"
                         layout="ColumnLayout"
                         columnsM="2"
@@ -21,51 +21,66 @@
                     <core:Title id="_IDGenTitle1" text="Information" />
 
                         <Label id="_IDGenLabel1" text="Date" />
-						<Text id="_IDGenText11" text="{newEA>date}" />
+						<Text text="{createFragmentViewModel>/Date}" />
 
                         <Label id="_IDGenLabel2" text="Name" />
-						<Input id="name" value="{newEA>name}"></Input>
+						<Input id="name" value="{advanceRequestHeader>/Name}" ></Input>
 
 						<Label id="_IDGenLabel4" text="Budget#" />
 						<ComboBox width="100%"
 								change="onBudgetChange"
-								value="{newEA>budget_id}"
+								value="{advanceRequestHeader>/U_BudgetCode}"
+								selectionChange="onSelectionChange"
+								showSecondaryValues="true"
 								items="{
-								path: 'budgeting>/data',
+								path: 'budgeting>/value',
 								templateShareable: false
 								}"
 							>
 
-								<core:Item
-									key="{budgeting>ID}"
-									text="{budgeting>ID}"
+								<core:ListItem
+									key="{budgeting>Code}"
+									text="{budgeting>Code}"
+									additionalText="{budgeting>Name}"
 								/>
 
 						</ComboBox>
 
 						<Label id="_IDGenLabel3" text="Company" />
-						<Text id="_IDGenText5"  />
+						<Text id="_IDGenText5"  text="{budgetHeader>/U_Company}"/>
 
 						<Label id="_IDGenLabe20" text="Remaining Budget" />
-						<ObjectNumber binding="{/}" number="{ parts:[{path:'Price'},{path:'CurrencyCode'}], type: 'sap.ui.model.type.Currency', formatOptions: {showMeasure: false,decimalSeparator : ',', groupingSeparator : '.'} }" unit="IDR" />
+						<ObjectNumber number="{
+									parts: [
+										{path:'budgetHeader>/U_RemainingBudget'}, 
+										 'IDR',
+										 'TwoWay'], 
+									type:'sap.ui.model.type.Currency',
+									formatOptions: {showMeasure: true}
+								}" unit="IDR" />
+
+
+						<Label id="totalAmount" text="Total Advance Amount" />
+						<ObjectNumber number="{ parts:[{path:'advanceRequestHeader>/U_Amount'},'IDR','TwoWay'], type: 'sap.ui.model.type.Currency', formatOptions: {showMeasure: true,decimalSeparator : ',', groupingSeparator : '.'} }" unit="IDR" />
+
 
 						<core:Title id="_IDGenTitle2" text="Category Information" />
 
                         <Label id="_IDGenLabel5" text="Project" />
-						<Text id="_IDGenText15" text="BLIF 2023" />
+						<Text id="_IDGenText15" text="{budgetHeader>/U_Project}" />
 						
 
                         <Label id="_IDGenLabel6" text="Pillar" />
-						<Text id="_IDGenText16" text="Distribution" />
+						<Text id="_IDGenText16" text="{budgetHeader>/U_Pillar}" />
 
                         <Label id="_IDGenLabel7" text="Class" />
-						<Text id="_IDGenText17" text="Baliverse 2023" />
+						<Text id="_IDGenText17" text="{budgetHeader>/U_Classification}" />
 
                         <Label id="_IDGenLabel8" text="Subclass" />
-						<Text id="_IDGenText18" text="Panpel 2023" />
+						<Text id="_IDGenText18" text="{budgetHeader>/U_SubClass}" />
 						
                         <Label id="_IDGenLabel9" text="Subclass2" />
-						<Text id="_IDGenText19" text="Liga 1 - 2023/2024" />
+						<Text id="_IDGenText19" text="{budgetHeader>/U_SubClass2}" />
 						
 						
 						
@@ -74,7 +89,7 @@
 				</f:SimpleForm>
 
                  <table:Table id="tableId" 
-                        rows="{new_ea_items>/itemRow}"
+                        rows="{new_ar_items>/ADVANCEREQLINESCollection}"
 						visibleRowCount="7"
 						 
 				>
@@ -96,7 +111,7 @@
 						<Text text="Account Code" />
 						<table:template>
 							<ComboBox width="100%"
-								selectedKey="{new_ea_items>account_code}"
+								selectedKey="{new_ar_items>U_AccountCode}"
 								items="{
 								path: 'accounts>/data',
 								templateShareable: false
@@ -104,8 +119,8 @@
 							>
 
 								<core:Item
-									key="{accounts>account_code}"
-									text="{accounts>account_code} - {accounts>account_name}"
+									key="{accounts>AccountCode}"
+									text="{accounts>AccountCode} - {accounts>AccountName}"
 								/>
 
 							</ComboBox>
@@ -115,11 +130,20 @@
 					<table:Column >
 						<Text text="Item Name" />
 						<table:template>
-							<Input
-								type="Text"
-								placeholder="Enter item"
-								value="{new_ea_items>item_name}"
-								ariaLabelledBy="InputNumberLabel"/>
+							<ComboBox width="100%"
+								selectedKey="{new_ar_items>U_ItemCode}"
+								items="{
+								path: 'items>/data',
+								templateShareable: false
+								}"
+							>
+
+								<core:Item
+									key="{items>ItemCode}"
+									text="{items>ItemCode} - {items>ItemName}"
+								/>
+
+							</ComboBox>
 						</table:template>
 					</table:Column>
 
@@ -128,10 +152,18 @@
 						<table:template>
 							<Input
 								id="inputNumber"
-								type="Number"
-								placeholder="Enter number"
-								value="{new_ea_items>amount}"
-								ariaLabelledBy="InputNumberLabel"/>
+								placeholder="Advance amount"
+								value="{
+									parts: [
+										{path:'new_ar_items>U_Amount'}, 
+										 'IDR',
+										 'TwoWay'], 
+									type:'sap.ui.model.type.Currency',
+									formatOptions: {showMeasure: true}
+								}"
+								ariaLabelledBy="InputNumberLabel"
+								change="onAmountChange"
+								/>
 						</table:template>
 					</table:Column>
 
@@ -145,7 +177,7 @@
 		<footer>
 				<Toolbar id="_IDGenToolbar12">
 					<ToolbarSpacer id="_IDGenToolbarSpacer12" />
-                    <Button id="_IDGenButton12" type="Emphasized" text="Create Employee Advance" press="onSaveButtonClick" />
+                    <Button id="_IDGenButton12" type="Emphasized" text="Create Advance Request" press="onSaveButtonClick" />
 				    <Button id="_IDGenButton13" text="Cancel" press="._closeDialog" />
 				</Toolbar>
 		</footer>

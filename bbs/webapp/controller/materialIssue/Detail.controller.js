@@ -75,33 +75,32 @@ sap.ui.define([
 			this.getOwnerComponent().setModel(oBudgetingModel,"budgeting");
 			materialIssueDetailModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
 				var userData = oUserModel.getData();
-				console.log(userData);
 				var materialIssueDetailData = this.getView().getModel("materialIssueDetailModel").getData();
-				if(userData.user.role_id == 4 || userData.user.role_id == 5 ){
+				if(userData.user.role_id == 4){
+					viewModel.setProperty("/editable", false);
 					viewModel.setProperty("/is_approver", true);
 					viewModel.setProperty("/is_requestor", false);
-				}else if(userData.user.role_id == 3){
+					if(materialIssueDetailData.U_Status == 3){
+						viewModel.setProperty("/showFooter", false);
+					}
+				}
+				else if(userData.user.role_id == 5){
+					viewModel.setProperty("/editable", false);
+					viewModel.setProperty("/is_approver", true);
+					viewModel.setProperty("/is_requestor", false);
+					if(materialIssueDetailData.U_Status == 2){
+						viewModel.setProperty("/showFooter", false);
+					}
+				}
+				else if(userData.user.role_id == 3){
 					viewModel.setProperty("/is_approver", false);
 					viewModel.setProperty("/is_requestor", true);
-				};
-				if(userData.user.role_id == 3){
-					viewModel.setProperty("/showFooter", true);
-					viewModel.setProperty("/editable", true);
-
 					if(materialIssueDetailData.U_Status != 1){
 						viewModel.setProperty("/showFooter", false);
 						viewModel.setProperty("/editable", false);
 					}
-				}
+				};
 
-				if(userData.user.role_id == 5 && materialIssueDetailData.U_Status == 2){
-					viewModel.setProperty("/showFooter", false);
-				}
-
-				if(userData.user.role_id == 4 && materialIssueDetailData.U_Status == 3){
-					viewModel.setProperty("/showFooter", false);
-				}
-				
 				const oBudgetModel = new JSONModel();
 				oBudgetModel.loadData(backendUrl+"budget/getBudgetById?code="+materialIssueDetailData.U_BudgetCode, null, true, "GET",false,false,{
 					'Authorization': 'Bearer ' + this.oJWT

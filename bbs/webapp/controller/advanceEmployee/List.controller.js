@@ -22,11 +22,69 @@ sap.ui.define([
 	var DialogType = mobileLibrary.DialogType;
     return Controller.extend("frontend.bbs.controller.advanceEmployee.List", {
        onInit: function () {
-		var oModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/employee_advance.json"));
-		this.getOwnerComponent().setModel(oModel,"advanceEmployee");
-		var oBudgetingModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/budgeting.json"));
-		this.getView().setModel(oBudgetingModel,"budgeting");
+		this.getView().byId("advanceEmployeeTableID").setBusy(true);
+		var currentRoute = this.getRouter().getHashChanger().getHash();
+		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
+		this.oJWT = oStore.get("jwt");
+		var oModel = new JSONModel();
+		oModel.loadData(backendUrl+"advanceRequest/getAdvanceRequests", null, true, "GET",false,false,{
+			'Authorization': 'Bearer ' + this.oJWT
+		});
+		this.getOwnerComponent().setModel(oModel,"advanceRequests");
+		oModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
+			this.getView().byId("advanceEmployeeTableID").setBusy(false);
+		}.bind(this));
+
+		var oSalesOrderModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/sales_order.json"));
+		this.getView().setModel(oSalesOrderModel,"salesOrder");
+		var oCompaniesModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/companies.json"));
+		this.getView().setModel(oCompaniesModel,"companies");
+		var oItemsModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/items.json"));
+		this.getView().setModel(oItemsModel,"items");
+		var oAdvanceRequestHeader = new sap.ui.model.json.JSONModel();
+		var viewModel = new sap.ui.model.json.JSONModel({
+			showCreateButton : true
+		});
+		this.getView().setModel(viewModel,"viewModel");
+		// var dynamicProperties = [];
+		// oBudgetingDetailModel.setData(dynamicProperties);
+		
+		this.getView().setModel(oAdvanceRequestHeader,"advanceRequestHeader");
+		var budgetRequestHeader = new sap.ui.model.json.JSONModel({
+			U_RemainingBudget : 0
+		});
+		this.getView().setModel(budgetRequestHeader,"budgetHeader");
+		var oBudgetingModel = new JSONModel();
+		oBudgetingModel.loadData(backendUrl+"budget/getApprovedBudget", null, true, "GET",false,false,{
+			'Authorization': 'Bearer ' + this.oJWT
+		});
+		this.getOwnerComponent().setModel(oBudgetingModel,"budgeting");
+
+		//NEW AR ITEM MODEL
+		var oNewAdvanceRequestItems = new sap.ui.model.json.JSONModel();
+		this.getView().setModel(oNewAdvanceRequestItems,"new_ar_items");
+		this.getView().getModel("new_ar_items").setProperty("/ADVANCEREQLINESCollection", []);
+
+		var userModel = this.getOwnerComponent().getModel("userModel");
+		if(userModel === undefined){
+			const bus = this.getOwnerComponent().getEventBus();
+			bus.subscribe("username", "checktoken", this.toggleCreateButton, this);
+		}else{
+			var userData = userModel.getData();
+			var a = { "userName" : userData.user.name,
+			  "roleId" : userData.user.role_id,
+			  "roleName" : userData.role[0].name,
+			  "status" : "success"
+			};
+			this.toggleCreateButton("username","checkToken",a);
+		}
        },
+	   toggleCreateButton : function(channelId, eventId, parametersMap){
+		console.log(parametersMap);
+			if(parametersMap.roleId == 4 || parametersMap.roleId == 5){
+				this.getView().getModel("viewModel").setProperty("/showCreateButton",false)
+			}
+	   },
 	   onCreateButtonClick : function(oEvent) {
 		if (!this.createEmployeeAdvanceDialog) {
 			this.createEmployeeAdvanceDialog = this.loadFragment({
@@ -34,15 +92,21 @@ sap.ui.define([
 			});
 		}
 		this.createEmployeeAdvanceDialog.then(function (oDialog) {
+			var oCreateFragmentViewModel = new sap.ui.model.json.JSONModel({
+				Date : new Date()
+			});
+			this.getView().setModel(oCreateFragmentViewModel,"createFragmentViewModel");
+			var budgetRequestHeader = this.getView().getModel("budgetHeader");
+			budgetRequestHeader.setData([]);
+			var oAdvanceRequestHeader = new sap.ui.model.json.JSONModel();
+			this.getView().setModel(oAdvanceRequestHeader,"advanceRequestHeader");
+			var oNewAdvanceEmployeeItems = new sap.ui.model.json.JSONModel();
+			this.getView().setModel(oNewAdvanceEmployeeItems,"new_ar_items");
+			this.getView().getModel("new_ar_items").setProperty("/ADVANCEREQLINESCollection", []);
 			this.oDialog = oDialog;
 			this.oDialog.open();
-			var oEmployeeAdvanceDetailModel = new sap.ui.model.json.JSONModel();
-			var dynamicProperties = [];
-			oEmployeeAdvanceDetailModel.setData(dynamicProperties);
-			this.getView().setModel(oEmployeeAdvanceDetailModel,"EmployeeAdvanceDetailModel");
-			var oNewAdvanceEmployeeItems = new sap.ui.model.json.JSONModel();
-			this.getView().setModel(oNewAdvanceEmployeeItems,"new_ea_items");
-			this.getView().getModel("new_ea_items").setProperty("/itemRow", []);
+
+			
 
 		}.bind(this));
 	   },
@@ -63,42 +127,124 @@ sap.ui.define([
 			this.oDialog.close();
 		},
 		buttonFormatter: function(sStatus) {
-			if(sStatus == 'Approved'){
+			if(sStatus == 2 || sStatus == 3){
 				return 'Accept'
-			}else if(sStatus == 'Pending'){
+			}else if(sStatus == 1){
 				return 'Attention'
 			}else{
 				return 'Reject'
 			}
+		  },
+		
+		textFormatter : function(sStatus){
+			if(sStatus == 1){
+				return 'Pending'
+			}else if(sStatus == 2){
+				return 'Approved by Manager'
+			}else if(sStatus == 3){
+				return 'Approved by Director'
+			}else{
+				return 'Rejected'
+			}
+		  
 		},
 		dateFormatter : function(date){
-			var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({pattern : "YYYY/MM/DD" });   
-			var dateFormatted = dateFormat.format(date);
+			var unformattedDate = new Date(date);
+			var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({pattern : "YYYY-MM-dd" });   
+			var dateFormatted = dateFormat.format(unformattedDate);
 			return dateFormatted;
 		},
+		onBudgetChange : async function(oEvent){
+			this.getView().byId("createARForm").setBusy(true);
+			var selectedID = parseInt(oEvent.getParameters('selectedItem').value);
+			var budgetingModel = new JSONModel();
+			await budgetingModel.loadData(backendUrl+"budget/getBudgetById?code="+selectedID, null, true, "GET",false,false,{
+				'Authorization': 'Bearer ' + this.oJWT
+			});
+			var budgetingData = budgetingModel.getData();
+			var approvedBudget = budgetingData.U_TotalAmount;
+			var usedBudget = budgetingData.BUDGETUSEDCollection;
+			let sumUsedBudget = 0;
+			for (let i = 0; i < usedBudget.length; i++ ) {
+				sumUsedBudget += usedBudget[i]["U_Amount"];
+			};
+			budgetingData.U_RemainingBudget = approvedBudget - sumUsedBudget;
+			var budgetRequestHeader = this.getView().getModel("budgetHeader");
+			budgetRequestHeader.setData(budgetingData);
+			this.getView().byId("createARForm").setBusy(false);
+
+		  },
 		onPress: function (oEvent) {
+
 			var oRouter = this.getOwnerComponent().getRouter();
-			var oPath = oEvent.getSource().getBindingContextPath();
-			var id = oPath.split("/").slice(-1).pop();
+			var oRow = oEvent.getSource();
+			var id = oRow.getCells()[0].getText();
 			oRouter.navTo("advanceEmployeeDetail",{
 				ID : id
 			});
 
 		},
 		onAddPress : function(oEvent){
-			const oModel = this.getView().getModel("new_ea_items");
+			const oModel = this.getView().getModel("new_ar_items");
 			var oModelData = oModel.getData();
 			var oNewObject = {
-				"account_code": "",
-				"item_name": "",
-				"amount": ""
+				"U_AccountCode": "",
+				"U_ItemCode": "",
+				"U_Amount": ""
 			};
-			oModelData.itemRow.push(oNewObject);
-			console.log(oModelData.itemRow);
+			oModelData.ADVANCEREQLINESCollection.push(oNewObject);
 			var f = new sap.ui.model.json.JSONModel(oModelData);
-			this.getView().setModel(f, 'new_ea_items');
+			this.getView().setModel(f, 'new_ar_items');
 			f.refresh();
 		
+		},
+		onSaveButtonClick : function(oEvent) {
+			var oDialog = this.oDialog;
+			oDialog.setBusy(true);
+			var advanceRequestModel = this.getView().getModel("advanceRequests");
+			const oModel = this.getView().getModel("advanceRequestHeader");
+			const oModelItems = this.getView().getModel("new_ar_items");
+			oModel.setProperty("/ADVANCEREQLINESCollection", oModelItems.getData().ADVANCEREQLINESCollection);
+			var oProperty = oModel.getProperty("/");
+			var view = this.getView();
+			var oJWT = this.oJWT;
+
+			$.ajax({
+				type: "POST",
+				data: JSON.stringify(oProperty),
+				crossDomain: true,
+				headers: { 'Authorization': 'Bearer ' + oJWT },
+				url: backendUrl+'advanceRequest/createAdvanceRequest',
+				contentType: "application/json",
+				success: function (res, status, xhr) {
+					  //success code
+					oDialog.setBusy(false);
+					oDialog.close();
+					advanceRequestModel.loadData(backendUrl+"advanceRequest/getAdvanceRequests", null, true, "GET",false,false,{
+						'Authorization': 'Bearer ' + oJWT
+					});
+					MessageToast.show("Advance Request created");
+					$(".sapMMessageToast").css("background", "#256f3a");
+					view.getModel('advanceRequests').refresh();
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+				  	console.log("Got an error response: " + textStatus + errorThrown);
+				}
+			  });
+			// alert(JSON.stringify(oProperty));
+	   },
+		onAmountChange : function(event){
+			const oModel = this.getView().getModel("new_ar_items");
+			var oModelData = oModel.getData().ADVANCEREQLINESCollection;
+			console.log(oModelData);
+			let sum = 0;
+			for (let i = 0; i < oModelData.length; i++ ) {
+				sum += oModelData[i]["U_Amount"];
+			}
+			console.log(sum);
+			const oModelHeader = this.getView().getModel("advanceRequestHeader");
+			oModelHeader.setProperty("/U_Amount", sum);
+
 		}
     });
  });

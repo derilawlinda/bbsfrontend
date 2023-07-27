@@ -35,7 +35,7 @@ sap.ui.define([
 		});
 		this.getView().setModel(budgetRequestHeader,"budgetHeader");
 		var oBudgetingModel = new JSONModel();
-		oBudgetingModel.loadData(backendUrl+"getBudget", null, true, "GET",false,false,{
+		oBudgetingModel.loadData(backendUrl+"budget/getApprovedBudget", null, true, "GET",false,false,{
 			'Authorization': 'Bearer ' + this.oJWT
 		});
 		this.getOwnerComponent().setModel(oBudgetingModel,"budgeting");
@@ -77,9 +77,12 @@ sap.ui.define([
 			}
 		},
 		onBudgetChange : function(oEvent){
-			var budgetingModel = this.getView().getModel("budgeting");
-			var budgetingData = budgetingModel.getData().value;
 			var selectedID = parseInt(oEvent.getParameters('selectedItem').value);
+			var budgetingModel = new JSONModel();
+			budgetingModel.loadData(backendUrl+"budget/getBudgetById?code="+selectedID, null, true, "GET",false,false,{
+				'Authorization': 'Bearer ' + this.oJWT
+			});
+			var budgetingData = budgetingModel.getData().value;
 			let result = _.find(budgetingData, function(obj) {
 				if (obj.Code == selectedID) {
 					return true;

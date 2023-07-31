@@ -32,6 +32,7 @@
 								value="{materialRequestHeader>/U_BudgetCode}"
 								selectionChange="onSelectionChange"
 								showSecondaryValues="true"
+								filterSecondaryValues="true"
 								items="{
 								path: 'budgeting>/value',
 								templateShareable: false
@@ -83,7 +84,7 @@
 					</f:content>
 				</f:SimpleForm>
 
-                 <table:Table id="tableId" 
+                 <table:Table id="MRItemsTableID" 
                         rows="{new_mr_items>/MATERIALREQLINESCollection}"
 						visibleRowCount="7"
 						 
@@ -108,14 +109,14 @@
 							<ComboBox width="100%"
 								selectedKey="{new_mr_items>U_AccountCode}"
 								items="{
-								path: 'accounts>/data',
+								path: 'accounts>/value',
 								templateShareable: false
 								}"
 							>
 
 								<core:Item
-									key="{accounts>AccountCode}"
-									text="{accounts>AccountCode} - {accounts>AccountName}"
+									key="{accounts>Code}"
+									text="{accounts>Code} - {accounts>Name}"
 								/>
 
 							</ComboBox>

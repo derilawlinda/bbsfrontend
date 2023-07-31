@@ -5,7 +5,7 @@ xmlns="sap.m"
 xmlns:f="sap.f"
 xmlns:table="sap.ui.table" 
 >
-  <f:DynamicPage  id="_IDGenDynamicPage1" headerExpanded="true" toggleHeaderOnTitleClick="true" class="sapUiContentPadding">
+  <f:DynamicPage  id="reimbursementTableID" headerExpanded="true" toggleHeaderOnTitleClick="true" class="sapUiContentPadding">
     
     <f:content>
       <Table 
@@ -13,9 +13,9 @@ xmlns:table="sap.ui.table"
         inset="false"
         selectionChange="handleSelectionChange"
         items="{
-					path: 'reimbursement>/data',
+					path: 'reimbursements>/value',
 					sorter: {
-						path: 'ID'
+						path: 'Code'
 					}
 				}">
          	<headerToolbar>
@@ -54,17 +54,22 @@ xmlns:table="sap.ui.table"
              <ColumnListItem id="_IDGenColumnListItem1" vAlign="Middle" type="Navigation" press=".onPress" >
                 <cells>
                     	<ObjectIdentifier id="_IDGenObjectIdentifier1"
-						    text="{reimbursement>ID}"/>
+						    text="{reimbursements>Code}"/>
                         <Text id="_IDGenText1"
-						    text="{reimbursement>date}" />
+						    text="{path : 'reimbursements>CreateDate', formatter:'.dateFormatter'}" />
                           <Text id="_IDGenText3"
-						    text="{reimbursement>disbursed_date}" />
-                        <Text id="_IDGenText2" text="{reimbursement>name}" />
+						    text="{reimbursements>U_DisbursedAt}" />
+                        <Text id="_IDGenText2" text="{reimbursements>Name}" />
                         <ObjectNumber id="_IDGenObjectNumber1" 
                         	number="{
-								parts:[{path:'reimbursement>amount'}]
-							}"/>
-                        <Button id="_IDGenButton1" text="{reimbursement>status}" type="{path:'reimbursement>status', formatter:'.buttonFormatter'}"/>
+                                        parts: [
+                                                {path:'reimbursements>U_TotalAmount'}, 
+                                                        'IDR',
+                                                        'TwoWay'], 
+                                        type:'sap.ui.model.type.Currency',
+                                        formatOptions: {showMeasure: true}
+                                }"/>
+                        <Button id="_IDGenButton1" text="{path : 'reimbursements>U_Status', formatter:'.textFormatter'}"  type="{path:'reimbursements>U_Status', formatter:'.buttonFormatter'}"/>
 
                 </cells>
              </ColumnListItem>

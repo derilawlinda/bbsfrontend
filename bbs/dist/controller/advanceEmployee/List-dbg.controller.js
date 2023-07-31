@@ -1,18 +1,11 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/core/routing/History",
-	"sap/ui/core/Fragment",
-	"sap/ui/layout/HorizontalLayout",
-	"sap/ui/layout/VerticalLayout",
-	"sap/m/Dialog",
-	"sap/m/Button",
-	"sap/m/Label",
 	"sap/m/library",
 	"sap/m/MessageToast",
-	"sap/m/Text",
-	"sap/m/TextArea",
-	"sap/ui/model/json/JSONModel"
- ], function (Controller,History,Fragment,HorizontalLayout, VerticalLayout, Dialog, Button, Label, mobileLibrary, MessageToast, Text, TextArea,JSONModel) {
+	"sap/ui/model/json/JSONModel",
+	"sap/ui/core/library",
+ ], function (Controller,History,mobileLibrary, MessageToast, JSONModel,coreLibrary) {
     "use strict";
 
 	// shortcut for sap.m.ButtonType
@@ -20,6 +13,7 @@ sap.ui.define([
 
 	// shortcut for sap.m.DialogType
 	var DialogType = mobileLibrary.DialogType;
+	var ValueState = coreLibrary.ValueState;
     return Controller.extend("frontend.bbs.controller.advanceEmployee.List", {
        onInit: function () {
 		this.getView().byId("advanceEmployeeTableID").setBusy(true);
@@ -39,8 +33,9 @@ sap.ui.define([
 		this.getView().setModel(oSalesOrderModel,"salesOrder");
 		var oCompaniesModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/companies.json"));
 		this.getView().setModel(oCompaniesModel,"companies");
-		var oItemsModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/items.json"));
-		this.getView().setModel(oItemsModel,"items");
+		var oItemModel = new JSONModel();
+		this.getView().setModel(oItemModel,"items");
+		this.getView().getModel("items").setProperty("/data", []);
 		var oAdvanceRequestHeader = new sap.ui.model.json.JSONModel();
 		var viewModel = new sap.ui.model.json.JSONModel({
 			showCreateButton : true
@@ -58,7 +53,7 @@ sap.ui.define([
 		oBudgetingModel.loadData(backendUrl+"budget/getApprovedBudget", null, true, "GET",false,false,{
 			'Authorization': 'Bearer ' + this.oJWT
 		});
-		this.getOwnerComponent().setModel(oBudgetingModel,"budgeting");
+		this.getView().setModel(oBudgetingModel,"budgeting");
 
 		//NEW AR ITEM MODEL
 		var oNewAdvanceRequestItems = new sap.ui.model.json.JSONModel();
@@ -155,24 +150,49 @@ sap.ui.define([
 			return dateFormatted;
 		},
 		onBudgetChange : async function(oEvent){
-			this.getView().byId("createARForm").setBusy(true);
-			var selectedID = parseInt(oEvent.getParameters('selectedItem').value);
-			var budgetingModel = new JSONModel();
-			await budgetingModel.loadData(backendUrl+"budget/getBudgetById?code="+selectedID, null, true, "GET",false,false,{
-				'Authorization': 'Bearer ' + this.oJWT
-			});
-			var budgetingData = budgetingModel.getData();
-			var approvedBudget = budgetingData.U_TotalAmount;
-			var usedBudget = budgetingData.BUDGETUSEDCollection;
-			let sumUsedBudget = 0;
-			for (let i = 0; i < usedBudget.length; i++ ) {
-				sumUsedBudget += usedBudget[i]["U_Amount"];
-			};
-			budgetingData.U_RemainingBudget = approvedBudget - sumUsedBudget;
-			var budgetRequestHeader = this.getView().getModel("budgetHeader");
-			budgetRequestHeader.setData(budgetingData);
-			this.getView().byId("createARForm").setBusy(false);
+			var oValidatedComboBox = oEvent.getSource(),
+				sSelectedKey = oValidatedComboBox.getSelectedKey(),
+				sValue = oValidatedComboBox.getValue();
 
+			if (!sSelectedKey && sValue) {
+				oValidatedComboBox.setValueState(ValueState.Error);
+				oValidatedComboBox.setValueStateText("Please enter a valid Budget Code");
+			} else {
+				oValidatedComboBox.setValueState(ValueState.None);
+			}
+
+			if(oValidatedComboBox.getValueState() == ValueState.None){
+				this.getView().byId("createARForm").setBusy(true);
+				this.getView().byId("ARItemsTableID").setBusy(true);
+				this.getView().getModel("new_ar_items").setProperty("/ADVANCEREQLINESCollection", []);
+				var selectedID = parseInt(oEvent.getParameters('selectedItem').value);
+				var budgetingModel = new JSONModel();
+				await budgetingModel.loadData(backendUrl+"budget/getBudgetById?code="+selectedID, null, true, "GET",false,false,{
+					'Authorization': 'Bearer ' + this.oJWT
+				});
+				var accountModel = new JSONModel();
+				await accountModel.loadData(backendUrl+"coa/getCOAsByBudget?budgetCode="+selectedID, null, true, "GET",false,false,{
+					'Authorization': 'Bearer ' + this.oJWT
+				});
+				this.getView().setModel(accountModel,"accounts");
+				
+				var budgetingModel = new JSONModel();
+				await budgetingModel.loadData(backendUrl+"budget/getBudgetById?code="+selectedID, null, true, "GET",false,false,{
+					'Authorization': 'Bearer ' + this.oJWT
+				});
+				var budgetingData = budgetingModel.getData();
+				var approvedBudget = budgetingData.U_TotalAmount;
+				var usedBudget = budgetingData.BUDGETUSEDCollection;
+				let sumUsedBudget = 0;
+				for (let i = 0; i < usedBudget.length; i++ ) {
+					sumUsedBudget += usedBudget[i]["U_Amount"];
+				};
+				budgetingData.U_RemainingBudget = approvedBudget - sumUsedBudget;
+				var budgetRequestHeader = this.getView().getModel("budgetHeader");
+				budgetRequestHeader.setData(budgetingData);
+				this.getView().byId("createARForm").setBusy(false);
+				this.getView().byId("ARItemsTableID").setBusy(false);
+			}
 		  },
 		onPress: function (oEvent) {
 
@@ -183,6 +203,36 @@ sap.ui.define([
 				ID : id
 			});
 
+		},
+		onAccountCodeChange : async function(oEvent){
+			
+			var oSelectedItem = oEvent.getSource().getSelectedKey(); //Get Selected Item
+			var oSelectedRow = oEvent.getSource().getParent(); //Selected Row.
+			oSelectedRow.getCells()[1].setEnabled(true);
+
+			var oItemByAccountModel = new JSONModel();
+			await oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount?accountCode='"+oSelectedItem+"'", null, true, "GET",false,false,{
+				'Authorization': 'Bearer ' + this.oJWT
+			});
+			var oItemByAccountData = oItemByAccountModel.getData();
+
+			var oItemModel = this.getView().getModel("items");
+			var oItemData = oItemModel.getData();
+			oItemData.data.push(oItemByAccountData);
+			var i = new sap.ui.model.json.JSONModel(oItemData);
+			this.getView().setModel(i, 'items');
+			console.log(this.getView().getModel('items'));
+			i.refresh();
+
+			oSelectedRow.getCells()[1].bindAggregation("items", {
+				path: 'items>/data/'+ oSelectedRow.getIndex(),
+				template: new sap.ui.core.Item({
+					key: "{items>ItemCode}",
+					text: "{items>ItemCode} - {items>ItemName}"
+				})
+			});
+
+			
 		},
 		onAddPress : function(oEvent){
 			const oModel = this.getView().getModel("new_ar_items");

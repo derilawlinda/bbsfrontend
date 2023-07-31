@@ -142,7 +142,6 @@ xmlns:core="sap.ui.core"
 								showSecondaryValues= "false"
 								filterSecondaryValues= "true"
 								selectedKey="{budgetingDetailModel>U_AccountCode}"
-								value="{budgetingDetailModel>U_AccountCode}"
 								editable="{viewModel>/editable}"
 								items="{
 								path: 'accounts>/data',

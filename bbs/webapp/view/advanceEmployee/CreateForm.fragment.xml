@@ -88,7 +88,7 @@
 					</f:content>
 				</f:SimpleForm>
 
-                 <table:Table id="tableId" 
+                 <table:Table id="ARItemsTableID" 
                         rows="{new_ar_items>/ADVANCEREQLINESCollection}"
 						visibleRowCount="7"
 						 
@@ -112,15 +112,16 @@
 						<table:template>
 							<ComboBox width="100%"
 								selectedKey="{new_ar_items>U_AccountCode}"
+								change="onAccountCodeChange"
 								items="{
-								path: 'accounts>/data',
+								path: 'accounts>/value',
 								templateShareable: false
 								}"
 							>
 
 								<core:Item
-									key="{accounts>AccountCode}"
-									text="{accounts>AccountCode} - {accounts>AccountName}"
+									key="{accounts>Code}"
+									text="{accounts>Code} - {accounts>Name}"
 								/>
 
 							</ComboBox>
@@ -132,6 +133,7 @@
 						<table:template>
 							<ComboBox width="100%"
 								selectedKey="{new_ar_items>U_ItemCode}"
+								enabled="false"
 								items="{
 								path: 'items>/data',
 								templateShareable: false

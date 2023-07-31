@@ -105,7 +105,6 @@ xmlns:core="sap.ui.core"
 								filterSecondaryValues= "true"
 								editable="{viewModel>/editable}"
 								selectedKey="{materialRequestDetailModel>U_AccountCode}"
-								value="{materialRequestDetailModel>U_AccountCode}"
 								items="{
 								path: 'accounts>/data',
 								templateShareable: true
@@ -128,7 +127,6 @@ xmlns:core="sap.ui.core"
 							<ComboBox width="100%"
 								editable="{viewModel>/editable}"
 								selectedKey="{materialRequestDetailModel>U_ItemCode}"
-								value="{materialRequestDetailModel>U_ItemCode}"
 								items="{
 								path: 'items>/data',
 								templateShareable: false

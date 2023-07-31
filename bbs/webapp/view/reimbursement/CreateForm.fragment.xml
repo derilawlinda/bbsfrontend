@@ -4,13 +4,14 @@
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns:core="sap.ui.core"
     xmlns:l="sap.ui.layout"
+	xmlns:table="sap.ui.table"
     
     height="100%">
 	<Dialog
 		id="mainDialog"
-		title="Create Reimbursement">
+		title="Create Reimbursement Request">
 			<VBox class="sapUiSmallMargin" id="formContainer">
-				<f:SimpleForm id="SimpleFormChangeColumn_twoGroups234"
+				<f:SimpleForm id="createReimbursementForm"
 						editable="true"
                         layout="ColumnLayout"
                         columnsM="2"
@@ -20,42 +21,66 @@
                     <core:Title id="_IDGenTitle1" text="Information" />
 
                         <Label id="_IDGenLabel1" text="Date" />
-						<Text id="_IDGenText11" text="18/04/2023" />
+						<Text text="{createFragmentViewModel>/Date}" />
 
                         <Label id="_IDGenLabel2" text="Name" />
-						<Input id="name"></Input>
+						<Input id="name" value="{reimbursementHeader>/Name}" ></Input>
 
 						<Label id="_IDGenLabel4" text="Budget#" />
-						<Select id="budgetNumber">
-							<items>
-								<core:Item id="_IDGenItem3" text="500001" key="500001" />
-								<core:Item id="_IDGenItem4" text="500002" key="500002" />
-							</items>
-						</Select>
+						<ComboBox width="100%"
+								change="onBudgetChange"
+								value="{reimbursementHeader>/U_BudgetCode}"
+								selectionChange="onSelectionChange"
+								showSecondaryValues="true"
+								items="{
+								path: 'budgeting>/value',
+								templateShareable: false
+								}"
+							>
+
+								<core:ListItem
+									key="{budgeting>Code}"
+									text="{budgeting>Code}"
+									additionalText="{budgeting>Name}"
+								/>
+
+						</ComboBox>
 
 						<Label id="_IDGenLabel3" text="Company" />
-						<Text id="_IDGenText5" text="KKB" />
+						<Text id="_IDGenText5"  text="{budgetHeader>/U_Company}"/>
 
 						<Label id="_IDGenLabe20" text="Remaining Budget" />
-						<Text id="_IDGenText20" text="Rp 2.000.000,00" />
+						<ObjectNumber number="{
+									parts: [
+										{path:'budgetHeader>/U_RemainingBudget'}, 
+										 'IDR',
+										 'TwoWay'], 
+									type:'sap.ui.model.type.Currency',
+									formatOptions: {showMeasure: true}
+								}" unit="IDR" />
+
+
+						<Label id="totalAmount" text="Total Reimbursement Amount" />
+						<ObjectNumber ariaLabelledBy="totalAmount" number="{ parts:[{path:'reimbursementHeader>/U_TotalAmount'},'IDR','TwoWay'], type: 'sap.ui.model.type.Currency', formatOptions: {showMeasure: true,decimalSeparator : ',', groupingSeparator : '.'} }" unit="IDR" />
+
 
 						<core:Title id="_IDGenTitle2" text="Category Information" />
 
                         <Label id="_IDGenLabel5" text="Project" />
-						<Text id="_IDGenText15" text="BLIF 2023" />
+						<Text id="_IDGenText15" text="{budgetHeader>/U_Project}" />
 						
 
                         <Label id="_IDGenLabel6" text="Pillar" />
-						<Text id="_IDGenText16" text="Distribution" />
+						<Text id="_IDGenText16" text="{budgetHeader>/U_Pillar}" />
 
                         <Label id="_IDGenLabel7" text="Class" />
-						<Text id="_IDGenText17" text="Baliverse 2023" />
+						<Text id="_IDGenText17" text="{budgetHeader>/U_Classification}" />
 
                         <Label id="_IDGenLabel8" text="Subclass" />
-						<Text id="_IDGenText18" text="Panpel 2023" />
+						<Text id="_IDGenText18" text="{budgetHeader>/U_SubClass}" />
 						
                         <Label id="_IDGenLabel9" text="Subclass2" />
-						<Text id="_IDGenText19" text="Liga 1 - 2023/2024" />
+						<Text id="_IDGenText19" text="{budgetHeader>/U_SubClass2}" />
 						
 						
 						
@@ -63,34 +88,126 @@
 					</f:content>
 				</f:SimpleForm>
 
-                <Table id="tableId" 
-                         mode="Delete" delete="deleteRow">
-                    <headerToolbar>
-                    <Toolbar id="_IDGenToolbar1">
-                    <ToolbarSpacer id="_IDGenToolbarSpacer11"></ToolbarSpacer>
-                    <Button id="_IDGenButton11" icon="sap-icon://add" type="Emphasized" text="Add Item" press="onAdd" />
-                    </Toolbar>
-                    </headerToolbar>
-                    <columns>
-                    <Column id="_IDGenColumn11" width="50%">
-                    <Text id="_IDGenText12" text="Amount" />
-                    </Column>
-                    <Column id="_IDGenColumn12" width="50%">
-                    <Text id="_IDGenText13" text="Currency" />
-                    </Column>
+                 <table:Table id="ReimbursementItemsTableID" 
+                        rows="{new_re_items>/REIMBURSEMENTLINESCollection}"
+						visibleRowCount="7"
+						 
+				>
+				
+				<table:extension>
+					<OverflowToolbar  class="sapMTBHeader-CTX">
+						<Title text="Items"/>
+						<ToolbarSpacer />
+						<Button 
+							icon="sap-icon://add"
+							press=".onAddPress"
+							type="Transparent"
+						/>
+					</OverflowToolbar>
+				</table:extension>
+                  
+				<table:columns>
+					<table:Column >
+						<Text text="Account Code" />
+						<table:template>
+							<ComboBox width="100%"
+								selectedKey="{new_re_items>U_AccountCode}"
+								change="onAccountCodeChange"
+								items="{
+								path: 'accounts>/value',
+								templateShareable: false
+								}"
+							>
 
-                    <Column id="_IDGenColumn13" width="50%">
-                    <Text id="_IDGenText14" text="Delete" />
-                    </Column>
-                    </columns>
-                </Table>
+								<core:Item
+									key="{accounts>Code}"
+									text="{accounts>Code} - {accounts>Name}"
+								/>
+
+							</ComboBox>
+						</table:template>
+					</table:Column>
+
+					<table:Column >
+						<Text text="Item Name" />
+						<table:template>
+							<ComboBox width="100%"
+								selectedKey="{new_re_items>U_ItemCode}"
+								enabled="false"
+								items="{
+								path: 'items>/data',
+								templateShareable: false
+								}"
+							>
+
+								<core:Item
+									key="{items>ItemCode}"
+									text="{items>ItemCode} - {items>ItemName}"
+								/>
+
+							</ComboBox>
+						</table:template>
+					</table:Column>
+
+					<table:Column >
+						<Text text="Description" />
+						<table:template>
+							<Input
+								id="inputDescription"
+								type="Text"
+								placeholder="Description"
+								value="{new_re_items>U_Description}"
+								/>
+						</table:template>
+					</table:Column>
+
+
+
+					<table:Column width="8rem">
+						<Text text="NPWP" />
+						<table:template>
+								<Select 
+								selectedKey="{new_re_items>U_NPWP}"
+								items="{
+								path: 'viewModel>/NPWP',
+								templateShareable: false
+								}">
+									<core:Item text="{viewModel>Name}" key="{viewModel>Name}"/>
+								</Select>
+						</table:template>
+					</table:Column>
+
+					<table:Column >
+						<Text text="Amount"  />
+						<table:template>
+							<Input
+								id="inputNumber"
+								placeholder="Reimbursement amount"
+								value="{
+									parts: [
+										{path:'new_re_items>U_Amount'}, 
+										 'IDR',
+										 'TwoWay'], 
+									type:'sap.ui.model.type.Currency',
+									formatOptions: {showMeasure: true}
+								}"
+								ariaLabelledBy="InputNumberLabel"
+								change="onAmountChange"
+								/>
+						</table:template>
+					</table:Column>
+
+				</table:columns>
+
+				
+                </table:Table>
 			</VBox>
         <Page id="_IDGenPage1">
 			
 		<footer>
 				<Toolbar id="_IDGenToolbar12">
 					<ToolbarSpacer id="_IDGenToolbarSpacer12" />
-                    <Button id="_IDGenButton12" type="Emphasized" text="Create Reimbursement" press="onSaveButtonClick" />
+                    <Button id="_IDGenButton12" type="Emphasized" text="Create Reimbursement Request" press="onSaveButtonClick" />
 				    <Button id="_IDGenButton13" text="Cancel" press="._closeDialog" />
 				</Toolbar>
 		</footer>

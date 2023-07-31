@@ -1,19 +1,12 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/core/routing/History",
-	"sap/ui/core/Fragment",
-	"sap/ui/layout/HorizontalLayout",
-	"sap/ui/layout/VerticalLayout",
-	"sap/m/Dialog",
-	"sap/m/Button",
-	"sap/m/Label",
 	"sap/m/library",
 	"sap/m/MessageToast",
-	"sap/m/Text",
-	"sap/m/TextArea",
 	"sap/ui/model/json/JSONModel",
-	'frontend/bbs/libs/lodash'
- ], function (Controller,History,Fragment,HorizontalLayout, VerticalLayout, Dialog, Button, Label, mobileLibrary, MessageToast, Text, TextArea,JSONModel) {
+	"sap/ui/core/library",
+	'frontend/bbs/libs/lodash',
+ ], function (Controller,History, mobileLibrary, MessageToast, JSONModel,coreLibrary) {
     "use strict";
 
 	// shortcut for sap.m.ButtonType
@@ -21,6 +14,8 @@ sap.ui.define([
 
 	// shortcut for sap.m.DialogType
 	var DialogType = mobileLibrary.DialogType;
+
+	var ValueState = coreLibrary.ValueState;
     return Controller.extend("frontend.bbs.controller.materialRequest.List", {
        onInit: async function () {
 		this.getView().byId("materialRequestTableID").setBusy(true);
@@ -97,6 +92,9 @@ sap.ui.define([
 			});
 		}
 		this.createMaterialRequestDialog.then(function (oDialog) {
+			const oModel = this.getView().getModel("materialRequestHeader");
+
+			oModel.setData([]);
 			var oCreateFragmentViewModel = new sap.ui.model.json.JSONModel({
 				Date : new Date()
 			});
@@ -161,24 +159,43 @@ sap.ui.define([
 		  
 		},
 		  onBudgetChange : async function(oEvent){
-			this.getView().byId("createMRForm").setBusy(true);
-			var selectedID = parseInt(oEvent.getParameters('selectedItem').value);
-			var budgetingModel = new JSONModel();
-			await budgetingModel.loadData(backendUrl+"budget/getBudgetById?code="+selectedID, null, true, "GET",false,false,{
-				'Authorization': 'Bearer ' + this.oJWT
-			});
-			var budgetingData = budgetingModel.getData();
-			var approvedBudget = budgetingData.U_TotalAmount;
-			var usedBudget = budgetingData.BUDGETUSEDCollection;
-			let sumUsedBudget = 0;
-			for (let i = 0; i < usedBudget.length; i++ ) {
-				sumUsedBudget += usedBudget[i]["U_Amount"];
-			};
-			budgetingData.U_RemainingBudget = approvedBudget - sumUsedBudget;
-			var budgetRequestHeader = this.getView().getModel("budgetHeader");
-			budgetRequestHeader.setData(budgetingData);
-			this.getView().byId("createMRForm").setBusy(false);
+			var oValidatedComboBox = oEvent.getSource(),
+				sSelectedKey = oValidatedComboBox.getSelectedKey(),
+				sValue = oValidatedComboBox.getValue();
 
+			if (!sSelectedKey && sValue) {
+				oValidatedComboBox.setValueState(ValueState.Error);
+				oValidatedComboBox.setValueStateText("Please enter a valid Budget Code");
+			} else {
+				oValidatedComboBox.setValueState(ValueState.None);
+			}
+			if(oValidatedComboBox.getValueState() == ValueState.None){
+				this.getView().byId("createMRForm").setBusy(true);
+				this.getView().byId("MRItemsTableID").setBusy(true);
+				this.getView().getModel("new_mr_items").setProperty("/MATERIALREQLINESCollection", []);
+				var selectedID = parseInt(oEvent.getParameters('selectedItem').value);
+				var budgetingModel = new JSONModel();
+				await budgetingModel.loadData(backendUrl+"budget/getBudgetById?code="+selectedID, null, true, "GET",false,false,{
+					'Authorization': 'Bearer ' + this.oJWT
+				});
+				var accountModel = new JSONModel();
+				await accountModel.loadData(backendUrl+"coa/getCOAsByBudget?budgetCode="+selectedID, null, true, "GET",false,false,{
+					'Authorization': 'Bearer ' + this.oJWT
+				});
+				this.getView().setModel(accountModel,"accounts");
+				var budgetingData = budgetingModel.getData();
+				var approvedBudget = budgetingData.U_TotalAmount;
+				var usedBudget = budgetingData.BUDGETUSEDCollection;
+				let sumUsedBudget = 0;
+				for (let i = 0; i < usedBudget.length; i++ ) {
+					sumUsedBudget += usedBudget[i]["U_Amount"];
+				};
+				budgetingData.U_RemainingBudget = approvedBudget - sumUsedBudget;
+				var budgetRequestHeader = this.getView().getModel("budgetHeader");
+				budgetRequestHeader.setData(budgetingData);
+				this.getView().byId("createMRForm").setBusy(false);
+				this.getView().byId("MRItemsTableID").setBusy(false);
+			}
 		  },
 		  onSaveButtonClick : function(oEvent) {
 			var oDialog = this.oDialog;

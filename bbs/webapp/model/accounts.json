@@ -1,115 +1,115 @@
 {
     "data": [
       {
-        "AccountCode": 50100.01,
+        "AccountCode": "50100.0100",
         "AccountName": "HPP RAW MATERIAL"
        },
        {
-        "AccountCode": 50100.03,
+        "AccountCode": 50100.0300,
         "AccountName": "HPP FINISHED GOOD DISTRIBUTION"
        },
        {
-        "AccountCode": 60101,
+        "AccountCode": 60101.0000,
         "AccountName": "BIAYA GAJI"
        },
        {
-        "AccountCode": 60102,
+        "AccountCode": 60102.0000,
         "AccountName": "BIAYA BONUS"
        },
        {
-        "AccountCode": 60103,
+        "AccountCode": 60103.0000,
         "AccountName": "BIAYA TUNJANGAN"
        },
        {
-        "AccountCode": 60200.01,
+        "AccountCode": 60200.0100,
         "AccountName": "BIAYA PEMAIN"
        },
        {
-        "AccountCode": 60200.02,
+        "AccountCode": 60200.0200,
         "AccountName": "BIAYA OLAHRAGA DAN REKREASI"
        },
        {
-        "AccountCode": 60200.03,
+        "AccountCode": 60200.0300,
         "AccountName": "BIAYA PELATIHAN DAN PENGEMBANGAN"
        },
        {
-        "AccountCode": 60200.04,
+        "AccountCode": 60200.0400,
         "AccountName": "BIAYA SERAGAM DAN PERLENGKAPAN PEMAIN"
        },
        {
-        "AccountCode": 60200.05,
+        "AccountCode": 60200.0500,
         "AccountName": "BIAYA RUMAH SAKIT DAN PENGOBATAN TEKNIS"
        },
        {
-        "AccountCode": 60200.06,
+        "AccountCode": 60200.0600,
         "AccountName": "BIAYA PERLENGKAPAN MEDIS TEKNIS"
        },
        {
-        "AccountCode": 60300.01,
+        "AccountCode": 60300.0100,
         "AccountName": "BIAYA RUMAH SAKIT DAN PENGOBATAN MANAJEMEN"
        },
        {
-        "AccountCode": 60300.02,
+        "AccountCode": 60300.0200,
         "AccountName": "BIAYA PERLENGKAPAN MEDIS MANAJEMEN"
        },
        {
-        "AccountCode": 60400.01,
+        "AccountCode": 60400.0100,
         "AccountName": "JARINGAN - INTERNET"
        },
        {
-        "AccountCode": 60400.02,
+        "AccountCode": 60400.0200,
         "AccountName": "JARINGAN - SNG & TRANSPONDER"
        },
        {
-        "AccountCode": 60500.01,
+        "AccountCode": 60500.0100,
         "AccountName": "TIKET PESAWAT"
        },
        {
-        "AccountCode": 60500.02,
+        "AccountCode": 60500.0200,
         "AccountName": "TIKET LAIN (BIS, KERETA, KAPAL, DLL)"
        },
        {
-        "AccountCode": 60500.03,
+        "AccountCode": 60500.0300,
         "AccountName": "OPERASIONAL DINAS"
        },
        {
-        "AccountCode": 60500.04,
+        "AccountCode": 60500.0400,
         "AccountName": "BBM, PARKIR DAN TOL"
        },
        {
-        "AccountCode": 60500.05,
+        "AccountCode": 60500.0500,
         "AccountName": "HOTEL DAN PENGINAPAN"
        },
        {
-        "AccountCode": 60600.01,
+        "AccountCode": 60600.0100,
         "AccountName": "KONSUMSI - OPERASIONAL"
        },
        {
-        "AccountCode": 60600.02,
+        "AccountCode": 60600.0200,
         "AccountName": "KONSUMSI - NON-OPERASIONAL"
        },
        {
-        "AccountCode": 60600.03,
+        "AccountCode": 60600.0300,
         "AccountName": "KONSUMSI - PERJAMUAN DAN REPRESENTASI"
        },
        {
-        "AccountCode": 60700.01,
+        "AccountCode": 60700.0100,
         "AccountName": "DONASI\/HADIAH - HADIAH"
        },
        {
-        "AccountCode": 60700.02,
+        "AccountCode": 60700.0200,
         "AccountName": "DONASI\/HADIAH - SUMBANGAN"
        },
        {
-        "AccountCode": 60700.03,
+        "AccountCode": 60700.0300,
         "AccountName": "DONASI\/HADIAH - HADIAH PERTANDINGAN"
        },
        {
-        "AccountCode": 60700.04,
+        "AccountCode": 60700.0400,
         "AccountName": "DONASI\/HADIAH - HARI KEAGAMAAN"
        },
        {
-        "AccountCode": 60700.05,
+        "AccountCode": 60700.0500,
         "AccountName": "DONASI\/HADIAH - PR PACKAGE"
        },
        {
@@ -343,6 +343,18 @@
        {
         "AccountCode": 50100.02,
         "AccountName": "HPP FINISHED GOOD STORE"
-       }
+       },
+       {
+        "AccountCode": 11510.0000,
+        "AccountName": "PERSEDIAAN RAW MATERIAL"
+    },
+    {
+        "AccountCode": 11520.0000,
+        "AccountName": "PERSEDIAAN FINISHED GOOD STORE"
+    },
+    {
+        "AccountCode": 11530.0000,
+        "AccountName": "PERSEDIAAN FINISHED GOOD DISTRIBUTION"
+    }
     ]
   }

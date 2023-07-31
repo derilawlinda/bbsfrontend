@@ -343,6 +343,14 @@
        {
         "AccountCode": "50100.0200",
         "AccountName": "HPP FINISHED GOOD STORE"
-       }
+       },
+       {
+        "AccountCode": "11520.0000",
+        "AccountName": "PERSEDIAAN FINISHED GOOD STORE"
+      },
+      {
+          "AccountCode": "11530.0000",
+          "AccountName": "PERSEDIAAN FINISHED GOOD DISTRIBUTION"
+      }
     ]
   }

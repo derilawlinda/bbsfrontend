@@ -83,7 +83,7 @@
 					</f:content>
 				</f:SimpleForm>
 
-                 <table:Table id="tableId" 
+                 <table:Table id="MIItemsTableID" 
                         rows="{new_mi_items>/MATERIALISSUELINESCollection}"
 						visibleRowCount="7"
 						 
@@ -102,41 +102,44 @@
 				</table:extension>
                   
 				<table:columns>
+
+					<table:Column >
+						<Text text="No" />
+						<table:template>
+							<Text text="{new_mi_items>Serial}" />
+						</table:template>
+					</table:Column>
+
+					
 					<table:Column >
 						<Text text="Account Code" />
 						<table:template>
 							<ComboBox width="100%"
-								selectedKey="{new_mi_items>U_AccountCode}"
+								change="onAccountCodeChange"
 								items="{
-								path: 'accounts>/data',
+								path: 'accounts>/value/',
 								templateShareable: false
 								}"
 							>
 
 								<core:Item
-									key="{accounts>AccountCode}"
-									text="{accounts>AccountCode} - {accounts>AccountName}"
+									key="{accounts>Code}"
+									text="{accounts>Code} - {accounts>Name}"
 								/>
 
 							</ComboBox>
 						</table:template>
 					</table:Column>
 
+					
+
 					<table:Column >
 						<Text text="Item Name" />
 						<table:template>
 							<ComboBox width="100%"
 								selectedKey="{new_mi_items>U_ItemCode}"
-								items="{
-								path: 'items>/data',
-								templateShareable: false
-								}"
+								enabled="false"
 							>
-
-								<core:Item
-									key="{items>ItemCode}"
-									text="{items>ItemCode} - {items>ItemName}"
-								/>
 
 							</ComboBox>
 						</table:template>

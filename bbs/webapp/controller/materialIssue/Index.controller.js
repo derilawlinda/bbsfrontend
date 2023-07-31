@@ -4,9 +4,10 @@ sap.ui.define([
 	"sap/m/library",
 	"sap/ui/model/json/JSONModel",
 	"sap/m/MessageToast",
+	"sap/ui/core/library",
 	'frontend/bbs/libs/lodash'
 	
- ], function (Controller,History,mobileLibrary, JSONModel,MessageToast) {
+ ], function (Controller,History,mobileLibrary, JSONModel,MessageToast,coreLibrary) {
     "use strict";
 
 	// shortcut for sap.m.ButtonType
@@ -14,14 +15,14 @@ sap.ui.define([
 
 	// shortcut for sap.m.DialogType
 	var DialogType = mobileLibrary.DialogType;
+	var ValueState = coreLibrary.ValueState;
     return Controller.extend("frontend.bbs.controller.materialIssue.Index", {
        onInit: async function  () {
 		this.getView().byId("materialIssueTableID").setBusy(true);
 		var currentRoute = this.getRouter().getHashChanger().getHash();
 		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 		this.oJWT = oStore.get("jwt");
-		var oItemsModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/items.json"));
-		this.getView().setModel(oItemsModel,"items");
+		
 		var oModel = new JSONModel();
 		oModel.loadData(backendUrl+"materialIssue/getMaterialIssues", null, true, "GET",false,false,{
 			'Authorization': 'Bearer ' + this.oJWT
@@ -30,6 +31,9 @@ sap.ui.define([
 		oModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
 			this.getView().byId("materialIssueTableID").setBusy(false);
 		}.bind(this));
+
+		var oItemModel = new JSONModel();
+		this.getView().setModel(oItemModel,"items");
 		
 		//GET BUDGET DATA
 		var budgetRequestHeader = new sap.ui.model.json.JSONModel({
@@ -79,25 +83,76 @@ sap.ui.define([
 			}
 		},
 		onBudgetChange : async function(oEvent){
-			this.getView().byId("createMIForm").setBusy(true);
-			var selectedID = parseInt(oEvent.getParameters('selectedItem').value);
-			var budgetingModel = new JSONModel();
-			await budgetingModel.loadData(backendUrl+"budget/getBudgetById?code="+selectedID, null, true, "GET",false,false,{
+			this.getView().getModel("budgetHeader").setProperty("/", []);
+			this.getView().getModel("new_mi_items").setProperty("/MATERIALISSUELINESCollection", []);
+			var oValidatedComboBox = oEvent.getSource(),
+				sSelectedKey = oValidatedComboBox.getSelectedKey(),
+				sValue = oValidatedComboBox.getValue();
+
+			if (!sSelectedKey && sValue) {
+				oValidatedComboBox.setValueState(ValueState.Error);
+				oValidatedComboBox.setValueStateText("Please enter a valid Budget Code");
+			} else {
+				oValidatedComboBox.setValueState(ValueState.None);
+			}
+			if(oValidatedComboBox.getValueState() == ValueState.None){
+				this.getView().byId("createMIForm").setBusy(true);
+				this.getView().byId("MIItemsTableID").setBusy(true);
+				var selectedID = parseInt(oEvent.getParameters('selectedItem').value);
+				var budgetingModel = new JSONModel();
+				await budgetingModel.loadData(backendUrl+"budget/getBudgetById?code="+selectedID, null, true, "GET",false,false,{
+					'Authorization': 'Bearer ' + this.oJWT
+				});
+				var accountModel = new JSONModel();
+				await accountModel.loadData(backendUrl+"coa/getCOAsByBudget?budgetCode="+selectedID, null, true, "GET",false,false,{
+					'Authorization': 'Bearer ' + this.oJWT
+				});
+				this.getView().setModel(accountModel,"accounts");
+				var budgetingData = budgetingModel.getData();
+				var approvedBudget = budgetingData.U_TotalAmount;
+				var usedBudget = budgetingData.BUDGETUSEDCollection;
+				let sumUsedBudget = 0;
+				for (let i = 0; i < usedBudget.length; i++ ) {
+					sumUsedBudget += usedBudget[i]["U_Amount"];
+				};
+				budgetingData.U_RemainingBudget = approvedBudget - sumUsedBudget;
+				var budgetRequestHeader = this.getView().getModel("budgetHeader");
+				budgetRequestHeader.setData(budgetingData);
+				this.getView().byId("createMIForm").setBusy(false);
+				this.getView().byId("MIItemsTableID").setBusy(false);
+			}
+		  },
+		onAccountCodeChange : async function(oEvent){
+			
+			var oSelectedItem = oEvent.getSource().getSelectedKey(); //Get Selected Item
+			var oSelectedRow = oEvent.getSource().getParent(); //Selected Row.
+			oSelectedRow.getCells()[2].setEnabled(true);
+
+			var oItemByAccountModel = new JSONModel();
+			await oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount?accountCode='"+oSelectedItem+"'", null, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
 			});
-			var budgetingData = budgetingModel.getData();
-			var approvedBudget = budgetingData.U_TotalAmount;
-			var usedBudget = budgetingData.BUDGETUSEDCollection;
-			let sumUsedBudget = 0;
-			for (let i = 0; i < usedBudget.length; i++ ) {
-				sumUsedBudget += usedBudget[i]["U_Amount"];
-			};
-			budgetingData.U_RemainingBudget = approvedBudget - sumUsedBudget;
-			var budgetRequestHeader = this.getView().getModel("budgetHeader");
-			budgetRequestHeader.setData(budgetingData);
-			this.getView().byId("createMIForm").setBusy(false);
+			var oItemByAccountData = oItemByAccountModel.getData();
 
-		  },
+			var oItemModel = this.getView().getModel("items");
+			this.getView().getModel("items").setProperty("/data", []);
+			var oItemData = oItemModel.getData();
+			oItemData.data.push(oItemByAccountData);
+			var i = new sap.ui.model.json.JSONModel(oItemData);
+			this.getView().setModel(i, 'items');
+			console.log(this.getView().getModel('items'));
+			i.refresh();
+
+			oSelectedRow.getCells()[2].bindAggregation("items", {
+				path: 'items>/data/'+ oSelectedRow.getIndex(),
+				template: new sap.ui.core.Item({
+					key: "{items>ItemCode}",
+					text: "{items>ItemCode} - {items>ItemName}"
+				})
+			});
+
+			
+		},
 		onCreateButtonClick : function(oEvent) {
 			if (!this.createMaterialIssueDialog) {
 				this.createMaterialIssueDialog = this.loadFragment({
@@ -134,6 +189,7 @@ sap.ui.define([
 			const oModel = this.getView().getModel("new_mi_items");
 			var oModelData = oModel.getData();
 			var oNewObject = {
+				"Serial": oModelData.MATERIALISSUELINESCollection.length,
 				"U_AccountCode": "",
 				"U_ItemCode": "",
 				"U_Qty": ""

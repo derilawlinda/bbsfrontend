@@ -34,15 +34,15 @@
 								showSecondaryValues="true"
 								filterSecondaryValues="true"
 								items="{
-								path: 'budgeting>/value',
+								path: 'MRbudgets>/value',
 								templateShareable: false
 								}"
 							>
 
 								<core:ListItem
-									key="{budgeting>Code}"
-									text="{budgeting>Code}"
-									additionalText="{budgeting>Name}"
+									key="{MRbudgets>Code}"
+									text="{MRbudgets>Code}"
+									additionalText="{MRbudgets>Name}"
 								/>
 
 						</ComboBox>

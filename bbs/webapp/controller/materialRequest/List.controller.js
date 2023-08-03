@@ -48,11 +48,11 @@ sap.ui.define([
 			U_RemainingBudget : 0
 		});
 		this.getView().setModel(budgetRequestHeader,"budgetHeader");
-		var oBudgetingModel = new JSONModel();
-		oBudgetingModel.loadData(backendUrl+"budget/getApprovedBudget", null, true, "GET",false,false,{
+		var _oBudgetingModel = new JSONModel();
+		_oBudgetingModel.loadData(backendUrl+"budget/getApprovedBudget", null, true, "GET",false,false,{
 			'Authorization': 'Bearer ' + this.oJWT
 		});
-		this.getView().setModel(oBudgetingModel,"MRbudgets");
+		this.getView().setModel(_oBudgetingModel,"MRbudgets");
 
 		//NEW MR ITEM MODEL
 		var oNewMaterialRequestItems = new sap.ui.model.json.JSONModel();

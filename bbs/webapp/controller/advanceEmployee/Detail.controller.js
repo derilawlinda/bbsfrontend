@@ -106,9 +106,11 @@ sap.ui.define([
 					var approvedBudget = budgetingData.U_TotalAmount;
 					var usedBudget = budgetingData.BUDGETUSEDCollection;
 					let sumUsedBudget = 0;
-					for (let i = 0; i < usedBudget.length; i++ ) {
-						sumUsedBudget += usedBudget[i]["U_Amount"];
-					};
+					if(usedBudget.length > 0){
+						for (let i = 0; i < usedBudget.length; i++ ) {
+							sumUsedBudget += usedBudget[i]["U_Amount"];
+						};
+					}
 					budgetingData.U_RemainingBudget = approvedBudget - sumUsedBudget;
 					var budgetRequestHeader = this.getView().getModel("budget");
 					budgetRequestHeader.setData(budgetingData);
@@ -206,7 +208,6 @@ sap.ui.define([
 			for (let i = 0; i < oModelData.length; i++ ) {
 				sum += oModelData[i]["U_Amount"];
 			}
-			console.log(sum);
 			const oModelHeader = this.getView().getModel("advanceRequestDetailModel");
 			oModelHeader.setProperty("/U_Amount", sum);
 
@@ -214,20 +215,36 @@ sap.ui.define([
 		onBudgetChange : async function(oEvent){
 			this.getView().byId("createARForm").setBusy(true);
 			var selectedID = parseInt(oEvent.getParameters('selectedItem').value);
-			var budgetingModel = new JSONModel();
+			
+			var budgetingModel = new JSONModel({});
 			await budgetingModel.loadData(backendUrl+"budget/getBudgetById?code="+selectedID, null, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
 			});
+			const oModelHeader = this.getView().getModel("advanceRequestDetailModel");
+			oModelHeader.setProperty("/U_Amount", 0);
 			var budgetingData = budgetingModel.getData();
 			var approvedBudget = budgetingData.U_TotalAmount;
 			var usedBudget = budgetingData.BUDGETUSEDCollection;
 			let sumUsedBudget = 0;
-			for (let i = 0; i < usedBudget.length; i++ ) {
-				sumUsedBudget += usedBudget[i]["U_Amount"];
-			};
-			budgetingData.U_RemainingBudget = approvedBudget - sumUsedBudget;
+			if(usedBudget.length > 0){
+				for (let i = 0; i < usedBudget.length; i++ ) {
+					sumUsedBudget += usedBudget[i]["U_Amount"];
+				};
+			}
+			var remainingBudget = approvedBudget - sumUsedBudget;
+			budgetingData.U_RemainingBudget = remainingBudget;
 			var budgetRequestHeader = this.getView().getModel("budget");
 			budgetRequestHeader.setData(budgetingData);
+			budgetRequestHeader.refresh();
+
+			var oModel = this.getView().getModel("advanceRequestDetailModel");
+			oModel.setProperty("/ADVANCEREQLINESCollection",[]);
+			oModel.refresh();
+			
+			
+
+
+
 			this.getView().byId("createARForm").setBusy(false);
 
 		  },

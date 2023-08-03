@@ -75,7 +75,6 @@ sap.ui.define([
 		}
        },
 	   toggleCreateButton : function(channelId, eventId, parametersMap){
-		console.log(parametersMap);
 			if(parametersMap.roleId == 4 || parametersMap.roleId == 5){
 				this.getView().getModel("viewModel").setProperty("/showCreateButton",false)
 			}
@@ -208,29 +207,33 @@ sap.ui.define([
 			
 			var oSelectedItem = oEvent.getSource().getSelectedKey(); //Get Selected Item
 			var oSelectedRow = oEvent.getSource().getParent(); //Selected Row.
+			oSelectedRow.getCells()[1].setBusy(true);
+			oSelectedRow.getCells()[1].setSelectedKey("");
 			oSelectedRow.getCells()[1].setEnabled(true);
-
-			var oItemByAccountModel = new JSONModel();
-			await oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount?accountCode='"+oSelectedItem+"'", null, true, "GET",false,false,{
-				'Authorization': 'Bearer ' + this.oJWT
-			});
-			var oItemByAccountData = oItemByAccountModel.getData();
+			oSelectedRow.getCells()[1].setEnabled(true);
 
 			var oItemModel = this.getView().getModel("items");
 			var oItemData = oItemModel.getData();
-			oItemData.data.push(oItemByAccountData);
-			var i = new sap.ui.model.json.JSONModel(oItemData);
-			this.getView().setModel(i, 'items');
-			console.log(this.getView().getModel('items'));
-			i.refresh();
+			if(!(oSelectedItem in oItemData)){
+				var oItemByAccountModel = new JSONModel();
+				await oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount?accountCode="+oSelectedItem+"", null, true, "GET",false,false,{
+					'Authorization': 'Bearer ' + this.oJWT
+				});
+				var oItemByAccountData = oItemByAccountModel.getData();
+				oItemData[oSelectedItem] = oItemByAccountData;
+				var i = new sap.ui.model.json.JSONModel(oItemData);
+				this.getView().setModel(i, 'items');
+				i.refresh();
+			}
 
 			oSelectedRow.getCells()[1].bindAggregation("items", {
-				path: 'items>/data/'+ oSelectedRow.getIndex(),
+				path: 'items>/'+ oSelectedItem,
 				template: new sap.ui.core.Item({
 					key: "{items>ItemCode}",
 					text: "{items>ItemCode} - {items>ItemName}"
 				})
 			});
+			oSelectedRow.getCells()[1].setBusy(false);
 
 			
 		},
@@ -247,6 +250,16 @@ sap.ui.define([
 			this.getView().setModel(f, 'new_ar_items');
 			f.refresh();
 		
+		},
+		onDelete: function(oEvent){
+
+			var row = oEvent.getParameters().row;
+			var iIdx = row.getIndex();
+			var oModel = this.getView().getModel("new_ar_items");
+			var oModelLineData = oModel.getData().ADVANCEREQLINESCollection;
+			oModelLineData.splice(iIdx, 1);
+			oModel.setProperty("/ADVANCEREQLINESCollection",oModelLineData);
+			oModel.refresh();
 		},
 		onSaveButtonClick : function(oEvent) {
 			var oDialog = this.oDialog;

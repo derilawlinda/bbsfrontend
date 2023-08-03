@@ -64,12 +64,12 @@ sap.ui.define([
 			this.getOwnerComponent().setModel(oBudgetingModel,"budgeting");
 			advanceRequestDetailModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
 				var userData = oUserModel.getData();
-				var advanceRequestDetailModel = this.getView().getModel("advanceRequestDetailModel").getData();
+				var advanceRequestDetailData = this.getView().getModel("advanceRequestDetailModel").getData();
 				if(userData.user.role_id == 4){
 					viewModel.setProperty("/editable", false);
 					viewModel.setProperty("/is_approver", true);
 					viewModel.setProperty("/is_requestor", false);
-					if(advanceRequestDetailModel.U_Status == 3){
+					if(advanceRequestDetailData.U_Status == 3){
 						viewModel.setProperty("/showFooter", false);
 					}
 				}
@@ -77,21 +77,27 @@ sap.ui.define([
 					viewModel.setProperty("/editable", false);
 					viewModel.setProperty("/is_approver", true);
 					viewModel.setProperty("/is_requestor", false);
-					if(advanceRequestDetailModel.U_Status == 2){
+					if(advanceRequestDetailData.U_Status == 2){
 						viewModel.setProperty("/showFooter", false);
 					}
 				}
 				else if(userData.user.role_id == 3){
 					viewModel.setProperty("/is_approver", false);
 					viewModel.setProperty("/is_requestor", true);
-					if(advanceRequestDetailModel.U_Status != 1){
+					if(advanceRequestDetailData.U_Status != 1){
 						viewModel.setProperty("/showFooter", false);
 						viewModel.setProperty("/editable", false);
 					}
 				};
 
+				var accountModel = new JSONModel();
+				accountModel.loadData(backendUrl+"coa/getCOAsByBudget?budgetCode="+advanceRequestDetailData.U_BudgetCode, null, true, "GET",false,false,{
+					'Authorization': 'Bearer ' + this.oJWT
+				});
+				this.getView().setModel(accountModel,"accounts");
+
 				const oBudgetModel = new JSONModel();
-				oBudgetModel.loadData(backendUrl+"budget/getBudgetById?code="+advanceRequestDetailModel.U_BudgetCode, null, true, "GET",false,false,{
+				oBudgetModel.loadData(backendUrl+"budget/getBudgetById?code="+advanceRequestDetailData.U_BudgetCode, null, true, "GET",false,false,{
 					'Authorization': 'Bearer ' + this.oJWT
 				});
 				this.getOwnerComponent().setModel(oBudgetModel,"budget");
@@ -109,8 +115,88 @@ sap.ui.define([
 					this.getView().byId("advanceRequestPageId").setBusy(false);
 
 				}.bind(this));
+
+				
+
+				var advanceReqLineTable = this.getView().byId("advanceRequestLineTableID");
+				var oItemsModel = this.getView().getModel("items");
+				oItemsModel.setProperty("/data", []);
+				var oItemData = oItemsModel.getData();
+				var itemsByAccount = new JSONModel();
+
+				var accounts = [];
+				for (let i = 0; i < advanceRequestDetailData.ADVANCEREQLINESCollection.length; i++) {
+					if(!(advanceRequestDetailData.ADVANCEREQLINESCollection[i].U_AccountCode.toString() in accounts)){
+						accounts.push(advanceRequestDetailData.ADVANCEREQLINESCollection[i].U_AccountCode);
+					};
+				}
+				var uniqueAccounts = [... new Set(accounts)];
+				
+				for (let i = 0; i < uniqueAccounts.length; i++) {
+					this.getView().byId("advanceRequestPageId").setBusy(true);
+
+					itemsByAccount.loadData(backendUrl+"items/getItemsByAccount?accountCode="+uniqueAccounts[i], null, true, "GET",false,false,{
+						'Authorization': 'Bearer ' + this.oJWT
+					});
+					itemsByAccount.dataLoaded().then(function(){
+						var itemsByAccountData = itemsByAccount.getData();
+						oItemData.data[uniqueAccounts[i]] = itemsByAccountData;
+						var newItemModel = new sap.ui.model.json.JSONModel(oItemData);
+						this.getView().setModel(newItemModel, 'items');
+						newItemModel.refresh();
+						this.getView().byId("advanceRequestPageId").setBusy(false);
+					}.bind(this))
+				};
+
+				
+				for (let i = 0; i < advanceRequestDetailData.ADVANCEREQLINESCollection.length; i++) {
+					advanceReqLineTable.getRows()[i].getCells()[1].setBusy(true);
+					let account = (advanceRequestDetailData.ADVANCEREQLINESCollection[i].U_AccountCode).toString();
+					advanceReqLineTable.getRows()[i].getCells()[1].bindAggregation("items", {
+						path: 'items>/data/'+ account,
+						template: new sap.ui.core.Item({
+							key: "{items>ItemCode}",
+							text: "{items>ItemCode} - {items>ItemName}"
+						})
+					});
+					advanceReqLineTable.getRows()[i].getCells()[1].setBusy(false);
+				}
+
+
 				
 			}.bind(this));
+		},
+		onAccountCodeChange : async function(oEvent){
+			
+			var oSelectedItem = oEvent.getSource().getSelectedKey(); //Get Selected Item
+			var oSelectedRow = oEvent.getSource().getParent(); //Selected Row.
+			oSelectedRow.getCells()[1].setBusy(true);
+			oSelectedRow.getCells()[1].setSelectedKey("");
+			oSelectedRow.getCells()[1].setEnabled(true);
+			oSelectedRow.getCells()[1].setEnabled(true);
+
+			var oItemModel = this.getView().getModel("items");
+			var oItemData = oItemModel.getData();
+			if(!(oSelectedItem.toString() in oItemData)){
+				var oItemByAccountModel = new JSONModel();
+				await oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount?accountCode="+oSelectedItem+"", null, true, "GET",false,false,{
+					'Authorization': 'Bearer ' + this.oJWT
+				});
+				var oItemByAccountData = oItemByAccountModel.getData();
+				oItemData[oSelectedItem] = oItemByAccountData;
+				var i = new sap.ui.model.json.JSONModel(oItemData);
+				this.getView().setModel(i, 'items');
+				i.refresh();
+			}
+
+			oSelectedRow.getCells()[1].bindAggregation("items", {
+				path: 'items>/'+ oSelectedItem,
+				template: new sap.ui.core.Item({
+					key: "{items>ItemCode}",
+					text: "{items>ItemCode} - {items>ItemName}"
+				})
+			});
+			oSelectedRow.getCells()[1].setBusy(false);
 		},
 		onAmountChange : function(event){
 			const oModel = this.getView().getModel("advanceRequestDetailModel");
@@ -204,6 +290,72 @@ sap.ui.define([
 				var oRouter = this.getOwnerComponent().getRouter();
 				oRouter.navTo("dashboard", {}, true);
 			}
+		},
+		onAddPress : function(oEvent){
+			const oModel = this.getView().getModel("advanceRequestDetailModel");
+			var oModelData = oModel.getData();
+			var oNewObject = {
+				"U_AccountCode": "",
+				"U_ItemCode": "",
+				"U_Amount": ""
+			};
+			oModelData.ADVANCEREQLINESCollection.push(oNewObject);
+			var f = new sap.ui.model.json.JSONModel(oModelData);
+			this.getView().setModel(f, 'advanceRequestDetailModel');
+			f.refresh();
+		
+		},
+		onDelete: function(oEvent){
+
+			var row = oEvent.getParameters().row;
+			var iIdx = row.getIndex();
+			var oModel = this.getView().getModel("advanceRequestDetailModel");
+			var oModelLineData = oModel.getData().ADVANCEREQLINESCollection;
+			oModelLineData.splice(iIdx, 1);
+			oModel.setProperty("/ADVANCEREQLINESCollection",oModelLineData);
+			oModel.refresh();
+		},
+		onSaveButtonClick : function(oEvent){
+			var pageDOM = this.getView().byId("advanceRequestPageId");
+			pageDOM.setBusy(true);
+			var oModel = this.getView().getModel("advanceRequestDetailModel");
+			var jsonData = JSON.stringify(oModel.getData());
+			var oJWT = this.oJWT;
+
+			$.ajax({
+				type: "POST",
+				data: jsonData,
+				headers: {"Authorization": "Bearer "+ oJWT},
+				crossDomain: true,
+				url: backendUrl+'advanceRequest/saveAR',
+				contentType: "application/json",
+				success: function (res, status, xhr) {
+					  //success code
+					  pageDOM.setBusy(false);
+					  
+					  if (!this.oSuccessMessageDialog) {
+						this.oSuccessMessageDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Success",
+							state: ValueState.Success,
+							content: new Text({ text: "Advance Request saved" }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									this.oSuccessMessageDialog.close();
+								}.bind(this)
+							})
+						});
+					}
+		
+					this.oSuccessMessageDialog.open();
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+				  	console.log("Got an error response: " + textStatus + errorThrown);
+				}
+			  });
+
 		}
 	});
 });

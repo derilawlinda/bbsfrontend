@@ -91,6 +91,7 @@
                  <table:Table id="ARItemsTableID" 
                         rows="{new_ar_items>/ADVANCEREQLINESCollection}"
 						visibleRowCount="7"
+						rowActionCount="1"
 						 
 				>
 				
@@ -171,6 +172,13 @@
 
 				</table:columns>
 
+				<table:rowActionTemplate>
+					<table:RowAction>
+						<table:items>
+							<table:RowActionItem type="Delete" press="onDelete"></table:RowActionItem>
+						</table:items>
+					</table:RowAction>
+				</table:rowActionTemplate>
 				
                 </table:Table>
 			</VBox>

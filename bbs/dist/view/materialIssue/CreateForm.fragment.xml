@@ -86,6 +86,7 @@
                  <table:Table id="MIItemsTableID" 
                         rows="{new_mi_items>/MATERIALISSUELINESCollection}"
 						visibleRowCount="7"
+						rowActionCount="1"
 						 
 				>
 				
@@ -102,20 +103,13 @@
 				</table:extension>
                   
 				<table:columns>
-
-					<table:Column >
-						<Text text="No" />
-						<table:template>
-							<Text text="{new_mi_items>Serial}" />
-						</table:template>
-					</table:Column>
-
 					
 					<table:Column >
 						<Text text="Account Code" />
 						<table:template>
 							<ComboBox width="100%"
 								change="onAccountCodeChange"
+								selectedKey="{new_mi_items>U_AccountCode}"
 								items="{
 								path: 'accounts>/value/',
 								templateShareable: false
@@ -158,6 +152,14 @@
 					</table:Column>
 
 				</table:columns>
+				
+				<table:rowActionTemplate>
+					<table:RowAction>
+						<table:items>
+							<table:RowActionItem type="Delete" press="onDelete"></table:RowActionItem>
+						</table:items>
+					</table:RowAction>
+				</table:rowActionTemplate>
 
 				
                 </table:Table>

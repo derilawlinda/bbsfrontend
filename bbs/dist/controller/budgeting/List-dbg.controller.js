@@ -3,8 +3,9 @@ sap.ui.define([
     "sap/ui/core/routing/History",
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/model/odata/v4/ODataModel",
-	"sap/m/MessageToast"
- ], function (Controller,History,JSONModel,ODataModel,MessageToast) {
+	"sap/m/MessageToast",
+	"frontend/bbs/model/models"
+ ], function (Controller,History,JSONModel,ODataModel,MessageToast,Models) {
     "use strict";
 	var endTerm;
 	var startTerm;
@@ -45,7 +46,7 @@ sap.ui.define([
 			};
 			this.toggleCreateButton("username","checkToken",a);
 		}
-		
+
 		
 	},
 
@@ -79,12 +80,27 @@ sap.ui.define([
 	},
 
 	   onCreateButtonClick : function(oEvent) {
+
+		
+
+
 		if (!this.createBudgetingDialog) {
 			this.createBudgetingDialog = this.loadFragment({
 				name: "frontend.bbs.view.budgeting.CreateForm"
 			});
 		}
 		this.createBudgetingDialog.then(function (oDialog) {
+			this.getView().byId("CreatePillar").setSelectedKey("");
+			this.getView().byId("CreateClassification").setSelectedKey("");
+			this.getView().byId("CreateSubClassification").setSelectedKey("");
+			this.getView().byId("CreateSubClassification2").setSelectedKey("");
+
+			this.getView().byId("CreatePillar").setEnabled(false);
+			this.getView().byId("CreateClassification").setEnabled(false);
+			this.getView().byId("CreateSubClassification").setEnabled(false);
+			this.getView().byId("CreateSubClassification2").setEnabled(false);
+
+
 			this.oDialog = oDialog;
 			this.oDialog.open();
 			var oCreateFragmentViewModel = new sap.ui.model.json.JSONModel({
@@ -224,6 +240,93 @@ sap.ui.define([
 			oModelHeader.setProperty("/U_TotalAmount", sum);
 			console.log(oModelHeader.getData());
 
-		}
+		},
+		onCompanyChange : function(oEvent){
+			this.getView().byId("CreatePillar").setSelectedKey("");
+			this.getView().byId("CreateClassification").setSelectedKey("");
+			this.getView().byId("CreateSubClassification").setSelectedKey("");
+			this.getView().byId("CreateSubClassification2").setSelectedKey("");
+
+			this.getView().byId("CreateClassification").setEnabled(false);
+			this.getView().byId("CreateSubClassification").setEnabled(false);
+			this.getView().byId("CreateSubClassification2").setEnabled(false);
+
+
+			var comboPath = oEvent.oSource.getSelectedItem().getBindingContext("companies").getPath();
+			this.companyPath = comboPath;
+			var comboPillar = this.getView().byId("CreatePillar");
+			comboPillar.setEnabled(true);
+			comboPillar.bindAggregation("items", {
+				path: "companies>"+ comboPath + "/nodes",
+				template: new sap.ui.core.Item({
+					key: "{companies>text}",
+					text: "{companies>text}"
+				})
+			});
+		},
+
+		onPillarChange : function(oEvent){
+			this.getView().byId("CreateClassification").setSelectedKey("");
+			this.getView().byId("CreateSubClassification").setSelectedKey("");
+			this.getView().byId("CreateSubClassification2").setSelectedKey("");
+
+			this.getView().byId("CreateSubClassification").setEnabled(false);
+			this.getView().byId("CreateSubClassification2").setEnabled(false);
+
+			var comboPath = oEvent.oSource.getSelectedItem().getBindingContext("companies").getPath();
+			var comboBox = this.getView().byId("CreateClassification");
+			comboBox.setEnabled(true);
+			comboBox.bindAggregation("items", {
+				path: "companies>"+ comboPath + "/nodes",
+				template: new sap.ui.core.Item({
+					key: "{companies>text}",
+					text: "{companies>text}"
+				})
+			});
+		},
+
+		onClassificationChange : function(oEvent){
+
+			this.getView().byId("CreateSubClassification").setSelectedKey("");
+			this.getView().byId("CreateSubClassification2").setSelectedKey("");
+
+			this.getView().byId("CreateSubClassification2").setEnabled(false);
+
+			var comboPath = oEvent.oSource.getSelectedItem().getBindingContext("companies").getPath();
+			var comboBox = this.getView().byId("CreateSubClassification");
+			comboBox.setEnabled(true);
+			comboBox.bindAggregation("items", {
+				path: "companies>"+ comboPath + "/nodes",
+				template: new sap.ui.core.Item({
+					key: "{companies>text}",
+					text: "{companies>text}"
+				})
+			});
+		},
+		onSubClassificationChange : function(oEvent){
+
+			this.getView().byId("CreateSubClassification2").setSelectedKey("");
+
+			var comboPath = oEvent.oSource.getSelectedItem().getBindingContext("companies").getPath();
+			var comboBox = this.getView().byId("CreateSubClassification2");
+			comboBox.setEnabled(true);
+			comboBox.bindAggregation("items", {
+				path: "companies>"+ comboPath + "/nodes",
+				template: new sap.ui.core.Item({
+					key: "{companies>text}",
+					text: "{companies>text}"
+				})
+			});
+		},
+		onDelete: function(oEvent){
+
+			var row = oEvent.getParameters().row;
+			var iIdx = row.getIndex();
+			var oModel = this.getView().getModel("new_budgeting_accounts");
+			var oModelLineData = oModel.getData().BUDGETREQLINESCollection;
+			oModelLineData.splice(iIdx, 1);
+			oModel.setProperty("/BUDGETREQLINESCollection",oModelLineData);
+			oModel.refresh();
+		},
     });
  });

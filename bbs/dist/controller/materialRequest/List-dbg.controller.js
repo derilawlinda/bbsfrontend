@@ -37,7 +37,6 @@ sap.ui.define([
 		this.getView().setModel(oCompaniesModel,"companies");
 		var oItemsModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/items.json"));
 		this.getView().setModel(oItemsModel,"items");
-		var oMaterialRequestHeader = new sap.ui.model.json.JSONModel();
 		var viewModel = new sap.ui.model.json.JSONModel({
 			showCreateButton : true
 		});
@@ -45,7 +44,6 @@ sap.ui.define([
 		// var dynamicProperties = [];
 		// oBudgetingDetailModel.setData(dynamicProperties);
 		
-		this.getView().setModel(oMaterialRequestHeader,"materialRequestHeader");
 		var budgetRequestHeader = new sap.ui.model.json.JSONModel({
 			U_RemainingBudget : 0
 		});
@@ -92,9 +90,12 @@ sap.ui.define([
 			});
 		}
 		this.createMaterialRequestDialog.then(function (oDialog) {
-			const oModel = this.getView().getModel("materialRequestHeader");
-
-			oModel.setData([]);
+			let oBudgetHeader = new sap.ui.model.json.JSONModel();
+			this.getView().setModel(oBudgetHeader,"budgetHeader");
+			let newMRItems = new sap.ui.model.json.JSONModel();
+			this.getView().setModel(newMRItems,"new_mr_items");
+			let oMaterialRequestHeader = new sap.ui.model.json.JSONModel();
+			this.getView().setModel(oMaterialRequestHeader,"materialRequestHeader");
 			var oCreateFragmentViewModel = new sap.ui.model.json.JSONModel({
 				Date : new Date()
 			});
@@ -105,10 +106,46 @@ sap.ui.define([
 			var dynamicProperties = [];
 			oMaterialRequestDetailModel.setData(dynamicProperties);
 			this.getView().setModel(oMaterialRequestDetailModel,"materialRequestgDetailModel");
-			this.getView().getModel("new_mr_items").setProperty("/MATERIALREQLINESCollection", []);
+			this.getView().getModel("new_mr_items").setProperty("/METERIALREQLINESCollection", []);
 
 		}.bind(this));
 	   },
+
+	   onAccountCodeChange : async function(oEvent){
+		var oSelectedItem = oEvent.getSource().getSelectedKey(); //Get Selected Item
+		var oSelectedRow = oEvent.getSource().getParent(); //Selected Row.
+		oSelectedRow.getCells()[1].setBusy(true);
+		oSelectedRow.getCells()[1].setSelectedKey("");
+		oSelectedRow.getCells()[1].setEnabled(true);
+		oSelectedRow.getCells()[1].setEnabled(true);
+
+		
+
+		var oItemModel = this.getView().getModel("items");
+		var oItemData = oItemModel.getData();
+		if(!(oSelectedItem in oItemData)){
+			var oItemByAccountModel = new JSONModel();
+			await oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount?accountCode="+oSelectedItem+"", null, true, "GET",false,false,{
+				'Authorization': 'Bearer ' + this.oJWT
+			});
+			var oItemByAccountData = oItemByAccountModel.getData();
+			oItemData[oSelectedItem] = oItemByAccountData;
+			var i = new sap.ui.model.json.JSONModel(oItemData);
+			this.getView().setModel(i, 'items');
+			i.refresh();
+		}
+
+		oSelectedRow.getCells()[1].bindAggregation("items", {
+			path: 'items>/'+ oSelectedItem,
+			template: new sap.ui.core.Item({
+				key: "{items>ItemCode}",
+				text: "{items>ItemCode} - {items>ItemName}"
+			})
+		});
+		oSelectedRow.getCells()[1].setBusy(false);
+
+		
+	},
 	    getRouter : function () {
 			return sap.ui.core.UIComponent.getRouterFor(this);
 		},
@@ -198,6 +235,7 @@ sap.ui.define([
 			}
 		  },
 		  onSaveButtonClick : function(oEvent) {
+			var materialRequest = new Array();
 			var oDialog = this.oDialog;
 			oDialog.setBusy(true);
 			const oModel = this.getView().getModel("materialRequestHeader");
@@ -207,7 +245,7 @@ sap.ui.define([
 			var oProperty = oModel.getProperty("/");
 			var view = this.getView();
 			var oJWT = this.oJWT;
-
+		
 			$.ajax({
 				type: "POST",
 				data: JSON.stringify(oProperty),
@@ -247,6 +285,15 @@ sap.ui.define([
 			this.getView().setModel(f, 'new_mr_items');
 			f.refresh();
 		
+		},
+		onDelete: function(oEvent){
+			var row = oEvent.getParameters().row;
+			var iIdx = row.getIndex();
+			var oModel = this.getView().getModel("new_mr_items");
+			var oModelLineData = oModel.getData().MATERIALREQLINESCollection;
+			oModelLineData.splice(iIdx, 1);
+			oModel.setProperty("/METERIALREQLINESCollection",oModelLineData);
+			oModel.refresh();
 		},
 		textFormatter : function(sStatus){
 			if(sStatus == 1){

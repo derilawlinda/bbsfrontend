@@ -26,13 +26,23 @@ sap.ui.define([
         },
         
 
-         //app Congiguration model
+        createCompanyModel: function () {
+            var oModel = new sap.ui.model.json.JSONModel();
+
+            oPillarConfigurationModel.dataLoaded().then(function(){
+                var pillarJson = oPillarConfigurationModel.getData();
+                oModel.setData(pillarJson);
+                
+            });
+            return oModel;
+        },
          createPillarModel: function () {
             var oModel = new sap.ui.model.json.JSONModel();
             var that = this;
 
             oPillarConfigurationModel.dataLoaded().then(function(){
                 var pillarJson = oPillarConfigurationModel.getData();
+
                 const pillarArray = that.search(pillarJson,'Pillar');
                 oModel.setData(pillarArray);
                 
@@ -79,10 +89,10 @@ sap.ui.define([
             var oSalesOrderModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/sales_order.json"));
             return oSalesOrderModel;
         },
-        createCompanyModel : function () {
-            var oCompanyModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/companies.json"));
-            return oCompanyModel;
-        },
+        // createCompanyModel : function () {
+        //     var oCompanyModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/companies.json"));
+        //     return oCompanyModel;
+        // },
         createAccountModel : function () {
             var oAccountModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/new_accounts.json"));
             return oAccountModel;
@@ -106,6 +116,37 @@ sap.ui.define([
                 }
             endTerm = term;
     
+            });
+            return matches;
+        },
+        createSearchModel: function (parentText, parentSubHeaderValue) {
+            var oModel = new sap.ui.model.json.JSONModel();
+            var that = this;
+
+            oPillarConfigurationModel.dataLoaded().then(function(){
+                var pillarJson = oPillarConfigurationModel.getData();
+                const searchedArray = that.searchChildrenByParentText(pillarJson,parentText,parentSubHeaderValue);
+                oModel.setData(searchedArray);
+                
+            });
+            console.log(oModel);
+            return oModel;
+        },
+        
+
+        searchChildrenByParentText : function (arr, parentText, parentSubHeaderValue) {
+           
+            var matches = [];
+            console.log(arr);
+            if (!Array.isArray(arr)) return matches;
+            var that = this;
+            
+            arr.forEach(function(i) {
+                if (i.text === parentText && i.subheader === parentSubHeaderValue) {
+                   matches.push(i.nodes);
+                }else {
+                    that.search(i.nodes, parentText, parentSubHeaderValue);
+                } 
             });
             return matches;
         }

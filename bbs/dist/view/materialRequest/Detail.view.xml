@@ -49,7 +49,6 @@ xmlns:core="sap.ui.core"
 								change="onBudgetChange"
 								editable="{viewModel>/editable}"
 								value="{materialRequestDetailModel>/U_BudgetCode}"
-								selectionChange="onSelectionChange"
 								showSecondaryValues="true"
 								items="{
 								path: 'budgeting>/value',
@@ -84,15 +83,23 @@ xmlns:core="sap.ui.core"
 					</form:content>
 				</form:SimpleForm>
 
-				<table:Table id="tableId" 
+				<table:Table id="materialReqLineTableID" 
                         rows="{materialRequestDetailModel>/METERIALREQLINESCollection}"
 						visibleRowCount="7"
+						rowActionCount="1"
 						 
 				>
 
 				<table:extension>
 					<OverflowToolbar  class="sapMTBHeader-CTX">
 						<Title text="Items"/>
+						<ToolbarSpacer />
+						<Button 
+							icon="sap-icon://add"
+							press=".onAddPress"
+							type="Transparent"
+						/>
+
 					</OverflowToolbar>
 				</table:extension>
 		                  
@@ -103,6 +110,7 @@ xmlns:core="sap.ui.core"
 							<ComboBox width="100%"
 								showSecondaryValues= "false"
 								filterSecondaryValues= "true"
+								change="onAccountCodeChange"
 								editable="{viewModel>/editable}"
 								selectedKey="{materialRequestDetailModel>U_AccountCode}"
 								items="{
@@ -127,8 +135,9 @@ xmlns:core="sap.ui.core"
 							<ComboBox width="100%"
 								editable="{viewModel>/editable}"
 								selectedKey="{materialRequestDetailModel>U_ItemCode}"
+								enabled="true"
 								items="{
-								path: 'items>/data',
+								path: 'items>/',
 								templateShareable: false
 								}"
 							>
@@ -157,7 +166,17 @@ xmlns:core="sap.ui.core"
 						</table:template>
 					</table:Column>
 
+					
+
 				</table:columns>
+
+				<table:rowActionTemplate>
+					<table:RowAction>
+						<table:items>
+							<table:RowActionItem type="Delete" press="onDelete"></table:RowActionItem>
+						</table:items>
+					</table:RowAction>
+				</table:rowActionTemplate>
 
 				
                 </table:Table>

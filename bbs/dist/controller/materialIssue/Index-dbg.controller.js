@@ -126,30 +126,35 @@ sap.ui.define([
 			
 			var oSelectedItem = oEvent.getSource().getSelectedKey(); //Get Selected Item
 			var oSelectedRow = oEvent.getSource().getParent(); //Selected Row.
-			oSelectedRow.getCells()[2].setEnabled(true);
+			oSelectedRow.getCells()[1].setBusy(true);
+			oSelectedRow.getCells()[1].setSelectedKey("");
+			oSelectedRow.getCells()[1].setEnabled(true);
+			oSelectedRow.getCells()[1].setEnabled(true);
 
-			var oItemByAccountModel = new JSONModel();
-			await oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount?accountCode='"+oSelectedItem+"'", null, true, "GET",false,false,{
-				'Authorization': 'Bearer ' + this.oJWT
-			});
-			var oItemByAccountData = oItemByAccountModel.getData();
+			
 
 			var oItemModel = this.getView().getModel("items");
-			this.getView().getModel("items").setProperty("/data", []);
 			var oItemData = oItemModel.getData();
-			oItemData.data.push(oItemByAccountData);
-			var i = new sap.ui.model.json.JSONModel(oItemData);
-			this.getView().setModel(i, 'items');
-			console.log(this.getView().getModel('items'));
-			i.refresh();
+			if(!(oSelectedItem in oItemData)){
+				var oItemByAccountModel = new JSONModel();
+				await oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount?accountCode="+oSelectedItem+"", null, true, "GET",false,false,{
+					'Authorization': 'Bearer ' + this.oJWT
+				});
+				var oItemByAccountData = oItemByAccountModel.getData();
+				oItemData[oSelectedItem] = oItemByAccountData;
+				var i = new sap.ui.model.json.JSONModel(oItemData);
+				this.getView().setModel(i, 'items');
+				i.refresh();
+			}
 
-			oSelectedRow.getCells()[2].bindAggregation("items", {
-				path: 'items>/data/'+ oSelectedRow.getIndex(),
+			oSelectedRow.getCells()[1].bindAggregation("items", {
+				path: 'items>/'+ oSelectedItem,
 				template: new sap.ui.core.Item({
 					key: "{items>ItemCode}",
 					text: "{items>ItemCode} - {items>ItemName}"
 				})
 			});
+			oSelectedRow.getCells()[1].setBusy(false);
 
 			
 		},
@@ -189,7 +194,6 @@ sap.ui.define([
 			const oModel = this.getView().getModel("new_mi_items");
 			var oModelData = oModel.getData();
 			var oNewObject = {
-				"Serial": oModelData.MATERIALISSUELINESCollection.length,
 				"U_AccountCode": "",
 				"U_ItemCode": "",
 				"U_Qty": ""
@@ -263,6 +267,17 @@ sap.ui.define([
 			}else{
 				return 'Reject'
 			}
-		  }
+		  },
+		
+		  onDelete: function(oEvent){
+
+			var row = oEvent.getParameters().row;
+			var iIdx = row.getIndex();
+			var oModel = this.getView().getModel("new_mi_items");
+			var oModelLineData = oModel.getData().MATERIALISSUELINESCollection;
+			oModelLineData.splice(iIdx, 1);
+			oModel.setProperty("/MATERIALISSUELINESCollection",oModelLineData);
+			oModel.refresh();
+		}
     });
  });

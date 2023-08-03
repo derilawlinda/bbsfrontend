@@ -7,7 +7,7 @@ xmlns:form="sap.ui.layout.form"
 xmlns:table="sap.ui.table"
 xmlns:core="sap.ui.core"
 >
-  <Page  id="materialIssuePageId" showNavButton="true"
+  <Page  id="materialIssuePageID" showNavButton="true"
 		navButtonPress=".onNavBack"
 		showFooter="{viewModel>/showFooter}">
     
@@ -84,15 +84,22 @@ xmlns:core="sap.ui.core"
 					</form:content>
 				</form:SimpleForm>
 
-				<table:Table id="tableId" 
+				<table:Table id="materialIssueLineTableID" 
                         rows="{materialIssueDetailModel>/MATERIALISSUELINESCollection}"
 						visibleRowCount="7"
+						rowActionCount="1"
 						 
 				>
 
 				<table:extension>
 					<OverflowToolbar  class="sapMTBHeader-CTX">
 						<Title text="Items"/>
+						<ToolbarSpacer />
+						<Button 
+							icon="sap-icon://add"
+							press=".onAddPress"
+							type="Transparent"
+						/>
 					</OverflowToolbar>
 				</table:extension>
 		                  
@@ -102,17 +109,18 @@ xmlns:core="sap.ui.core"
 						<table:template>
 							<ComboBox width="100%"
 								filterSecondaryValues= "true"
+								change="onAccountCodeChange"
 								selectedKey="{materialIssueDetailModel>U_AccountCode}"
 								editable="{viewModel>/editable}"
 								items="{
-								path: 'accounts>/data',
+								path: 'accounts>/value/',
 								templateShareable: true
 								}"
 							>
 
 								<core:ListItem
-									key="{accounts>AccountCode}"
-									text="{accounts>AccountCode} - {accounts>AccountName} "
+									key="{accounts>Code}"
+									text="{accounts>Code} - {accounts>Name} "
 								/>
 
 							</ComboBox>
@@ -125,17 +133,7 @@ xmlns:core="sap.ui.core"
 							<ComboBox width="100%"
 								selectedKey="{materialIssueDetailModel>U_ItemCode}"
 								editable="{viewModel>/editable}"
-								items="{
-								path: 'items>/data',
-								templateShareable: false
-								}"
 							>
-
-								<core:Item
-									key="{items>ItemCode}"
-									text="{items>ItemCode} - {items>ItemName}"
-								/>
-
 							</ComboBox>
 							
 						</table:template>
@@ -157,6 +155,14 @@ xmlns:core="sap.ui.core"
 					</table:Column>
 
 				</table:columns>
+
+				<table:rowActionTemplate>
+					<table:RowAction>
+						<table:items>
+							<table:RowActionItem type="Delete" press="onDelete"></table:RowActionItem>
+						</table:items>
+					</table:RowAction>
+				</table:rowActionTemplate>
 
 				
                 </table:Table>

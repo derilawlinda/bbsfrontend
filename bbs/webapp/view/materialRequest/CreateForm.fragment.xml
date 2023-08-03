@@ -29,7 +29,7 @@
 						<Label id="_IDGenLabel4" text="Budget#" />
 						<ComboBox width="100%"
 								change="onBudgetChange"
-								value="{materialRequestHeader>/U_BudgetCode}"
+								selectedKey="{materialRequestHeader>/U_BudgetCode}"
 								selectionChange="onSelectionChange"
 								showSecondaryValues="true"
 								filterSecondaryValues="true"
@@ -87,6 +87,7 @@
                  <table:Table id="MRItemsTableID" 
                         rows="{new_mr_items>/MATERIALREQLINESCollection}"
 						visibleRowCount="7"
+						rowActionCount="1"
 						 
 				>
 				
@@ -107,6 +108,7 @@
 						<Text text="Account Code" />
 						<table:template>
 							<ComboBox width="100%"
+								change="onAccountCodeChange"
 								selectedKey="{new_mr_items>U_AccountCode}"
 								items="{
 								path: 'accounts>/value',
@@ -128,16 +130,8 @@
 						<table:template>
 							<ComboBox width="100%"
 								selectedKey="{new_mr_items>U_ItemCode}"
-								items="{
-								path: 'items>/data',
-								templateShareable: false
-								}"
+								enabled="false"
 							>
-
-								<core:Item
-									key="{items>ItemCode}"
-									text="{items>ItemCode} - {items>ItemName}"
-								/>
 
 							</ComboBox>
 						</table:template>
@@ -156,6 +150,15 @@
 					</table:Column>
 
 				</table:columns>
+
+				<table:rowActionTemplate>
+					<table:RowAction>
+						<table:items>
+							<table:RowActionItem type="Delete" press="onDelete"></table:RowActionItem>
+						</table:items>
+					</table:RowAction>
+				</table:rowActionTemplate>
+
 
 				
                 </table:Table>

@@ -27,7 +27,7 @@ sap.ui.define([
 		oModel.loadData(backendUrl+"materialIssue/getMaterialIssues", null, true, "GET",false,false,{
 			'Authorization': 'Bearer ' + this.oJWT
 		});
-		this.getOwnerComponent().setModel(oModel,"materialIssue");
+		this.getView().setModel(oModel,"materialIssue");
 		oModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
 			this.getView().byId("materialIssueTableID").setBusy(false);
 		}.bind(this));
@@ -44,7 +44,7 @@ sap.ui.define([
 		oBudgetingModel.loadData(backendUrl+"budget/getApprovedBudget", null, true, "GET",false,false,{
 			'Authorization': 'Bearer ' + this.oJWT
 		});
-		this.getOwnerComponent().setModel(oBudgetingModel,"budgeting");
+		this.getView().setModel(oBudgetingModel,"budgeting");
 
 		//NEW MATERIAL ISSUE MODEL
 		var oNewMaterialIssueAccounts = new sap.ui.model.json.JSONModel();

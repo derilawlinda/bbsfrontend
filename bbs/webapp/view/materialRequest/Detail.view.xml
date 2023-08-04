@@ -98,7 +98,9 @@ xmlns:core="sap.ui.core"
 							icon="sap-icon://add"
 							press=".onAddPress"
 							type="Transparent"
+							visible="{viewModel>/editable}"
 						/>
+
 
 					</OverflowToolbar>
 				</table:extension>
@@ -171,7 +173,7 @@ xmlns:core="sap.ui.core"
 				</table:columns>
 
 				<table:rowActionTemplate>
-					<table:RowAction>
+					<table:RowAction visible="{viewModel>/editable}">
 						<table:items>
 							<table:RowActionItem type="Delete" press="onDelete"></table:RowActionItem>
 						</table:items>

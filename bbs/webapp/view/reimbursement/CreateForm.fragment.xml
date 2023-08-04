@@ -91,6 +91,7 @@
                  <table:Table id="ReimbursementItemsTableID" 
                         rows="{new_re_items>/REIMBURSEMENTLINESCollection}"
 						visibleRowCount="7"
+						rowActionCount="1"
 						 
 				>
 				
@@ -198,6 +199,14 @@
 					</table:Column>
 
 				</table:columns>
+					
+				<table:rowActionTemplate>
+					<table:RowAction>
+						<table:items>
+							<table:RowActionItem type="Delete" press="onDelete"></table:RowActionItem>
+						</table:items>
+					</table:RowAction>
+				</table:rowActionTemplate>
 
 				
                 </table:Table>

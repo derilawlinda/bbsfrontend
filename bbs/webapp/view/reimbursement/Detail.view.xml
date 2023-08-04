@@ -8,7 +8,7 @@ xmlns:table="sap.ui.table"
 xmlns:core="sap.ui.core"
 >
 
-<Page  id="reimbursementPageId" showNavButton="true"
+<Page  id="reimbursementPageID" showNavButton="true"
 		navButtonPress=".onNavBack"
 		showFooter="{viewModel>/showFooter}">
     
@@ -101,7 +101,7 @@ xmlns:core="sap.ui.core"
 					</form:content>
 				</form:SimpleForm>
 
-				<table:Table id="tableId" 
+				<table:Table id="reimbursementLineTableID" 
                         rows="{reimbursementDetailModel>/REIMBURSEMENTLINESCollection}"
 						visibleRowCount="7"
 						 
@@ -122,14 +122,14 @@ xmlns:core="sap.ui.core"
 								selectedKey="{reimbursementDetailModel>U_AccountCode}"
 								editable="{viewModel>/editable}"
 								items="{
-								path: 'accounts>/data',
+								path: 'accounts>/value/',
 								templateShareable: true
 								}"
 							>
 
 								<core:ListItem
-									key="{accounts>AccountCode}"
-									text="{accounts>AccountCode} - {accounts>AccountName} "
+									key="{accounts>Code}"
+									text="{accounts>Code} - {accounts>Name} "
 								/>
 
 							</ComboBox>
@@ -178,6 +178,7 @@ xmlns:core="sap.ui.core"
 						<table:template>
 								<Select 
 								selectedKey="{reimbursementDetailModel>U_NPWP}"
+								editable="{viewModel>/editable}"
 								items="{
 								path: 'viewModel>/NPWP',
 								templateShareable: false

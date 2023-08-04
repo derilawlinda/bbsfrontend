@@ -42,7 +42,7 @@ xmlns:core="sap.ui.core"
 						 <Label id="_IDGenLabelAmunt" text="Amount" />
 						<ObjectNumber number="{
 									parts: [
-										{path:'reimbursementDetailModel>/U_Amount'}, 
+										{path:'reimbursementDetailModel>/U_TotalAmount'}, 
 										 'IDR',
 										 'TwoWay'], 
 									type:'sap.ui.model.type.Currency',

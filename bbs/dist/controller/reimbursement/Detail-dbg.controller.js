@@ -60,11 +60,13 @@ sap.ui.define([
 
 			
 			const reimbursementDetailModel = new JSONModel();
+			this.getView().setModel(reimbursementDetailModel,"reimbursementDetailModel");
+
 			reimbursementDetailModel.loadData(backendUrl+"reimbursement/getReimbursementById?code="+reimbursementCode, null, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
 			});
+			reimbursementDetailModel.refresh();
 			
-			this.getView().setModel(reimbursementDetailModel,"reimbursementDetailModel");
 
 			var oBudgetingModel = new JSONModel();
 				oBudgetingModel.loadData(backendUrl+"budget/getApprovedBudget", null, true, "GET",false,false,{

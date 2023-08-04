@@ -220,6 +220,13 @@ sap.ui.define([
 			await budgetingModel.loadData(backendUrl+"budget/getBudgetById?code="+selectedID, null, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
 			});
+
+			var accountModel = this.getView().getModel("accounts");
+			accountModel.loadData(backendUrl+"coa/getCOAsByBudget?budgetCode="+selectedID, null, true, "GET",false,false,{
+				'Authorization': 'Bearer ' + this.oJWT
+			});
+			accountModel.refresh();
+
 			const oModelHeader = this.getView().getModel("advanceRequestDetailModel");
 			oModelHeader.setProperty("/U_Amount", 0);
 			var budgetingData = budgetingModel.getData();

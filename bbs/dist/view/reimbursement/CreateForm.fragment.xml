@@ -199,7 +199,7 @@
 					</table:Column>
 
 				</table:columns>
-
+					
 				<table:rowActionTemplate>
 					<table:RowAction>
 						<table:items>

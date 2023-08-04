@@ -145,28 +145,29 @@ sap.ui.define([
 		}.bind(this));
 	   },
 	   onAccountCodeChange : async function(oEvent){
-			
 		var oSelectedItem = oEvent.getSource().getSelectedKey(); //Get Selected Item
 		var oSelectedRow = oEvent.getSource().getParent(); //Selected Row.
 		oSelectedRow.getCells()[1].setBusy(true);
+		oSelectedRow.getCells()[1].setSelectedKey("");
 		oSelectedRow.getCells()[1].setEnabled(true);
-
-		var oItemByAccountModel = new JSONModel();
-		await oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount?accountCode='"+oSelectedItem+"'", null, true, "GET",false,false,{
-			'Authorization': 'Bearer ' + this.oJWT
-		});
-		var oItemByAccountData = oItemByAccountModel.getData();
+		oSelectedRow.getCells()[1].setEnabled(true);
 
 		var oItemModel = this.getView().getModel("items");
 		var oItemData = oItemModel.getData();
-		oItemData.data.push(oItemByAccountData);
-		var i = new sap.ui.model.json.JSONModel(oItemData);
-		this.getView().setModel(i, 'items');
-		console.log(this.getView().getModel('items'));
-		i.refresh();
+		if(!(oSelectedItem in oItemData)){
+			var oItemByAccountModel = new JSONModel();
+			await oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount?accountCode="+oSelectedItem+"", null, true, "GET",false,false,{
+				'Authorization': 'Bearer ' + this.oJWT
+			});
+			var oItemByAccountData = oItemByAccountModel.getData();
+			oItemData[oSelectedItem] = oItemByAccountData;
+			var i = new sap.ui.model.json.JSONModel(oItemData);
+			this.getView().setModel(i, 'items');
+			i.refresh();
+		}
 
 		oSelectedRow.getCells()[1].bindAggregation("items", {
-			path: 'items>/data/'+ oSelectedRow.getIndex(),
+			path: 'items>/'+ oSelectedItem,
 			template: new sap.ui.core.Item({
 				key: "{items>ItemCode}",
 				text: "{items>ItemCode} - {items>ItemName}"
@@ -248,7 +249,7 @@ sap.ui.define([
 					});
 					MessageToast.show("Reimbursement Request created");
 					$(".sapMMessageToast").css({"background-color": "#256f3a", "color": "white"});
-					view.getModel('advanceRequests').refresh();
+					view.getModel('reimbursements').refresh();
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 				  	console.log("Got an error response: " + textStatus + errorThrown);
@@ -262,9 +263,9 @@ sap.ui.define([
 			this.oDialog.close();
 		},
 		buttonFormatter: function(sStatus) {
-			if(sStatus == 'Approved'){
+			if(sStatus == 2 || sStatus == 3 || sStatus == 4){
 				return 'Accept'
-			}else if(sStatus == 'Pending'){
+			}else if(sStatus == 1){
 				return 'Attention'
 			}else{
 				return 'Reject'
@@ -307,6 +308,15 @@ sap.ui.define([
 			this.getView().setModel(f, 'new_re_items');
 			f.refresh();
 		
+		},
+		onDelete: function(oEvent){
+			var row = oEvent.getParameters().row;
+			var iIdx = row.getIndex();
+			var oModel = this.getView().getModel("new_re_items");
+			var oModelLineData = oModel.getData().REIMBURSEMENTLINESCollection;
+			oModelLineData.splice(iIdx, 1);
+			oModel.setProperty("/REIMBURSEMENTLINESCollection",oModelLineData);
+			oModel.refresh();
 		},
 		textFormatter : function(sStatus){
 			if(sStatus == 1){

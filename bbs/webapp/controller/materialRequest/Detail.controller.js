@@ -115,8 +115,8 @@ sap.ui.define([
 						viewModel.setProperty("/resubmit", true);
 					}
 					if((materialRequestDetailData.U_Status == 4 || materialRequestDetailData.U_Status == 1) ){
-						viewModel.setProperty("/showFooter", false);
-						viewModel.setProperty("/editable", false);
+						viewModel.setProperty("/showFooter", true);
+						viewModel.setProperty("/editable", true);
 					}
 				};
 
@@ -320,7 +320,6 @@ sap.ui.define([
 			var oModel = this.getView().getModel("materialRequestDetailModel");
 			var jsonData = JSON.stringify(oModel.getData());
 			var oJWT = this.oJWT;
-			console.log(jsonData);
 
 			$.ajax({
 				type: "POST",
@@ -357,6 +356,52 @@ sap.ui.define([
 			  });
 
 		},
+
+		onResubmitButtonClick : function(oEvent) {
+		
+			var pageDOM = this.getView().byId("materialRequestPageID");
+			pageDOM.setBusy(true);
+			var oModel = this.getView().getModel("materialRequestDetailModel");
+			var jsonData = JSON.stringify(oModel.getData());
+			var oJWT = this.oJWT;
+			var viewModel = this.getView().getModel("viewModel");
+
+			$.ajax({
+				type: "POST",
+				data: jsonData,
+				headers: {"Authorization": "Bearer "+ oJWT},
+				crossDomain: true,
+				url: backendUrl+'materialRequest/resubmitMR',
+				contentType: "application/json",
+				success: function (res, status, xhr) {
+					  //success code
+					  pageDOM.setBusy(false);
+					  
+					  if (!this.oSuccessMessageDialog) {
+						this.oSuccessMessageDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Success",
+							state: ValueState.Success,
+							content: new Text({ text: "Material Request resubmitted" }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									viewModel.setProperty("/showFooter", false);
+									viewModel.setProperty("/editable", false);
+									this.oSuccessMessageDialog.close();
+								}.bind(this)
+							})
+						});
+					}
+		
+					this.oSuccessMessageDialog.open();
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+				  	console.log("Got an error response: " + textStatus + errorThrown);
+				}
+			  });
+	   },
 
 		onBudgetChange : async function(oEvent){
 			var oValidatedComboBox = oEvent.getSource(),

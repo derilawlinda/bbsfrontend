@@ -31,7 +31,11 @@ sap.ui.define([
 
 			this.getView().byId("materialIssueLineTableID").setBusy(true);
 			
-			var viewModel = new JSONModel();
+			var viewModel = new JSONModel({
+				showFooter : false,
+				editable : true,
+				resubmit : false
+			});
 			this.getView().setModel(viewModel,"viewModel");
 
 			var accountModel = new JSONModel();
@@ -86,28 +90,34 @@ sap.ui.define([
 			materialIssueDetailModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
 				var userData = oUserModel.getData();
 				var materialIssueDetailData = this.getView().getModel("materialIssueDetailModel").getData();
+				
 				if(userData.user.role_id == 4){
 					viewModel.setProperty("/editable", false);
 					viewModel.setProperty("/is_approver", true);
 					viewModel.setProperty("/is_requestor", false);
-					if(materialIssueDetailData.U_Status == 3){
-						viewModel.setProperty("/showFooter", false);
+					if(materialIssueDetailData.U_Status == 2){
+						viewModel.setProperty("/showFooter", true);
 					}
 				}
 				else if(userData.user.role_id == 5){
 					viewModel.setProperty("/editable", false);
 					viewModel.setProperty("/is_approver", true);
 					viewModel.setProperty("/is_requestor", false);
-					if(materialIssueDetailData.U_Status == 2){
-						viewModel.setProperty("/showFooter", false);
+					if(materialIssueDetailData.U_Status == 1){
+						viewModel.setProperty("/showFooter", true);
 					}
 				}
 				else if(userData.user.role_id == 3){
 					viewModel.setProperty("/is_approver", false);
 					viewModel.setProperty("/is_requestor", true);
-					if(materialIssueDetailData.U_Status != 1){
-						viewModel.setProperty("/showFooter", false);
-						viewModel.setProperty("/editable", false);
+					viewModel.setProperty("/resubmit", false);
+
+					if(materialIssueDetailData.U_Status == 4){
+						viewModel.setProperty("/resubmit", true);
+					}
+					if((materialIssueDetailData.U_Status == 4 || materialIssueDetailData.U_Status == 1) ){
+						viewModel.setProperty("/showFooter", true);
+						viewModel.setProperty("/editable", true);
 					}
 				};
 
@@ -317,6 +327,114 @@ sap.ui.define([
 				this.getView().byId("materialIssuePageID").setBusy(false);
 			}
 		},
+		onRejectButtonClick : function(oEvent){
+			if (!this.rejectMaterialIssueDialog) {
+				this.rejectMaterialIssueDialog = this.loadFragment({
+					name: "frontend.bbs.view.materialIssue.RejectForm"
+				});
+			}
+			this.rejectMaterialIssueDialog.then(function (oDialog) {
+				this.oDialog = oDialog;
+				this.oDialog.open();
+			}.bind(this));
+		},
+
+		_closeDialog: function () {
+			this.oDialog.close();
+		},
+
+		onConfirmRejectClick : function(){
+			var pageDOM = this.getView().byId("materialIssuePageID");
+			var materialIssueDetailData = this.getView().getModel("materialIssueDetailModel").getData();
+			pageDOM.setBusy(true);
+			var oDialog = this.getView().byId("rejectDialog");
+			var code = materialIssueDetailData.Code;
+			var rejectionRemarks = this.getView().byId("RejectionRemarksID").getValue();
+			var viewModel = this.getView().getModel("viewModel");
+			
+			$.ajax({
+				type: "POST",
+				data: {
+					"Code": code,
+					"Remarks" : rejectionRemarks
+				},
+				headers: {"Authorization": "Bearer "+ this.oJWT},
+				crossDomain: true,
+				url: backendUrl+'materialIssue/rejectMI',
+				success: function (res, status, xhr) {
+					  //success code
+					  oDialog.close();
+					  pageDOM.setBusy(false);
+					  if (!this.oSuccessMessageDialog) {
+						this.oSuccessMessageDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Success",
+							state: ValueState.Success,
+							content: new Text({ text: "Material Issue rejected" }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									viewModel.setProperty("/showFooter", false);
+									this.oSuccessMessageDialog.close();
+								}.bind(this)
+							})
+						});
+					}
+					this.oSuccessMessageDialog.open();
+				}.bind(this),
+				error: function (jqXHR, textStatus, errorThrown) {
+				  	console.log("Got an error response: " + textStatus + errorThrown);
+				}
+			  });
+		},
+
+		onResubmitButtonClick : function(oEvent) {
+		
+			var pageDOM = this.getView().byId("materialIssuePageID");
+			pageDOM.setBusy(true);
+			var oModel = this.getView().getModel("materialIssueDetailModel");
+			var jsonData = JSON.stringify(oModel.getData());
+			var oJWT = this.oJWT;
+			var viewModel = this.getView().getModel("viewModel");
+
+			$.ajax({
+				type: "POST",
+				data: jsonData,
+				headers: {"Authorization": "Bearer "+ oJWT},
+				crossDomain: true,
+				url: backendUrl+'materialIssue/resubmitMI',
+				contentType: "application/json",
+				success: function (res, status, xhr) {
+					  //success code
+					  pageDOM.setBusy(false);
+					  
+					  if (!this.oSuccessMessageDialog) {
+						this.oSuccessMessageDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Success",
+							state: ValueState.Success,
+							content: new Text({ text: "Material Issue resubmitted" }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									viewModel.setProperty("/showFooter", false);
+									viewModel.setProperty("/editable", false);
+									this.oSuccessMessageDialog.close();
+								}.bind(this)
+							})
+						});
+					}
+		
+					this.oSuccessMessageDialog.open();
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+				  	console.log("Got an error response: " + textStatus + errorThrown);
+				}
+			  });
+	   },
+
 		onAddPress : function(oEvent){
 			const oModel = this.getView().getModel("materialIssueDetailModel");
 			var oModelData = oModel.getData();

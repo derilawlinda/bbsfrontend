@@ -35,8 +35,8 @@ xmlns:core="sap.ui.core"
 						<Label id="_IDGenLabel3" text="Company" />
 						<Text id="_IDGenText5"  text="{budget>/U_Company}"/>
 
-						<Label id="_IDGenLabel4" text="Sales Order" />
-						<Text id="_IDGenText4"  text="{budget>/U_SalesOrder}"/>
+						<Label id="_IDGenLabel4" text="Remarks" />
+						<Text text="{materialRequestDetailModel>/U_Remarks}" />
 						
 						 <Label id="_IDGenLabelAmunt" text="Amount" />
 						<Text text="{materialRequestDetailModel>/U_Amount}"/>
@@ -188,11 +188,13 @@ xmlns:core="sap.ui.core"
     </content>
 	<footer  >
 				<Toolbar>
+				
 					<ToolbarSpacer />
-					<Button type="Emphasized" text="Save MR" press="onSaveButtonClick" visible="{viewModel>/is_requestor}" />
+					<Button type="Emphasized" text="Save Budget" press="onSaveButtonClick" visible="{viewModel>/is_requestor}" />
 					<Button type="Accept" text="Approve" press="onApproveButtonClick" visible="{viewModel>/is_approver}" />
 					<Button type="Reject" text="Reject" press="onRejectButtonClick" visible="{viewModel>/is_approver}" />
-              
+					<Button type="Critical" text="Resubmit" press="onResubmitButtonClick" visible="{viewModel>/resubmit}" />
+				
 				</Toolbar>
 		</footer>
   </Page>

@@ -6,8 +6,10 @@ sap.ui.define([
 	"sap/m/Button",
 	"sap/m/library",
 	"sap/m/Text",
-	"sap/ui/core/library"
-], function (Controller, History, JSONModel,Dialog,Button,mobileLibrary,Text,coreLibrary) {
+	"sap/ui/core/library",
+	"sap/m/Input",
+	"sap/m/TextArea"
+], function (Controller, History, JSONModel,Dialog,Button,mobileLibrary,Text,coreLibrary,Input,TextArea) {
 	"use strict";
 
 	var ButtonType = mobileLibrary.ButtonType;
@@ -30,14 +32,16 @@ sap.ui.define([
 			this.getView().setModel(oSalesOrderModel,"salesOrder");
 			this.oRouter = oOwnerComponent.getRouter();
 			this.userModel = oOwnerComponent.getModel("userModel");
-			this.viewModel = new JSONModel();
-			this.getView().setModel(this.viewModel,"viewModel");
 			this.getView().setModel(this.userModel,"userModel");
 			this.oRouter.getRoute("budgetingDetail").attachPatternMatched(this._onObjectMatched, this);
 			
 		},
 		_onObjectMatched: function (oEvent) {
-			var viewModel = new JSONModel();
+			var viewModel = new JSONModel({
+				showFooter : true,
+				editable : true,
+				resubmit : false
+			});
 			this.getView().setModel(viewModel,"viewModel");
 			this.getView().byId("budgetingPageId").setBusy(true);
 			this.budgetCode = oEvent.getParameter("arguments").budgetID;
@@ -88,6 +92,8 @@ sap.ui.define([
 			this.getView().setModel(budgetingDetailModel,"budgetingDetailModel");
 			budgetingDetailModel.dataLoaded().then(function(){
 				var budgetingDetailData = budgetingDetailModel.getData();
+				console.log(budgetingDetailData.U_Status);
+				console.log(parametersMap.roleId);
 
 				if(parametersMap.roleId == 4){
 					viewModel.setProperty("/editable", false);
@@ -101,21 +107,25 @@ sap.ui.define([
 					viewModel.setProperty("/editable", false);
 					viewModel.setProperty("/is_approver", true);
 					viewModel.setProperty("/is_requestor", false);
-					if(budgetingDetailData.U_Status == 2){
+					if(budgetingDetailData.U_Status == 2 || budgetingDetailData.U_Status == 4){
 						viewModel.setProperty("/showFooter", false);
 					}
 				}
 				else if(parametersMap.roleId == 3){
 					viewModel.setProperty("/is_approver", false);
 					viewModel.setProperty("/is_requestor", true);
-					if(budgetingDetailData.U_Status != 1){
+					viewModel.setProperty("/resubmit", false);
+
+					if(budgetingDetailData.U_Status == 4){
+						viewModel.setProperty("/resubmit", true);
+					}
+					if(!(budgetingDetailData.U_Status != 4 || budgetingDetailData.U_Status != 1) ){
 						viewModel.setProperty("/showFooter", false);
 						viewModel.setProperty("/editable", false);
 					}
 				};
-				
+
 				var companyPath = this.getView().byId("company").getSelectedItem().getBindingContext("companies").getPath();
-				
 				this.getView().byId("CreatePillar").bindAggregation("items", {
 					path: "companies>"+ companyPath + "/nodes",
 					template: new sap.ui.core.Item({
@@ -123,9 +133,10 @@ sap.ui.define([
 						text: "{companies>text}"
 					})
 				});
+
 				this.getView().byId("CreatePillar").setSelectedKey(budgetingDetailData.U_Pillar);
 				var pillarPath = this.getView().byId("CreatePillar").getSelectedItem().getBindingContext("companies").getPath();
-
+				
 				this.getView().byId("CreateClassification").bindAggregation("items", {
 					path: "companies>"+ pillarPath + "/nodes",
 					template: new sap.ui.core.Item({
@@ -215,6 +226,66 @@ sap.ui.define([
 				}
 			  });
 		},
+		onRejectButtonClick : function(oEvent){
+			if (!this.rejectBudgetingDialog) {
+				this.rejectBudgetingDialog = this.loadFragment({
+					name: "frontend.bbs.view.budgeting.RejectForm"
+				});
+			}
+			this.rejectBudgetingDialog.then(function (oDialog) {
+				this.oDialog = oDialog;
+				this.oDialog.open();
+			}.bind(this));
+		},
+
+		_closeDialog: function () {
+			this.oDialog.close();
+		},
+
+		onConfirmRejectClick : function(){
+			var pageDOM = this.getView().byId("budgetingPageId");
+			var budgetingDetailData = this.getView().getModel("budgetingDetailModel").getData();
+			pageDOM.setBusy(true);
+			var code = budgetingDetailData.Code;
+			var rejectionRemarks = this.getView().byId("RejectionRemarksID").getValue();
+			
+			$.ajax({
+				type: "POST",
+				data: {
+					"Code": code,
+					"Remarks" : rejectionRemarks
+				},
+				headers: {"Authorization": "Bearer "+ this.oJWT},
+				crossDomain: true,
+				url: backendUrl+'budget/rejectBudget',
+				success: function (res, status, xhr) {
+					  //success code
+					  pageDOM.setBusy(false);
+					  this.rejectBudgetingDialog.close();
+					  if (!this.oSuccessMessageDialog) {
+						this.oSuccessMessageDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Success",
+							state: ValueState.Success,
+							content: new Text({ text: "Budget rejected" }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									this.oSuccessMessageDialog.close();
+								}.bind(this)
+							})
+						});
+					}
+		
+					this.oSuccessMessageDialog.open();
+				}.bind(this),
+				error: function (jqXHR, textStatus, errorThrown) {
+				  	console.log("Got an error response: " + textStatus + errorThrown);
+				}
+			  }.bind(this));
+		},
+
 		onAmountChange : function(event){
 			const oModel = this.getView().getModel("budgetingDetailModel");
 			var oModelData = oModel.getData().BUDGETREQLINESCollection;
@@ -222,7 +293,6 @@ sap.ui.define([
 			for (let i = 0; i < oModelData.length; i++ ) {
 				sum += oModelData[i]["U_Amount"];
 			}
-			console.log(sum);
 			const oModelHeader = this.getView().getModel("budgetingDetailModel");
 			oModelHeader.setProperty("/U_TotalAmount", sum);
 
@@ -257,7 +327,6 @@ sap.ui.define([
 
 			this.getView().byId("CreateSubClassification").setEnabled(false);
 			this.getView().byId("CreateSubClassification2").setEnabled(false);
-			console.log(oEvent.getSource().getSelectedItem());
 			var comboPath = oEvent.oSource.getSelectedItem().getBindingContext("companies").getPath();
 			var comboBox = this.getView().byId("CreateClassification");
 			comboBox.setEnabled(true);
@@ -276,7 +345,6 @@ sap.ui.define([
 			this.getView().byId("CreateSubClassification2").setSelectedKey("");
 
 			this.getView().byId("CreateSubClassification2").setEnabled(false);
-			console.log( oEvent.getSource().getSelectedItem());
 			var comboPath = oEvent.oSource.getSelectedItem().getBindingContext("companies").getPath();
 			var comboBox = this.getView().byId("CreateSubClassification");
 			comboBox.setEnabled(true);
@@ -360,6 +428,48 @@ sap.ui.define([
 			  });
 
 		},
+		onResubmitButtonClick : function(oEvent) {
+		
+			var pageDOM = this.getView().byId("budgetingPageId");
+			pageDOM.setBusy(true);
+			var oModel = this.getView().getModel("budgetingDetailModel");
+			var jsonData = JSON.stringify(oModel.getData());
+			var oJWT = this.oJWT;
+
+			$.ajax({
+				type: "POST",
+				data: jsonData,
+				headers: {"Authorization": "Bearer "+ oJWT},
+				crossDomain: true,
+				url: backendUrl+'budget/resubmitBudget',
+				contentType: "application/json",
+				success: function (res, status, xhr) {
+					  //success code
+					  pageDOM.setBusy(false);
+					  
+					  if (!this.oSuccessMessageDialog) {
+						this.oSuccessMessageDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Success",
+							state: ValueState.Success,
+							content: new Text({ text: "Budget resubmitted" }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									this.oSuccessMessageDialog.close();
+								}.bind(this)
+							})
+						});
+					}
+		
+					this.oSuccessMessageDialog.open();
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+				  	console.log("Got an error response: " + textStatus + errorThrown);
+				}
+			  });
+	   },
 		onDelete: function(oEvent){
 
 			var row = oEvent.getParameters().row;
@@ -369,6 +479,7 @@ sap.ui.define([
 			oModelLineData.splice(iIdx, 1);
 			oModel.setProperty("/BUDGETREQLINESCollection",oModelLineData);
 			oModel.refresh();
+			this.onAmountChange();
 		},
 	});
 });

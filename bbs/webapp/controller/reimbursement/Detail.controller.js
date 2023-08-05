@@ -215,6 +215,49 @@ sap.ui.define([
 				}
 			  });
 		},
+		onSaveButtonClick : function(oEvent){
+			var pageDOM = this.getView().byId("reimbursementPageID");
+			pageDOM.setBusy(true);
+			var oModel = this.getView().getModel("reimbursementDetailModel");
+			var jsonData = JSON.stringify(oModel.getData());
+			var oJWT = this.oJWT;
+			console.log(jsonData);
+
+			$.ajax({
+				type: "POST",
+				data: jsonData,
+				headers: {"Authorization": "Bearer "+ oJWT},
+				crossDomain: true,
+				url: backendUrl+'reimbursement/saveReimbursement',
+				contentType: "application/json",
+				success: function (res, status, xhr) {
+					  //success code
+					  pageDOM.setBusy(false);
+					  
+					  if (!this.oSuccessMessageDialog) {
+						this.oSuccessMessageDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Success",
+							state: ValueState.Success,
+							content: new Text({ text: "Reimbursement saved" }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									this.oSuccessMessageDialog.close();
+								}.bind(this)
+							})
+						});
+					}
+		
+					this.oSuccessMessageDialog.open();
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+				  	console.log("Got an error response: " + textStatus + errorThrown);
+				}
+			  });
+
+		},
 
         onNavBack: function () {
 			var oHistory = History.getInstance();

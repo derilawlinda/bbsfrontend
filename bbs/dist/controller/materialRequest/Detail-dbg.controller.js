@@ -32,7 +32,11 @@ sap.ui.define([
 		},
 		_onObjectMatched: function (oEvent) {
 			
-			var viewModel = new JSONModel();
+			var viewModel = new JSONModel({
+				showFooter : false,
+				editable : true,
+				resubmit : false
+			});
 			this.getView().setModel(viewModel,"viewModel");
 			var oItemsModel = new JSONModel();
 			oItemsModel.setSizeLimit(5000);
@@ -85,31 +89,32 @@ sap.ui.define([
 			materialRequestDetailModel.dataLoaded().then(function(){
 				
 				var materialRequestDetailData = this.getView().getModel("materialRequestDetailModel").getData();
-				var accountsArray = new Array();
-				materialRequestDetailData.METERIALREQLINESCollection.map(function(item){
-					accountsArray.push(item.U_AccountCode);
-				});
-				var accountString = accountsArray.join();
+				
 				if(parametersMap.roleId == 4){
 					viewModel.setProperty("/editable", false);
 					viewModel.setProperty("/is_approver", true);
 					viewModel.setProperty("/is_requestor", false);
-					if(materialRequestDetailData.U_Status == 3){
-						viewModel.setProperty("/showFooter", false);
+					if(materialRequestDetailData.U_Status == 2){
+						viewModel.setProperty("/showFooter", true);
 					}
 				}
 				else if(parametersMap.roleId == 5){
 					viewModel.setProperty("/editable", false);
 					viewModel.setProperty("/is_approver", true);
 					viewModel.setProperty("/is_requestor", false);
-					if(materialRequestDetailData.U_Status == 2){
-						viewModel.setProperty("/showFooter", false);
+					if(materialRequestDetailData.U_Status == 1){
+						viewModel.setProperty("/showFooter", true);
 					}
 				}
 				else if(parametersMap.roleId == 3){
 					viewModel.setProperty("/is_approver", false);
 					viewModel.setProperty("/is_requestor", true);
-					if(materialRequestDetailData.U_Status != 1){
+					viewModel.setProperty("/resubmit", false);
+
+					if(materialRequestDetailData.U_Status == 4){
+						viewModel.setProperty("/resubmit", true);
+					}
+					if((materialRequestDetailData.U_Status == 4 || materialRequestDetailData.U_Status == 1) ){
 						viewModel.setProperty("/showFooter", false);
 						viewModel.setProperty("/editable", false);
 					}
@@ -183,11 +188,9 @@ sap.ui.define([
 			var pageDOM = this.getView().byId("materialRequestPageID");
 			var viewModel = this.getView().getModel("viewModel");
 			pageDOM.setBusy(true);
-			var code = this.getView().byId("_IDGenText101").getText();
 			const oModel = this.getView().getModel("materialRequestDetailModel");
 			var oProperty = oModel.getProperty("/");
-			var view = this.getView();
-			var oDialog = this.oDialog;
+		
 			var oJWT = this.oJWT;
 			$.ajax({
 				type: "POST",
@@ -219,6 +222,68 @@ sap.ui.define([
 		
 					this.oSuccessMessageDialog.open();
 				},
+				error: function (jqXHR, textStatus, errorThrown) {
+				  	console.log("Got an error response: " + textStatus + errorThrown);
+				}
+			  });
+		},
+		onRejectButtonClick : function(oEvent){
+			if (!this.rejectMaterialRequestDialog) {
+				this.rejectMaterialRequestDialog = this.loadFragment({
+					name: "frontend.bbs.view.materialRequest.RejectForm"
+				});
+			}
+			this.rejectMaterialRequestDialog.then(function (oDialog) {
+				this.oDialog = oDialog;
+				this.oDialog.open();
+			}.bind(this));
+		},
+
+		_closeDialog: function () {
+			this.oDialog.close();
+		},
+
+		onConfirmRejectClick : function(){
+			var pageDOM = this.getView().byId("materialRequestPageID");
+			var materialRequestDetailData = this.getView().getModel("materialRequestDetailModel").getData();
+			pageDOM.setBusy(true);
+			var oDialog = this.getView().byId("rejectDialog");
+			var code = materialRequestDetailData.Code;
+			var rejectionRemarks = this.getView().byId("RejectionRemarksID").getValue();
+			var viewModel = this.getView().getModel("viewModel");
+			
+			$.ajax({
+				type: "POST",
+				data: {
+					"Code": code,
+					"Remarks" : rejectionRemarks
+				},
+				headers: {"Authorization": "Bearer "+ this.oJWT},
+				crossDomain: true,
+				url: backendUrl+'materialRequest/rejectMR',
+				success: function (res, status, xhr) {
+					  //success code
+					  pageDOM.setBusy(false);
+					  oDialog.close();
+					  if (!this.oSuccessMessageDialog) {
+						this.oSuccessMessageDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Success",
+							state: ValueState.Success,
+							content: new Text({ text: "Material Request rejected" }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									viewModel.setProperty("/showFooter", false);
+									this.oSuccessMessageDialog.close();
+								}.bind(this)
+							})
+						});
+					}
+		
+					this.oSuccessMessageDialog.open();
+				}.bind(this),
 				error: function (jqXHR, textStatus, errorThrown) {
 				  	console.log("Got an error response: " + textStatus + errorThrown);
 				}

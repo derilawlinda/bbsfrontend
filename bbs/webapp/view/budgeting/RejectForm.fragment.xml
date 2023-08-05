@@ -1,0 +1,41 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:table="sap.ui.table"
+	xmlns:f="sap.ui.layout.form"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout"
+    
+    height="100%">
+	<Dialog
+		id="mainDialog" title="Rejection remarks">
+			<VBox class="sapUiSmallMargin" >
+				<f:SimpleForm 
+						editable="true"
+                        layout="ColumnLayout"
+                        columnsM="1"
+                        columnsL="1"
+                        columnsXL="1">
+					<f:content>
+
+                  		<Label  text="Rejection Remarks" required="true"  />
+						<TextArea  rows="8" id="RejectionRemarksID" />
+
+					</f:content>
+				</f:SimpleForm>
+
+			</VBox>
+
+        <Page>
+			
+			<footer>
+					<Toolbar>
+						<ToolbarSpacer />
+						<Button type="Reject" text="Reject" press="onConfirmRejectClick" />
+						<Button text="Cancel" press="._closeDialog" />
+					</Toolbar>
+			</footer>
+
+         </Page>
+	</Dialog>
+</core:FragmentDefinition>

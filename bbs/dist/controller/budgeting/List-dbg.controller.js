@@ -51,7 +51,6 @@ sap.ui.define([
 	},
 
 	toggleCreateButton : function(channelId, eventId, parametersMap){
-		console.log(parametersMap);
 			if(parametersMap.roleId == 4 || parametersMap.roleId == 5){
 				this.getView().getModel("viewModel").setProperty("/showCreateButton",false)
 			}
@@ -157,6 +156,7 @@ sap.ui.define([
 			  });
 			// alert(JSON.stringify(oProperty));
 	   },
+	   
 	    getRouter : function () {
 			return sap.ui.core.UIComponent.getRouterFor(this);
 		},
@@ -236,9 +236,7 @@ sap.ui.define([
 				sum += oModelData[i]["U_Amount"];
 			}
 			const oModelHeader = this.getView().getModel("budgetingDetailModel");
-			console.log(oModelHeader.getData());
 			oModelHeader.setProperty("/U_TotalAmount", sum);
-			console.log(oModelHeader.getData());
 
 		},
 		onCompanyChange : function(oEvent){
@@ -327,6 +325,7 @@ sap.ui.define([
 			oModelLineData.splice(iIdx, 1);
 			oModel.setProperty("/BUDGETREQLINESCollection",oModelLineData);
 			oModel.refresh();
+			this.onAmountChange();
 		},
     });
  });

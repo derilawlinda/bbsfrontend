@@ -31,7 +31,10 @@ sap.ui.define([
 
         },
 		_onObjectMatched: async function (oEvent) {
-			var viewModel = new JSONModel();
+			var viewModel = new JSONModel({
+				is_finance : false,
+				showFooter : true
+			});
 			this.getView().setModel(viewModel,"viewModel");
 			viewModel.setData({
 				NPWP: [
@@ -72,10 +75,12 @@ sap.ui.define([
 				var userData = oUserModel.getData();
 				var advanceRequestDetailModel = this.getView().getModel("advanceRequestDetailModel").getData();
 				var ojwt = this.oJWT;
+				console.log(advanceRequestDetailModel.U_RealiStatus);
 				if(userData.user.role_id == 4){
 					viewModel.setProperty("/editable", false);
 					viewModel.setProperty("/is_approver", true);
 					viewModel.setProperty("/is_requestor", false);
+					viewModel.setProperty("/is_finance", false);
 					if(advanceRequestDetailModel.U_RealiStatus == 4){
 						viewModel.setProperty("/showFooter", false);
 					}
@@ -84,6 +89,7 @@ sap.ui.define([
 					viewModel.setProperty("/editable", false);
 					viewModel.setProperty("/is_approver", true);
 					viewModel.setProperty("/is_requestor", false);
+					viewModel.setProperty("/is_finance", false);
 					if(advanceRequestDetailModel.U_RealiStatus == 3){
 						viewModel.setProperty("/showFooter", false);
 					}
@@ -91,11 +97,24 @@ sap.ui.define([
 				else if(userData.user.role_id == 3){
 					viewModel.setProperty("/is_approver", false);
 					viewModel.setProperty("/is_requestor", true);
-					if(advanceRequestDetailModel.U_RealiStatus != 2){
+					viewModel.setProperty("/is_finance", false);
+					if(advanceRequestDetailModel.U_RealiStatus == 2){
 						viewModel.setProperty("/showFooter", false);
 						viewModel.setProperty("/editable", false);
 					}
+				}
+				else if(userData.user.role_id == 2){
+					viewModel.setProperty("/is_approver", false);
+					viewModel.setProperty("/is_requestor", false);
+					viewModel.setProperty("/is_finance", true);
+					viewModel.setProperty("/editable", false);
+					if(advanceRequestDetailModel.U_RealiStatus == 4){
+						viewModel.setProperty("/showFooter", true);
+					}
 				};
+;
+
+				
 
 				var accountModel = new JSONModel();
 				accountModel.loadData(backendUrl+"coa/getCOAsByBudget?budgetCode="+advanceRequestDetailModel.U_BudgetCode, null, true, "GET",false,false,{
@@ -163,18 +182,37 @@ sap.ui.define([
 			// alert(JSON.stringify(oProperty));
 	   },
 
-		onAccountCodeChange : async function(oEvent){
+	   onAccountCodeChange : async function(oEvent){
 			
 			var oSelectedItem = oEvent.getSource().getSelectedKey(); //Get Selected Item
 			var oSelectedRow = oEvent.getSource().getParent(); //Selected Row.
+			oSelectedRow.getCells()[1].setBusy(true);
+			oSelectedRow.getCells()[1].setSelectedKey("");
 			oSelectedRow.getCells()[1].setEnabled(true);
+			oSelectedRow.getCells()[1].setEnabled(true);
+
+			var oItemModel = this.getView().getModel("items");
+			var oItemData = oItemModel.getData();
+			if(!(oSelectedItem.toString() in oItemData)){
+				var oItemByAccountModel = new JSONModel();
+				await oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount?accountCode="+oSelectedItem+"", null, true, "GET",false,false,{
+					'Authorization': 'Bearer ' + this.oJWT
+				});
+				var oItemByAccountData = oItemByAccountModel.getData();
+				oItemData[oSelectedItem] = oItemByAccountData;
+				var i = new sap.ui.model.json.JSONModel(oItemData);
+				this.getView().setModel(i, 'items');
+				i.refresh();
+			}
+
 			oSelectedRow.getCells()[1].bindAggregation("items", {
-				path: 'items>/data/'+ oSelectedItem,
+				path: 'items>/'+ oSelectedItem,
 				template: new sap.ui.core.Item({
 					key: "{items>ItemCode}",
 					text: "{items>ItemCode} - {items>ItemName}"
 				})
 			});
+			oSelectedRow.getCells()[1].setBusy(false);
 		},
 		onAmountChange : function(event){
 			const oModel = this.getView().getModel("advanceRequestDetailModel");

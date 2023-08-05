@@ -29,7 +29,9 @@ sap.ui.define([
 
         },
 		_onObjectMatched: async function (oEvent) {
-			var viewModel = new JSONModel();
+			var viewModel = new JSONModel({
+				is_finance : false
+			});
 			this.getView().setModel(viewModel,"viewModel");
 			this.getView().byId("advanceRequestPageId").setBusy(true);
 			var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
@@ -88,7 +90,18 @@ sap.ui.define([
 						viewModel.setProperty("/showFooter", false);
 						viewModel.setProperty("/editable", false);
 					}
-				};
+				}
+				else if(userData.user.role_id == 2){
+					viewModel.setProperty("/is_finance", true);
+					viewModel.setProperty("/is_approver", false);
+					viewModel.setProperty("/is_requestor", false);
+					viewModel.setProperty("/editable", false);
+
+					if(advanceRequestDetailData.U_Status != 3){
+						viewModel.setProperty("/showFooter", false);
+
+					}
+				};;
 
 				var accountModel = new JSONModel();
 				accountModel.loadData(backendUrl+"coa/getCOAsByBudget?budgetCode="+advanceRequestDetailData.U_BudgetCode, null, true, "GET",false,false,{

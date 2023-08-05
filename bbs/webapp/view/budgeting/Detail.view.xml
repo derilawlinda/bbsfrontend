@@ -48,7 +48,8 @@ xmlns:core="sap.ui.core"
 									
 						</ComboBox>
 
-						<Label id="_IDGenLabel4" text="Sales Order" />
+						<Label id="_IDGenLabel4" text="Remarks" />
+						<Text text="{budgetingDetailModel>/U_Remarks}" />
 <!-- 
 						<ComboBox id="SalesOrder" 
 								  editable="{viewModel>/editable}"
@@ -77,7 +78,6 @@ xmlns:core="sap.ui.core"
                         <Label id="_IDGenLabel441" text="Pillar" />
 
 						<ComboBox id="CreatePillar" 
-									selectedKey="{budgetingDetailModel>/U_Pillar}"
 									change="onPillarChange"
 									editable="{viewModel>/editable}">
 									
@@ -215,6 +215,7 @@ xmlns:core="sap.ui.core"
                     <Button type="Emphasized" text="Save Budget" press="onSaveButtonClick" visible="{viewModel>/is_requestor}" />
 					<Button type="Accept" text="Approve" press="onApproveButtonClick" visible="{viewModel>/is_approver}" />
 					<Button type="Reject" text="Reject" press="onRejectButtonClick" visible="{viewModel>/is_approver}" />
+					<Button type="Critical" text="Resubmit" press="onResubmitButtonClick" visible="{viewModel>/resubmit}" />
 				</Toolbar>
 		</footer>
   </Page>

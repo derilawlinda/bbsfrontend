@@ -36,18 +36,25 @@ xmlns:core="sap.ui.core"
 						<Label id="_IDGenLabel3" text="Company" />
 						<Text id="_IDGenText5"  text="{budget>/U_Company}"/>
 
-						<Label id="_IDGenLabel4" text="Sales Order" />
-						<Text id="_IDGenText4"  text="{budget>/U_SalesOrder}"/>
+						<Label id="_IDGenLabel4" text="Remarks" />
+						<Text id="_IDGenText4"  text="{advanceRequestDetailModel>/U_Remarks}"/>
 						
 						 <Label id="_IDGenLabelAmunt" text="Amount" />
-						<ObjectNumber number="{
+						<ObjectNumber 
+						id="advanceAmount"
+						number="{
 									parts: [
-										{path:'advanceRequestDetailModel>/U_Amount'}, 
-										 'IDR',
+										{path:'advanceRequestDetailModel>/U_Amount'},
+										'IDR',
 										 'TwoWay'], 
 									type:'sap.ui.model.type.Currency',
 									formatOptions: {showMeasure: true}
 								}" unit="IDR" />
+						<ObjectStatus xmlns="sap.m"
+							state="Error"
+							text="{viewModel>/amountExceeded}"
+							inverted="true"
+						/>
 
 						<Label id="_IDGenLabelRemainingAmount" text="Remaining Budget" />
 						<ObjectNumber number="{
@@ -209,9 +216,10 @@ xmlns:core="sap.ui.core"
 	<footer  >
 				<Toolbar>
 					<ToolbarSpacer />
-                   	<Button type="Emphasized" text="Save" press="onSaveButtonClick" visible="{viewModel>/is_requestor}" />
+                   	<Button id="submitButton" type="Emphasized" text="Save" press="onSaveButtonClick" visible="{viewModel>/is_requestor}" />
 					<Button type="Accept" text="Approve" press="onApproveButtonClick" visible="{viewModel>/is_approver}" />
 					<Button type="Reject" text="Reject" press="onRejectButtonClick" visible="{viewModel>/is_approver}" />
+					<Button id="resubmitButton" type="Critical" text="Resubmit" press="onResubmitButtonClick" visible="{viewModel>/resubmit}" />
 					<Button type="Emphasized" text="Transfer" press="onTransferButtonClick" visible="{viewModel>/is_finance}" />
               
 				</Toolbar>

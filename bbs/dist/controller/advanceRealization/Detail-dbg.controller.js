@@ -32,6 +32,9 @@ sap.ui.define([
         },
 		_onObjectMatched: async function (oEvent) {
 			var viewModel = new JSONModel({
+				showFooter : false,
+				editable : true,
+				resubmit : false,
 				is_finance : false,
 				showFooter : true
 			});
@@ -80,27 +83,29 @@ sap.ui.define([
 					viewModel.setProperty("/editable", false);
 					viewModel.setProperty("/is_approver", true);
 					viewModel.setProperty("/is_requestor", false);
-					viewModel.setProperty("/is_finance", false);
-					if(advanceRequestDetailModel.U_RealiStatus == 4){
-						viewModel.setProperty("/showFooter", false);
+					if(materialIssueDetailData.U_Status == 2){
+						viewModel.setProperty("/showFooter", true);
 					}
 				}
 				else if(userData.user.role_id == 5){
 					viewModel.setProperty("/editable", false);
 					viewModel.setProperty("/is_approver", true);
 					viewModel.setProperty("/is_requestor", false);
-					viewModel.setProperty("/is_finance", false);
-					if(advanceRequestDetailModel.U_RealiStatus == 3){
-						viewModel.setProperty("/showFooter", false);
+					if(materialIssueDetailData.U_Status == 1){
+						viewModel.setProperty("/showFooter", true);
 					}
 				}
 				else if(userData.user.role_id == 3){
 					viewModel.setProperty("/is_approver", false);
 					viewModel.setProperty("/is_requestor", true);
-					viewModel.setProperty("/is_finance", false);
-					if(advanceRequestDetailModel.U_RealiStatus == 2){
-						viewModel.setProperty("/showFooter", false);
-						viewModel.setProperty("/editable", false);
+					viewModel.setProperty("/resubmit", false);
+
+					if(materialIssueDetailData.U_Status == 4){
+						viewModel.setProperty("/resubmit", true);
+					}
+					if((materialIssueDetailData.U_Status == 4 || materialIssueDetailData.U_Status == 1) ){
+						viewModel.setProperty("/showFooter", true);
+						viewModel.setProperty("/editable", true);
 					}
 				}
 				else if(userData.user.role_id == 2){

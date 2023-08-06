@@ -30,6 +30,9 @@ sap.ui.define([
         },
 		_onObjectMatched: async function (oEvent) {
 			var viewModel = new JSONModel({
+				showFooter : false,
+				editable : true,
+				resubmit : false,
 				is_finance : false
 			});
 			this.getView().setModel(viewModel,"viewModel");
@@ -67,28 +70,34 @@ sap.ui.define([
 			advanceRequestDetailModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
 				var userData = oUserModel.getData();
 				var advanceRequestDetailData = this.getView().getModel("advanceRequestDetailModel").getData();
+
 				if(userData.user.role_id == 4){
 					viewModel.setProperty("/editable", false);
 					viewModel.setProperty("/is_approver", true);
 					viewModel.setProperty("/is_requestor", false);
-					if(advanceRequestDetailData.U_Status == 3){
-						viewModel.setProperty("/showFooter", false);
+					if(advanceRequestDetailData.U_Status == 2){
+						viewModel.setProperty("/showFooter", true);
 					}
 				}
 				else if(userData.user.role_id == 5){
 					viewModel.setProperty("/editable", false);
 					viewModel.setProperty("/is_approver", true);
 					viewModel.setProperty("/is_requestor", false);
-					if(advanceRequestDetailData.U_Status == 2){
-						viewModel.setProperty("/showFooter", false);
+					if(advanceRequestDetailData.U_Status == 1){
+						viewModel.setProperty("/showFooter", true);
 					}
 				}
 				else if(userData.user.role_id == 3){
 					viewModel.setProperty("/is_approver", false);
 					viewModel.setProperty("/is_requestor", true);
-					if(advanceRequestDetailData.U_Status != 1){
-						viewModel.setProperty("/showFooter", false);
-						viewModel.setProperty("/editable", false);
+					viewModel.setProperty("/resubmit", false);
+
+					if(advanceRequestDetailData.U_Status == 4){
+						viewModel.setProperty("/resubmit", true);
+					}
+					if((advanceRequestDetailData.U_Status == 4 || advanceRequestDetailData.U_Status == 1) ){
+						viewModel.setProperty("/showFooter", true);
+						viewModel.setProperty("/editable", true);
 					}
 				}
 				else if(userData.user.role_id == 2){
@@ -116,6 +125,7 @@ sap.ui.define([
 				this.getOwnerComponent().setModel(oBudgetModel,"budget");
 				oBudgetModel.dataLoaded().then(function() {
 					var budgetingData = oBudgetModel.getData();
+					console.log(budgetingData);
 					var approvedBudget = budgetingData.U_TotalAmount;
 					var usedBudget = budgetingData.BUDGETUSEDCollection;
 					let sumUsedBudget = 0;
@@ -215,24 +225,42 @@ sap.ui.define([
 		},
 		onAmountChange : function(event){
 			const oModel = this.getView().getModel("advanceRequestDetailModel");
+			const viewModel = this.getView().getModel("viewModel");
+			var oBudgetingData = this.getView().getModel("budget").getData();
+			console.log(oBudgetingData);
 			var oModelData = oModel.getData().ADVANCEREQLINESCollection;
-			console.log(oModelData);
 			let sum = 0;
 			for (let i = 0; i < oModelData.length; i++ ) {
 				sum += oModelData[i]["U_Amount"];
 			}
 			const oModelHeader = this.getView().getModel("advanceRequestDetailModel");
 			oModelHeader.setProperty("/U_Amount", sum);
+			var budgetAmount = oBudgetingData.U_RemainingBudget;
+			if(sum > budgetAmount){
+				this.getView().byId("advanceAmount").setState(ValueState.Error);
+				this.getView().byId("resubmitButton").setEnabled(false);
+				this.getView().byId("submitButton").setEnabled(false);
+				viewModel.setProperty("/amountExceeded","Advance Amount exceeded Budget!")
+
+			}else{
+				this.getView().byId("advanceAmount").setState(ValueState.None);
+				this.getView().byId("resubmitButton").setEnabled(true);
+				this.getView().byId("submitButton").setEnabled(true);
+				viewModel.setProperty("/amountExceeded","")
+			}
+
+
 
 		},
 		onBudgetChange : async function(oEvent){
 			this.getView().byId("createARForm").setBusy(true);
 			var selectedID = parseInt(oEvent.getParameters('selectedItem').value);
 			
-			var budgetingModel = new JSONModel({});
-			await budgetingModel.loadData(backendUrl+"budget/getBudgetById?code="+selectedID, null, true, "GET",false,false,{
+			var budgetModel = this.getView().getModel("budget");
+			await budgetModel.loadData(backendUrl+"budget/getBudgetById?code="+selectedID, null, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
 			});
+			budgetModel.refresh();
 
 			var accountModel = this.getView().getModel("accounts");
 			accountModel.loadData(backendUrl+"coa/getCOAsByBudget?budgetCode="+selectedID, null, true, "GET",false,false,{
@@ -242,7 +270,7 @@ sap.ui.define([
 
 			const oModelHeader = this.getView().getModel("advanceRequestDetailModel");
 			oModelHeader.setProperty("/U_Amount", 0);
-			var budgetingData = budgetingModel.getData();
+			var budgetingData = budgetModel.getData();
 			var approvedBudget = budgetingData.U_TotalAmount;
 			var usedBudget = budgetingData.BUDGETUSEDCollection;
 			let sumUsedBudget = 0;
@@ -253,18 +281,14 @@ sap.ui.define([
 			}
 			var remainingBudget = approvedBudget - sumUsedBudget;
 			budgetingData.U_RemainingBudget = remainingBudget;
-			var budgetRequestHeader = this.getView().getModel("budget");
-			budgetRequestHeader.setData(budgetingData);
-			budgetRequestHeader.refresh();
+			budgetModel.setData(budgetingData);
+			budgetModel.refresh();
 
 			var oModel = this.getView().getModel("advanceRequestDetailModel");
 			oModel.setProperty("/ADVANCEREQLINESCollection",[]);
 			oModel.refresh();
-			
-			
 
-
-
+			this.onAmountChange();
 			this.getView().byId("createARForm").setBusy(false);
 
 		  },
@@ -351,6 +375,7 @@ sap.ui.define([
 			oModelLineData.splice(iIdx, 1);
 			oModel.setProperty("/ADVANCEREQLINESCollection",oModelLineData);
 			oModel.refresh();
+			this.onAmountChange();
 		},
 		onSaveButtonClick : function(oEvent){
 			var pageDOM = this.getView().byId("advanceRequestPageId");
@@ -393,6 +418,113 @@ sap.ui.define([
 				}
 			  });
 
-		}
+		},
+		onRejectButtonClick : function(oEvent){
+			if (!this.rejectAdvanceRequestDialog) {
+				this.rejectAdvanceRequestDialog = this.loadFragment({
+					name: "frontend.bbs.view.advanceEmployee.RejectForm"
+				});
+			}
+			this.rejectAdvanceRequestDialog.then(function (oDialog) {
+				this.oDialog = oDialog;
+				this.oDialog.open();
+			}.bind(this));
+		},
+
+		_closeDialog: function () {
+			this.oDialog.close();
+		},
+
+		onConfirmRejectClick : function(){
+			var pageDOM = this.getView().byId("advanceRequestPageId");
+			var advanceRequestDetailData = this.getView().getModel("advanceRequestDetailModel").getData();
+			pageDOM.setBusy(true);
+			var oDialog = this.getView().byId("rejectDialog");
+			var code = advanceRequestDetailData.Code;
+			var rejectionRemarks = this.getView().byId("RejectionRemarksID").getValue();
+			var viewModel = this.getView().getModel("viewModel");
+			
+			$.ajax({
+				type: "POST",
+				data: {
+					"Code": code,
+					"Remarks" : rejectionRemarks
+				},
+				headers: {"Authorization": "Bearer "+ this.oJWT},
+				crossDomain: true,
+				url: backendUrl+'advanceRequest/rejectAR',
+				success: function (res, status, xhr) {
+					  //success code
+					  oDialog.close();
+					  pageDOM.setBusy(false);
+					  if (!this.oSuccessMessageDialog) {
+						this.oSuccessMessageDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Success",
+							state: ValueState.Success,
+							content: new Text({ text: "Advance Request rejected" }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									viewModel.setProperty("/showFooter", false);
+									this.oSuccessMessageDialog.close();
+								}.bind(this)
+							})
+						});
+					}
+					this.oSuccessMessageDialog.open();
+				}.bind(this),
+				error: function (jqXHR, textStatus, errorThrown) {
+				  	console.log("Got an error response: " + textStatus + errorThrown);
+				}
+			  });
+		},
+
+		onResubmitButtonClick : function(oEvent) {
+		
+			var pageDOM = this.getView().byId("advanceRequestPageId");
+			pageDOM.setBusy(true);
+			var oModel = this.getView().getModel("advanceRequestDetailModel");
+			var jsonData = JSON.stringify(oModel.getData());
+			var oJWT = this.oJWT;
+			var viewModel = this.getView().getModel("viewModel");
+
+			$.ajax({
+				type: "POST",
+				data: jsonData,
+				headers: {"Authorization": "Bearer "+ oJWT},
+				crossDomain: true,
+				url: backendUrl+'advanceRequest/resubmitAR',
+				contentType: "application/json",
+				success: function (res, status, xhr) {
+					  //success code
+					  pageDOM.setBusy(false);
+					  
+					  if (!this.oSuccessMessageDialog) {
+						this.oSuccessMessageDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Success",
+							state: ValueState.Success,
+							content: new Text({ text: "Advance Request resubmitted" }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									viewModel.setProperty("/showFooter", false);
+									viewModel.setProperty("/editable", false);
+									this.oSuccessMessageDialog.close();
+								}.bind(this)
+							})
+						});
+					}
+		
+					this.oSuccessMessageDialog.open();
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+				  	console.log("Got an error response: " + textStatus + errorThrown);
+				}
+			  });
+	   }
 	});
 });

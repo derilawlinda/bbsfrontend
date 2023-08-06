@@ -71,19 +71,20 @@ sap.ui.define([
 			});
 			
 			this.getView().setModel(advanceRequestDetailModel,"advanceRequestDetailModel");
+			var advanceRealLineTableID = this.getView().byId("advanceRealLineTableID");
 
 			
 
 			advanceRequestDetailModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
 				var userData = oUserModel.getData();
-				var advanceRequestDetailModel = this.getView().getModel("advanceRequestDetailModel").getData();
+				var advanceRequestDetailData = this.getView().getModel("advanceRequestDetailModel").getData();
 				var ojwt = this.oJWT;
-				console.log(advanceRequestDetailModel.U_RealiStatus);
+				console.log(advanceRequestDetailData.U_RealiStatus);
 				if(userData.user.role_id == 4){
 					viewModel.setProperty("/editable", false);
 					viewModel.setProperty("/is_approver", true);
 					viewModel.setProperty("/is_requestor", false);
-					if(materialIssueDetailData.U_Status == 2){
+					if(advanceRequestDetailData.U_RealiStatus == 2){
 						viewModel.setProperty("/showFooter", true);
 					}
 				}
@@ -91,7 +92,7 @@ sap.ui.define([
 					viewModel.setProperty("/editable", false);
 					viewModel.setProperty("/is_approver", true);
 					viewModel.setProperty("/is_requestor", false);
-					if(materialIssueDetailData.U_Status == 1){
+					if(advanceRequestDetailData.U_RealiStatus == 1){
 						viewModel.setProperty("/showFooter", true);
 					}
 				}
@@ -100,10 +101,10 @@ sap.ui.define([
 					viewModel.setProperty("/is_requestor", true);
 					viewModel.setProperty("/resubmit", false);
 
-					if(materialIssueDetailData.U_Status == 4){
+					if(advanceRequestDetailData.U_RealiStatus == 4){
 						viewModel.setProperty("/resubmit", true);
 					}
-					if((materialIssueDetailData.U_Status == 4 || materialIssueDetailData.U_Status == 1) ){
+					if((advanceRequestDetailData.U_RealiStatus == 4 || advanceRequestDetailData.U_RealiStatus == 1) ){
 						viewModel.setProperty("/showFooter", true);
 						viewModel.setProperty("/editable", true);
 					}
@@ -113,47 +114,58 @@ sap.ui.define([
 					viewModel.setProperty("/is_requestor", false);
 					viewModel.setProperty("/is_finance", true);
 					viewModel.setProperty("/editable", false);
-					if(advanceRequestDetailModel.U_RealiStatus == 4){
+					if(advanceRequestDetailData.U_RealiStatus == 4){
 						viewModel.setProperty("/showFooter", true);
 					}
 				};
-;
-
-				
 
 				var accountModel = new JSONModel();
-				accountModel.loadData(backendUrl+"coa/getCOAsByBudget?budgetCode="+advanceRequestDetailModel.U_BudgetCode, null, true, "GET",false,false,{
+				accountModel.loadData(backendUrl+"coa/getCOAsByBudget?budgetCode="+advanceRequestDetailData.U_BudgetCode, null, true, "GET",false,false,{
 					'Authorization': 'Bearer ' + ojwt
 				});
 				this.getView().setModel(accountModel,"accounts");
 
 				accountModel.dataLoaded().then(function() {
-					var oItemModel = this.getView().getModel("items");
-					this.getView().getModel("items").setProperty("/data", []);
-					var oItemData = oItemModel.getData();
+					var oItemsModel = this.getView().getModel("items");
+					oItemsModel.setProperty("/data/",[]);
+					oItemsModel.refresh();
+					var oItemByAccountModel = new JSONModel();
+					var realizations = advanceRequestDetailData.REALIZATIONREQLINESCollection;
 
-					var accountData = accountModel.getData();
-					accountData.value.map(function(item) {
-						var oItemByAccountModel = new JSONModel();
-						oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount?accountCode='"+item.Code+"'", null, true, "GET",false,false,{
-							'Authorization': 'Bearer ' + ojwt
-						});
-						oItemByAccountModel.dataLoaded().then(function() {
-							var oItemByAccountData = oItemByAccountModel.getData();
-							oItemData.data[item.Code] = oItemByAccountData;
+					for (let i = 0; i < realizations.length; i++) {
+						advanceRealLineTableID.getRows()[i].getCells()[1].setBusy(true);
+						var oItemsData = oItemsModel.getData();
 
-						}.bind(this))
-						
-					}.bind(this));
-					var i = new sap.ui.model.json.JSONModel(oItemData);
-					this.getView().setModel(i, 'items');
-					i.refresh();
-
+						if(!(realizations[i].U_AccountCode in oItemsData)){
+							let account = (realizations[i].U_AccountCode).toString();
+							oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount?accountCode="+account, null, true, "GET",false,false,{
+								'Authorization': 'Bearer ' + ojwt
+							});
+							oItemByAccountModel.dataLoaded().then(function() {
+								var oItemByAccountData = oItemByAccountModel.getData();
+								var oItemsModel = this.getView().getModel("items");
+								oItemsModel.setProperty("/data/"+account,oItemByAccountData);
+								oItemsModel.refresh();
+								advanceRealLineTableID.getRows()[i].getCells()[1].bindAggregation("items", {
+									path: 'items>/data/'+ account,
+									template: new sap.ui.core.Item({
+										key: "{items>ItemCode}",
+										text: "{items>ItemCode} - {items>ItemName}"
+									})
+								});
+								advanceRealLineTableID.getRows()[i].getCells()[1].setBusy(false);
+								
+							}.bind(this))
+						}
+					}
+					
 				}.bind(this))
+				
 
 				this.getView().byId("advanceRequestPageId").setBusy(false);
 				
 			}.bind(this));
+			
 		},
 
 		onSaveButtonClick : function(oEvent) {
@@ -222,7 +234,6 @@ sap.ui.define([
 		onAmountChange : function(event){
 			const oModel = this.getView().getModel("advanceRequestDetailModel");
 			var oModelData = oModel.getData().ADVANCEREQLINESCollection;
-			console.log(oModelData);
 			let sum = 0;
 			for (let i = 0; i < oModelData.length; i++ ) {
 				sum += oModelData[i]["U_Amount"];

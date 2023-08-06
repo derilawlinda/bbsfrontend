@@ -14,8 +14,9 @@ xmlns:core="sap.ui.core"
     
     <content>
       <VBox class="sapUiSmallMargin" id="createARForm" justifyContent="Start">
+
                 <FlexBox >
-                <table:Table id="advanceRealLineTableID" 
+                <table:Table id="advanceReqLineTableID" 
                         rows="{advanceRequestDetailModel>/ADVANCEREQLINESCollection}"
 						visibleRowCount="5"
                         class="topMargin"
@@ -43,10 +44,9 @@ xmlns:core="sap.ui.core"
                         <Text text="{advanceRequestDetailModel>U_ItemCode}"/>
 						</table:template>
 					</table:Column>
+					
 
-					<Label id="_IDGenLabel4" text="Remarks" />
-					<Text id="_IDGenText4"  text="{advanceRequestDetailModel>/U_Remarks}"/>
-
+					
 
 					<table:Column >
 						<Text text="Amount" />
@@ -89,20 +89,20 @@ xmlns:core="sap.ui.core"
                 </FlexBox>
 
 				<FlexBox class="topMargin" >
-					 <table:Table id="MIItemsTableID" 
-                        rows="{advanceRequestDetailModel>/REALIZATIONREQLINESCollection}"
-						visibleRowCount="5"
-						 
+				<table:Table id="advanceRealLineTableID"
+					rows="{advanceRequestDetailModel>/REALIZATIONREQLINESCollection}"
+					visibleRowCount="5"
 				>
 				
 				<table:extension>
 					<OverflowToolbar  class="sapMTBHeader-CTX">
-						<Title text="Realization Items"/>
+						<Title text="Items"/>
 						<ToolbarSpacer />
 						<Button 
 							icon="sap-icon://add"
 							press=".onAddPress"
 							type="Transparent"
+							visible="{viewModel>/editable}"
 						/>
 					</OverflowToolbar>
 				</table:extension>
@@ -120,7 +120,6 @@ xmlns:core="sap.ui.core"
 								templateShareable: false
 								}"
 							>
-
 								<core:Item
 									key="{accounts>Code}"
 									text="{accounts>Code} - {accounts>Name}"
@@ -137,7 +136,7 @@ xmlns:core="sap.ui.core"
 						<table:template>
 							<ComboBox width="100%"
 								selectedKey="{advanceRequestDetailModel>U_ItemCode}"
-								enabled="false"
+								enabled="true"
 							>
 
 							</ComboBox>
@@ -197,6 +196,22 @@ xmlns:core="sap.ui.core"
                 </table:Table>
 				</FlexBox>
 
+				<form:SimpleForm id="SimpleFormChangeColumn_twoGroups234"
+						editable="true"
+                        layout="ColumnLayout"
+                        columnsM="2"
+                        columnsL="2"
+                        columnsXL="2"
+						class="topMargin" >
+					<form:content>
+
+					<Label id="_IDGenLabel101" text="Remarks" />
+					<Text id="_IDGenText101" text="{advanceRequestDetailModel>/U_RealizationRemarks}" />
+
+					</form:content>
+				
+				</form:SimpleForm>
+
 				
 
                 
@@ -205,10 +220,9 @@ xmlns:core="sap.ui.core"
 	<footer  >
 				<Toolbar>
 					<ToolbarSpacer />
-                   	<Button id="submitButton" type="Emphasized" text="Submit" press="onSaveButtonClick" visible="{viewModel>/is_requestor}" />
+                   	<Button type="Emphasized" text="Submit" press="onSaveButtonClick" visible="{viewModel>/is_requestor}" />
 					<Button type="Accept" text="Approve" press="onApproveButtonClick" visible="{viewModel>/is_approver}" />
 					<Button type="Reject" text="Reject" press="onRejectButtonClick" visible="{viewModel>/is_approver}" />
-					<Button id="resubmitButton" type="Critical" text="Resubmit" press="onResubmitButtonClick" visible="{viewModel>/resubmit}" />
 					<Button type="Emphasized" text="Transfered" press="onTransferButtonClick" visible="{viewModel>/is_finance}" />
               
 				</Toolbar>

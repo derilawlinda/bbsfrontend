@@ -153,10 +153,10 @@ sap.ui.define([
 										text: "{items>ItemCode} - {items>ItemName}"
 									})
 								});
-								advanceRealLineTableID.getRows()[i].getCells()[1].setBusy(false);
 								
 							}.bind(this))
 						}
+						advanceRealLineTableID.getRows()[i].getCells()[1].setBusy(false);
 					}
 					
 				}.bind(this))

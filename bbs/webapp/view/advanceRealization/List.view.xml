@@ -15,7 +15,8 @@ xmlns:table="sap.ui.table"
         items="{
 					path: 'advanceRealization>/value',
 					sorter: {
-						path: 'Code'
+						path: 'Code',
+                                                descending : 'true'
 					}
 				}">
          	<headerToolbar>
@@ -69,9 +70,11 @@ xmlns:table="sap.ui.table"
                                         type:'sap.ui.model.type.Currency',
                                         formatOptions: {showMeasure: true}
                                 }"/>
-                        <Button  text="{path : 'advanceRealization>U_Status',formatter:'.textFormatter'}" type="{path:'advanceRealization>U_Status', formatter:'.buttonFormatter'}"/>
-                        <Button  text="{path : 'advanceRealization>U_RealiStatus',formatter:'.relizationTextFormatter'}" type="{path:'advanceRealization>U_RealiStatus', formatter:'.realizationButtonFormatter'}"/>
+                        <!-- <Button  text="{path : 'advanceRealization>U_Status',formatter:'.textFormatter'}" type="{path:'advanceRealization>U_Status', formatter:'.buttonFormatter'}"/>
+                        <Button  text="{path : 'advanceRealization>U_RealiStatus',formatter:'.relizationTextFormatter'}" type="{path:'advanceRealization>U_RealiStatus', formatter:'.realizationButtonFormatter'}"/> -->
 
+                        <ObjectStatus text="{path : 'advanceRealization>U_Status', formatter:'.textFormatter'}" state="{path:'advanceRealization>U_Status', formatter:'.objectFormatter'}" inverted="true"></ObjectStatus>
+                        <ObjectStatus text="{path : 'advanceRealization>U_RealiStatus', formatter:'.textFormatter'}" state="{path:'advanceRealization>U_RealiStatus', formatter:'.objectFormatter'}" inverted="true"></ObjectStatus>
                 </cells>
              </ColumnListItem>
                 

@@ -63,6 +63,15 @@ sap.ui.define([
 				return 'Attention'
 			}
 		},
+		objectFormatter: function(sStatus) {
+			if(sStatus == 2 || sStatus == 3){
+				return 'Success'
+			}else if(sStatus == 1){
+				return 'Warning'
+			}else{
+				return 'Error'
+			}
+		  },
 		onPress: function (oEvent) {
 			var oRouter = this.getOwnerComponent().getRouter();
 			var oRow = oEvent.getSource();

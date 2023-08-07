@@ -78,8 +78,8 @@ xmlns:table="sap.ui.table"
                                         type:'sap.ui.model.type.Currency',
                                         formatOptions: {showMeasure: true}
                                 }"/>
-                        <Button id="_IDGenButton1" text="{path : 'budgeting>U_Status', formatter:'.textFormatter'}" type="{path:'budgeting>U_Status', formatter:'.buttonFormatter'}"/>
-
+                        <!-- <Button id="_IDGenButton1" text="{path : 'budgeting>U_Status', formatter:'.textFormatter'}" type="{path:'budgeting>U_Status', formatter:'.buttonFormatter'}"/> -->
+                        <ObjectStatus text="{path : 'budgeting>U_Status', formatter:'.textFormatter'}" state="{path:'budgeting>U_Status', formatter:'.objectFormatter'}" inverted="true"></ObjectStatus>
                 </cells>
              </ColumnListItem>
                 

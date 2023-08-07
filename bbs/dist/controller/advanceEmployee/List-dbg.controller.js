@@ -130,6 +130,16 @@ sap.ui.define([
 			}
 		  },
 		
+		  objectFormatter: function(sStatus) {
+			if(sStatus == 2 || sStatus == 3){
+				return 'Success'
+			}else if(sStatus == 1){
+				return 'Warning'
+			}else{
+				return 'Error'
+			}
+		  },
+		
 		textFormatter : function(sStatus){
 			if(sStatus == 1){
 				return 'Pending'

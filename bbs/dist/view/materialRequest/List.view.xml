@@ -57,7 +57,8 @@ xmlns:table="sap.ui.table"
                         	number="{
 								parts:[{path:'materialRequest>U_Qty'}]
 							}"/>
-                        <Button id="_IDGenButton1" text="{path : 'materialRequest>U_Status', formatter:'.textFormatter'}" type="{path:'materialRequest>U_Status', formatter:'.buttonFormatter'}"/>
+                        <ObjectStatus text="{path : 'materialRequest>U_Status', formatter:'.textFormatter'}" state="{path:'materialRequest>U_Status', formatter:'.objectFormatter'}" inverted="true"></ObjectStatus>
+                        
 
                 </cells>
              </ColumnListItem>

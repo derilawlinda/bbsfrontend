@@ -174,13 +174,13 @@ sap.ui.define([
 			});
 			
 		},
-		buttonFormatter: function(sStatus) {
-			if(sStatus == 2){
-				return 'Accept'
+		objectFormatter: function(sStatus) {
+			if(sStatus == 2 || sStatus == 3){
+				return 'Success'
 			}else if(sStatus == 1){
-				return 'Attention'
+				return 'Warning'
 			}else{
-				return 'Reject'
+				return 'Error'
 			}
 		  },
 		  textFormatter : function(sStatus){

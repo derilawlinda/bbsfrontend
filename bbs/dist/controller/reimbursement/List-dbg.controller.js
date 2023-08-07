@@ -337,6 +337,15 @@ sap.ui.define([
 			var dateFormatted = dateFormat.format(unformattedDate);
 			return dateFormatted;
 		},
+		objectFormatter: function(sStatus) {
+			if(sStatus == 2 || sStatus == 3){
+				return 'Success'
+			}else if(sStatus == 1){
+				return 'Warning'
+			}else{
+				return 'Error'
+			}
+		  },
 		onSelectionChange : function(oEvent){
 
 			console.log(oEvent.getParameters("selected"));

@@ -317,6 +317,7 @@ sap.ui.define([
 			oModelLineData.splice(iIdx, 1);
 			oModel.setProperty("/REIMBURSEMENTLINESCollection",oModelLineData);
 			oModel.refresh();
+			this.onAmountChange();
 		},
 		textFormatter : function(sStatus){
 			if(sStatus == 1){

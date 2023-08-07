@@ -48,6 +48,11 @@ xmlns:core="sap.ui.core"
 									type:'sap.ui.model.type.Currency',
 									formatOptions: {showMeasure: true}
 								}" unit="IDR" />
+						<ObjectStatus
+							state="Error"
+							text="{viewModel>/amountExceeded}"
+							inverted="true"
+						/>
 
 						<Label id="_IDGenLabelRemainingAmount" text="Remaining Budget" />
 						<ObjectNumber number="{
@@ -104,12 +109,19 @@ xmlns:core="sap.ui.core"
 				<table:Table id="reimbursementLineTableID" 
                         rows="{reimbursementDetailModel>/REIMBURSEMENTLINESCollection}"
 						visibleRowCount="7"
-						 
+						rowActionCount="1"
 				>
 
 				<table:extension>
 					<OverflowToolbar  class="sapMTBHeader-CTX">
 						<Title text="Items"/>
+						<ToolbarSpacer />
+						<Button 
+							icon="sap-icon://add"
+							press=".onAddPress"
+							type="Transparent"
+							visible="{viewModel>/editable}"
+						/>
 					</OverflowToolbar>
 				</table:extension>
 		                  
@@ -194,7 +206,7 @@ xmlns:core="sap.ui.core"
 						<table:template>
 							<Input
 								id="inputNumber"
-								placeholder="Enter number"
+								placeholder="Enter amount"
 								editable="{viewModel>/editable}"
 								value="{
 									parts: [
@@ -204,13 +216,20 @@ xmlns:core="sap.ui.core"
 									type:'sap.ui.model.type.Currency',
 									formatOptions: {showMeasure: true}
 								}"
-								ariaLabelledBy="InputNumberLabel"
 								change="onAmountChange"
 								/>
 						</table:template>
 					</table:Column>
 
 				</table:columns>
+
+				<table:rowActionTemplate>
+					<table:RowAction visible="{viewModel>/editable}">
+						<table:items>
+							<table:RowActionItem type="Delete" press="onDelete"></table:RowActionItem>
+						</table:items>
+					</table:RowAction>
+				</table:rowActionTemplate>
 
 				
                 </table:Table>
@@ -221,9 +240,9 @@ xmlns:core="sap.ui.core"
 	<footer  >
 				<Toolbar>
 					<ToolbarSpacer />
-                   	<Button type="Emphasized" text="Save" press="onSaveButtonClick" visible="{viewModel>/is_requestor}" />
-					<Button type="Accept" text="Approve" press="onApproveButtonClick" visible="{viewModel>/is_approver}" />
-					<Button type="Reject" text="Reject" press="onRejectButtonClick" visible="{viewModel>/is_approver}" />
+                   	<Button id="submitButton" type="Emphasized" text="Save" press="onSaveButtonClick" visible="{viewModel>/is_requestor}" />
+					<Button id="acceptButton" type="Accept" text="Approve" press="onApproveButtonClick" visible="{viewModel>/is_approver}" />
+					<Button id="rejectButton" type="Reject" text="Reject" press="onRejectButtonClick" visible="{viewModel>/is_approver}" />
               
 				</Toolbar>
 		</footer>

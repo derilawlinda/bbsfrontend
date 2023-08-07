@@ -269,6 +269,53 @@ sap.ui.define([
 				var oRouter = this.getOwnerComponent().getRouter();
 				oRouter.navTo("dashboard", {}, true);
 			}
+		},
+		onDelete: function(oEvent){
+			var row = oEvent.getParameters().row;
+			var iIdx = row.getIndex();
+			var oModel = this.getView().getModel("reimbursementDetailModel");
+			var oModelLineData = oModel.getData().REIMBURSEMENTLINESCollection;
+			oModelLineData.splice(iIdx, 1);
+			oModel.setProperty("/REIMBURSEMENTLINESCollection",oModelLineData);
+			oModel.refresh();
+			this.onAmountChange();
+		},
+		onAddPress : function(oEvent){
+			
+			const oModel = this.getView().getModel("reimbursementDetailModel");
+			var oModelData = oModel.getData();
+			var oNewObject = {
+				"U_AccountCode": "",
+				"U_ItemCode": "",
+				"U_NPWP": "",
+				"U_Amount": 0,
+				"U_Description": "",
+			};
+			oModelData.REIMBURSEMENTLINESCollection.push(oNewObject);
+			var f = new sap.ui.model.json.JSONModel(oModelData);
+			this.getView().setModel(f, 'reimbursementDetailModel');
+			f.refresh();
+		},
+		onAmountChange : function(event){
+			const oModel = this.getView().getModel("reimbursementDetailModel");
+			var oModelData = oModel.getData().REIMBURSEMENTLINESCollection;
+			const viewModel = this.getView().getModel("viewModel");
+			var oBudgetingData = this.getView().getModel("budget").getData();
+			let sum = 0;
+			for (let i = 0; i < oModelData.length; i++ ) {
+				sum += Number(oModelData[i]["U_Amount"]);
+			}
+			const oModelHeader = this.getView().getModel("reimbursementDetailModel");
+			oModelHeader.setProperty("/U_TotalAmount", sum);
+			var budgetAmount = oBudgetingData.U_RemainingBudget;
+			if(sum > budgetAmount){
+				this.getView().byId("submitButton").setEnabled(false);
+				viewModel.setProperty("/amountExceeded","Advance Amount exceeded Budget!")
+			}else{
+				this.getView().byId("submitButton").setEnabled(true);
+				viewModel.setProperty("/amountExceeded","")
+			}
+
 		}
 	});
 });

@@ -36,16 +36,15 @@ sap.ui.define([
 				editable : true,
 				resubmit : false,
 				is_finance : false,
-				showFooter : true
-			});
-			this.getView().setModel(viewModel,"viewModel");
-			viewModel.setData({
+				showFooter : true,
+				is_save : false,
 				NPWP: [
 					{"Name" : 0},
 					{"Name" : 2.5},
 					{"Name" : 3}
 				]
 			});
+			this.getView().setModel(viewModel,"viewModel");
 			this.getView().byId("advanceRequestPageId").setBusy(true);
 			var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 			this.oJWT = oStore.get("jwt");
@@ -65,6 +64,7 @@ sap.ui.define([
 				var urlArray = url.split("/");
 				advanceRequestCode = urlArray[urlArray.length - 1];
 			}
+
 			const advanceRequestDetailModel = new JSONModel();
 			advanceRequestDetailModel.loadData(backendUrl+"advanceRequest/getAdvanceRequestById?code="+advanceRequestCode, null, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
@@ -79,6 +79,8 @@ sap.ui.define([
 				var userData = oUserModel.getData();
 				var advanceRequestDetailData = this.getView().getModel("advanceRequestDetailModel").getData();
 				var ojwt = this.oJWT;
+				this.onAmountChange();
+
 				console.log(advanceRequestDetailData.U_RealiStatus);
 				if(userData.user.role_id == 4){
 					viewModel.setProperty("/editable", false);
@@ -100,6 +102,11 @@ sap.ui.define([
 					viewModel.setProperty("/is_approver", false);
 					viewModel.setProperty("/is_requestor", true);
 					viewModel.setProperty("/resubmit", false);
+
+					if(advanceRequestDetailData.U_RealiStatus == 2){
+						viewModel.setProperty("/is_save", true);
+						viewModel.setProperty("/is_submit", false);
+					}
 
 					if(advanceRequestDetailData.U_RealiStatus == 4){
 						viewModel.setProperty("/resubmit", true);
@@ -135,9 +142,10 @@ sap.ui.define([
 					for (let i = 0; i < realizations.length; i++) {
 						advanceRealLineTableID.getRows()[i].getCells()[1].setBusy(true);
 						var oItemsData = oItemsModel.getData();
+						let account = (realizations[i].U_AccountCode).toString();
+
 
 						if(!(realizations[i].U_AccountCode in oItemsData)){
-							let account = (realizations[i].U_AccountCode).toString();
 							oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount?accountCode="+account, null, true, "GET",false,false,{
 								'Authorization': 'Bearer ' + ojwt
 							});
@@ -153,10 +161,20 @@ sap.ui.define([
 										text: "{items>ItemCode} - {items>ItemName}"
 									})
 								});
+								advanceRealLineTableID.getRows()[i].getCells()[1].setBusy(false);
+
 								
 							}.bind(this))
+						}else{
+							advanceRealLineTableID.getRows()[i].getCells()[1].bindAggregation("items", {
+								path: 'items>/data/'+ account,
+								template: new sap.ui.core.Item({
+									key: "{items>ItemCode}",
+									text: "{items>ItemCode} - {items>ItemName}"
+								})
+							});
+							advanceRealLineTableID.getRows()[i].getCells()[1].setBusy(false);
 						}
-						advanceRealLineTableID.getRows()[i].getCells()[1].setBusy(false);
 					}
 					
 				}.bind(this))
@@ -168,7 +186,7 @@ sap.ui.define([
 			
 		},
 
-		onSaveButtonClick : function(oEvent) {
+		onSubmitButtonClick : function(oEvent) {
 			this.getView().byId("advanceRequestPageId").setBusy(true);
 			const oModel = this.getView().getModel("advanceRequestDetailModel");
 			var oProperty = oModel.getProperty("/");
@@ -233,14 +251,29 @@ sap.ui.define([
 		},
 		onAmountChange : function(event){
 			const oModel = this.getView().getModel("advanceRequestDetailModel");
-			var oModelData = oModel.getData().ADVANCEREQLINESCollection;
+			const oAdvanceRequestData = oModel.getData();
+			const advanceAmount = oAdvanceRequestData.U_Amount;
+			var oModelData = oModel.getData().REALIZATIONREQLINESCollection;
+			var viewModel = this.getView().getModel("viewModel");
 			let sum = 0;
-			for (let i = 0; i < oModelData.length; i++ ) {
-				sum += oModelData[i]["U_Amount"];
+			if(oModelData.length > 0){
+				for (let i = 0; i < oModelData.length; i++ ) {
+					sum += Number(oModelData[i]["U_Amount"]);
+				}
 			}
-			console.log(sum);
 			const oModelHeader = this.getView().getModel("advanceRequestDetailModel");
-			oModelHeader.setProperty("/U_Amount", sum);
+			oModelHeader.setProperty("/U_RealizationAmt", sum);
+			if(sum > advanceAmount) {
+				this.getView().byId("realizationAmount").setState(ValueState.Error);
+				viewModel.setProperty("/amountExceeded","Realization Amount exceeded Advance Amount");
+				this.getView().byId("submitButton").setEnabled(false);
+				this.getView().byId("saveButton").setEnabled(false);
+			}else{
+				this.getView().byId("realizationAmount").setState(ValueState.None);
+				viewModel.setProperty("/amountExceeded","");
+				this.getView().byId("submitButton").setEnabled(true);
+				this.getView().byId("saveButton").setEnabled(true);
+			};
 
 		},
 		onBudgetChange : async function(oEvent){
@@ -263,6 +296,48 @@ sap.ui.define([
 			this.getView().byId("createARForm").setBusy(false);
 
 		  },
+		  onSaveButtonClick : function(oEvent){
+			var pageDOM = this.getView().byId("advanceRequestPageId");
+			pageDOM.setBusy(true);
+			var oModel = this.getView().getModel("advanceRequestDetailModel");
+			var jsonData = JSON.stringify(oModel.getData());
+			var oJWT = this.oJWT;
+
+			$.ajax({
+				type: "POST",
+				data: jsonData,
+				headers: {"Authorization": "Bearer "+ oJWT},
+				crossDomain: true,
+				url: backendUrl+'advanceRequest/saveAR',
+				contentType: "application/json",
+				success: function (res, status, xhr) {
+					  //success code
+					  pageDOM.setBusy(false);
+					  
+					  if (!this.oSuccessMessageDialog) {
+						this.oSuccessMessageDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Success",
+							state: ValueState.Success,
+							content: new Text({ text: "Advance Realization saved" }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									this.oSuccessMessageDialog.close();
+								}.bind(this)
+							})
+						});
+					}
+		
+					this.oSuccessMessageDialog.open();
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+				  	console.log("Got an error response: " + textStatus + errorThrown);
+				}
+			  });
+
+		},
 
 		  onApproveButtonClick : function (){
 			var pageDOM = this.getView().byId("advanceRequestPageId");
@@ -301,7 +376,7 @@ sap.ui.define([
 								}.bind(this)
 							})
 						});
-						// viewModel.setProperty("/showFooter", false);
+						viewModel.setProperty("/showFooter", false);
 					}
 		
 					this.oSuccessMessageDialog.open();
@@ -327,6 +402,17 @@ sap.ui.define([
 			this.getView().setModel(f, 'advanceRequestDetailModel');
 			f.refresh();
 		
+		},
+		onDelete: function(oEvent){
+
+			var row = oEvent.getParameters().row;
+			var iIdx = row.getIndex();
+			var oModel = this.getView().getModel("advanceRequestDetailModel");
+			var oModelLineData = oModel.getData().REALIZATIONREQLINESCollection;
+			oModelLineData.splice(iIdx, 1);
+			oModel.setProperty("/REALIZATIONREQLINESCollection",oModelLineData);
+			oModel.refresh();
+			this.onAmountChange();
 		},
 
         onNavBack: function () {

@@ -92,6 +92,7 @@ xmlns:core="sap.ui.core"
 				<table:Table id="advanceRealLineTableID"
 					rows="{advanceRequestDetailModel>/REALIZATIONREQLINESCollection}"
 					visibleRowCount="5"
+					rowActionCount="1"
 				>
 				
 				<table:extension>
@@ -192,6 +193,35 @@ xmlns:core="sap.ui.core"
 
 				</table:columns>
 
+				<table:footer>
+						<FlexBox alignContent="End" justifyContent="End">
+							<Label text="Total Realization Amount :   " />
+							<ObjectNumber id="realizationAmount"
+							 number="{
+										parts: [
+											{path:'advanceRequestDetailModel>/U_RealizationAmt'}, 
+											'IDR',
+											'TwoWay'], 
+										type:'sap.ui.model.type.Currency',
+										formatOptions: {showMeasure: true}
+									}" unit="IDR" />
+							<ObjectStatus
+								class="marginLeft"
+								state="Error"
+								text="{viewModel>/amountExceeded}"
+								inverted="true"
+							/>
+						</FlexBox>
+  					</table:footer>
+
+					<table:rowActionTemplate>
+						<table:RowAction visible="{viewModel>/editable}">
+							<table:items>
+								<table:RowActionItem type="Delete" press="onDelete"></table:RowActionItem>
+							</table:items>
+						</table:RowAction>
+					</table:rowActionTemplate>
+
 				
                 </table:Table>
 				</FlexBox>
@@ -220,10 +250,11 @@ xmlns:core="sap.ui.core"
 	<footer  >
 				<Toolbar>
 					<ToolbarSpacer />
-                   	<Button type="Emphasized" text="Submit" press="onSaveButtonClick" visible="{viewModel>/is_requestor}" />
-					<Button type="Accept" text="Approve" press="onApproveButtonClick" visible="{viewModel>/is_approver}" />
-					<Button type="Reject" text="Reject" press="onRejectButtonClick" visible="{viewModel>/is_approver}" />
-					<Button type="Emphasized" text="Transfered" press="onTransferButtonClick" visible="{viewModel>/is_finance}" />
+                   	<Button id="submitButton" type="Emphasized" text="Submit" press="onSubmitButtonClick" visible="{viewModel>/is_submit}" />
+					<Button id="saveButton" type="Emphasized" text="Save" press="onSaveButtonClick" visible="{viewModel>/is_save}" />
+					<Button id="approveButton" type="Accept" text="Approve" press="onApproveButtonClick" visible="{viewModel>/is_approver}" />
+					<Button id="rejectButton" type="Reject" text="Reject" press="onRejectButtonClick" visible="{viewModel>/is_approver}" />
+					<Button id="transferedButton" type="Emphasized" text="Transfered" press="onTransferButtonClick" visible="{viewModel>/is_finance}" />
               
 				</Toolbar>
 		</footer>

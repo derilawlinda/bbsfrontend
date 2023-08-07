@@ -36,10 +36,9 @@ sap.ui.define([
 				editable : true,
 				resubmit : false,
 				is_finance : false,
-				showFooter : true,
 				is_save : false,
 				is_approver : false,
-				showFooter : false,
+				is_submit : false,
 				NPWP: [
 					{"Name" : 0},
 					{"Name" : 2.5},
@@ -88,7 +87,7 @@ sap.ui.define([
 					viewModel.setProperty("/editable", false);
 					viewModel.setProperty("/is_approver", true);
 					viewModel.setProperty("/is_requestor", false);
-					if(advanceRequestDetailData.U_RealiStatus == 2){
+					if(advanceRequestDetailData.U_RealiStatus == 3){
 						viewModel.setProperty("/showFooter", true);
 					}
 				}
@@ -96,7 +95,7 @@ sap.ui.define([
 					viewModel.setProperty("/editable", false);
 					viewModel.setProperty("/is_approver", true);
 					viewModel.setProperty("/is_requestor", false);
-					if(advanceRequestDetailData.U_RealiStatus == 1){
+					if(advanceRequestDetailData.U_RealiStatus == 2){
 						viewModel.setProperty("/showFooter", true);
 					}
 				}
@@ -105,18 +104,24 @@ sap.ui.define([
 					viewModel.setProperty("/is_requestor", true);
 					viewModel.setProperty("/resubmit", false);
 
+					if(advanceRequestDetailData.U_RealiStatus == 1){
+						viewModel.setProperty("/is_save", false);
+						viewModel.setProperty("/is_submit", true);
+					}
+
 					if(advanceRequestDetailData.U_RealiStatus == 2){
 						viewModel.setProperty("/is_save", true);
 						viewModel.setProperty("/is_submit", false);
 					}
-
-					if(advanceRequestDetailData.U_RealiStatus == 4){
-						viewModel.setProperty("/resubmit", true);
-					}
-					if((advanceRequestDetailData.U_RealiStatus == 4 || advanceRequestDetailData.U_RealiStatus == 1) ){
+					if((advanceRequestDetailData.U_RealiStatus == 5 || advanceRequestDetailData.U_RealiStatus == 1) ){
 						viewModel.setProperty("/showFooter", true);
 						viewModel.setProperty("/editable", true);
 					}
+					if(advanceRequestDetailData.U_RealiStatus == 5){
+						viewModel.setProperty("/is_save", true);
+						viewModel.setProperty("/resubmit", true);
+					}
+					
 				}
 				else if(userData.user.role_id == 2){
 					viewModel.setProperty("/is_approver", false);
@@ -218,6 +223,114 @@ sap.ui.define([
 			  });
 			// alert(JSON.stringify(oProperty));
 	   },
+
+	   onRejectButtonClick : function(oEvent){
+			if (!this.rejectAdvanceRealizationDialog) {
+				this.rejectAdvanceRealizationDialog = this.loadFragment({
+					name: "frontend.bbs.view.advanceRealization.RejectForm"
+				});
+			}
+			this.rejectAdvanceRealizationDialog.then(function (oDialog) {
+				this.oDialog = oDialog;
+				this.oDialog.open();
+			}.bind(this));
+		},
+
+		_closeDialog: function () {
+			this.oDialog.close();
+		},
+
+		onConfirmRejectClick : function(){
+			var pageDOM = this.getView().byId("advanceRequestPageId");
+			var advanceRequestDetailData = this.getView().getModel("advanceRequestDetailModel").getData();
+			pageDOM.setBusy(true);
+			var oDialog = this.getView().byId("rejectDialog");
+			var code = advanceRequestDetailData.Code;
+			var rejectionRemarks = this.getView().byId("RejectionRemarksID").getValue();
+			var viewModel = this.getView().getModel("viewModel");
+			
+			$.ajax({
+				type: "POST",
+				data: {
+					"Code": code,
+					"Remarks" : rejectionRemarks
+				},
+				headers: {"Authorization": "Bearer "+ this.oJWT},
+				crossDomain: true,
+				url: backendUrl+'advanceRequest/rejectAdvanceRealization',
+				success: function (res, status, xhr) {
+					//success code
+					oDialog.close();
+					pageDOM.setBusy(false);
+					if (!this.oSuccessMessageDialog) {
+						this.oSuccessMessageDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Success",
+							state: ValueState.Success,
+							content: new Text({ text: "Advance Realization rejected" }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									viewModel.setProperty("/showFooter", false);
+									this.oSuccessMessageDialog.close();
+								}.bind(this)
+							})
+						});
+					}
+					this.oSuccessMessageDialog.open();
+				}.bind(this),
+				error: function (jqXHR, textStatus, errorThrown) {
+					console.log("Got an error response: " + textStatus + errorThrown);
+				}
+			});
+		},
+
+		onResubmitButtonClick : function(oEvent) {
+		
+			var pageDOM = this.getView().byId("advanceRequestPageId");
+			pageDOM.setBusy(true);
+			var oModel = this.getView().getModel("advanceRequestDetailModel");
+			var jsonData = JSON.stringify(oModel.getData());
+			var oJWT = this.oJWT;
+			var viewModel = this.getView().getModel("viewModel");
+
+			$.ajax({
+				type: "POST",
+				data: jsonData,
+				headers: {"Authorization": "Bearer "+ oJWT},
+				crossDomain: true,
+				url: backendUrl+'advanceRequest/resubmitRealization',
+				contentType: "application/json",
+				success: function (res, status, xhr) {
+					//success code
+					pageDOM.setBusy(false);
+					
+					if (!this.oSuccessMessageDialog) {
+						this.oSuccessMessageDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Success",
+							state: ValueState.Success,
+							content: new Text({ text: "Advance Realization resubmitted" }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									viewModel.setProperty("/showFooter", false);
+									viewModel.setProperty("/editable", false);
+									this.oSuccessMessageDialog.close();
+								}.bind(this)
+							})
+						});
+					}
+		
+					this.oSuccessMessageDialog.open();
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+					console.log("Got an error response: " + textStatus + errorThrown);
+				}
+			});
+	},
 
 	   onAccountCodeChange : async function(oEvent){
 			
@@ -344,7 +457,7 @@ sap.ui.define([
 		  onApproveButtonClick : function (){
 			var pageDOM = this.getView().byId("advanceRequestPageId");
 			var viewModel = this.getView().getModel("viewModel");
-			// pageDOM.setBusy(true);
+			pageDOM.setBusy(true);
 			var code = this.getView().byId("_IDGenText101").getText();
 			const oModel = this.getView().getModel("advanceRequestDetailModel");
 			var budgetInformation = this.getView().getModel("budget").getData();
@@ -362,7 +475,7 @@ sap.ui.define([
 				contentType: "application/json",
 				success: function (res, status, xhr) {
 					  //success code
-					//   pageDOM.setBusy(false);
+					  pageDOM.setBusy(false);
 					  
 					  if (!this.oSuccessMessageDialog) {
 						this.oSuccessMessageDialog = new Dialog({

@@ -74,7 +74,7 @@ xmlns:table="sap.ui.table"
                         <Button  text="{path : 'advanceRealization>U_RealiStatus',formatter:'.relizationTextFormatter'}" type="{path:'advanceRealization>U_RealiStatus', formatter:'.realizationButtonFormatter'}"/> -->
 
                         <ObjectStatus text="{path : 'advanceRealization>U_Status', formatter:'.textFormatter'}" state="{path:'advanceRealization>U_Status', formatter:'.objectFormatter'}" inverted="true"></ObjectStatus>
-                        <ObjectStatus text="{path : 'advanceRealization>U_RealiStatus', formatter:'.textFormatter'}" state="{path:'advanceRealization>U_RealiStatus', formatter:'.objectFormatter'}" inverted="true"></ObjectStatus>
+                        <ObjectStatus text="{path : 'advanceRealization>U_RealiStatus', formatter:'.relizationTextFormatter'}" state="{path:'advanceRealization>U_RealiStatus', formatter:'.realizationObjectFormatter'}" inverted="true"></ObjectStatus>
                 </cells>
              </ColumnListItem>
                 

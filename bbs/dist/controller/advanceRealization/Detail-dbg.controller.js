@@ -38,6 +38,8 @@ sap.ui.define([
 				is_finance : false,
 				showFooter : true,
 				is_save : false,
+				is_approver : false,
+				showFooter : false,
 				NPWP: [
 					{"Name" : 0},
 					{"Name" : 2.5},

@@ -103,17 +103,30 @@ sap.ui.define([
 		},
 		realizationButtonFormatter: function(sStatus) {
 			if(sStatus == 3 || sStatus == 4){
-				return 'Accept'
+				return 'Success'
 			}else if(sStatus == 1 || sStatus == 2){
-				return 'Attention'
+				return 'Warning'
 			}else{
-				return 'Reject'
+				return 'Error'
+			}
+		  },
+		  realizationObjectFormatter: function(sStatus) {
+			if(sStatus == 1 ){
+				return 'Information'}
+			else if(sStatus == 2){
+				return 'Warning'
+			}
+			else if(sStatus == 3 || sStatus == 4){
+				return 'Success'
+			}
+			else{
+				return 'Error'
 			}
 		  },
 		
 		relizationTextFormatter : function(sStatus){
 			if(sStatus == 1){
-				return 'Pending'
+				return 'Unrealized'
 			}else if(sStatus == 2){
 				return 'Submitted'
 			}else if(sStatus == 3){

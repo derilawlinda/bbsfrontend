@@ -87,15 +87,27 @@ sap.ui.define([
 			}
 	   },
 	   onAmountChange : function(event){
-		const oModel = this.getView().getModel("new_re_items");
-		var oModelData = oModel.getData().REIMBURSEMENTLINESCollection;
-		let sum = 0;
-		for (let i = 0; i < oModelData.length; i++ ) {
-			sum += oModelData[i]["U_Amount"];
-		}
-		console.log(sum);
-		const oModelHeader = this.getView().getModel("reimbursementHeader");
-		oModelHeader.setProperty("/U_TotalAmount", sum);
+			const oModel = this.getView().getModel("new_re_items");
+			var oModelData = oModel.getData().REIMBURSEMENTLINESCollection;
+			const viewModel = this.getView().getModel("createFragmentViewModel");
+			const oModelHeader = this.getView().getModel("reimbursementHeader");
+			var oBudgetingData = this.getView().getModel("budgetHeader").getData();
+			let sum = 0;
+			for (let i = 0; i < oModelData.length; i++ ) {
+				sum += oModelData[i]["U_Amount"];
+			}
+			oModelHeader.setProperty("/U_TotalAmount", sum);
+			var budgetAmount = oBudgetingData.U_RemainingBudget;
+			if(sum > budgetAmount){
+				viewModel.setProperty("/is_amountExceeded",true);
+				viewModel.setProperty("/createButtonEnabled",false);
+				viewModel.setProperty("/amountExceeded","Advance Amount exceeded Budget!");
+			}else{
+				viewModel.setProperty("/is_amountExceeded",false);
+				viewModel.setProperty("/createButtonEnabled",true);
+				viewModel.setProperty("/amountExceeded","");
+
+			}
 
 		},
 

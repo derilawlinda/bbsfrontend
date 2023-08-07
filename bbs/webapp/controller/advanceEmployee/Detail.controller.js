@@ -227,7 +227,6 @@ sap.ui.define([
 			const oModel = this.getView().getModel("advanceRequestDetailModel");
 			const viewModel = this.getView().getModel("viewModel");
 			var oBudgetingData = this.getView().getModel("budget").getData();
-			console.log(oBudgetingData);
 			var oModelData = oModel.getData().ADVANCEREQLINESCollection;
 			let sum = 0;
 			for (let i = 0; i < oModelData.length; i++ ) {
@@ -241,15 +240,12 @@ sap.ui.define([
 				this.getView().byId("resubmitButton").setEnabled(false);
 				this.getView().byId("submitButton").setEnabled(false);
 				viewModel.setProperty("/amountExceeded","Advance Amount exceeded Budget!")
-
 			}else{
 				this.getView().byId("advanceAmount").setState(ValueState.None);
 				this.getView().byId("resubmitButton").setEnabled(true);
 				this.getView().byId("submitButton").setEnabled(true);
 				viewModel.setProperty("/amountExceeded","")
 			}
-
-
 
 		},
 		onBudgetChange : async function(oEvent){

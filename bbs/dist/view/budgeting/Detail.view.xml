@@ -28,7 +28,7 @@ xmlns:core="sap.ui.core"
                         <Label id="_IDGenLabel1" text="Date" />
 						<Text id="_IDGenText1" text="{budgetingDetailModel>/CreateDate}" />
 
-                        <Label id="_IDGenLabel2" text="Name" />
+                        <Label id="_IDGenLabel2" text="Budget Name" />
 						<Input id="name" value="{budgetingDetailModel>/Name}"
 						editable="{viewModel>/editable}"></Input>
 
@@ -212,7 +212,7 @@ xmlns:core="sap.ui.core"
 	<footer  >
 				<Toolbar>
 					<ToolbarSpacer />
-                    <Button type="Emphasized" text="Save Budget" press="onSaveButtonClick" visible="{viewModel>/is_requestor}" />
+                    <Button type="Emphasized" text="Save" press="onSaveButtonClick" visible="{viewModel>/is_requestor}" />
 					<Button type="Accept" text="Approve" press="onApproveButtonClick" visible="{viewModel>/is_approver}" />
 					<Button type="Reject" text="Reject" press="onRejectButtonClick" visible="{viewModel>/is_approver}" />
 					<Button type="Critical" text="Resubmit" press="onResubmitButtonClick" visible="{viewModel>/resubmit}" />

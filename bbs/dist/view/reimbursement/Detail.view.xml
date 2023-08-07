@@ -29,7 +29,7 @@ xmlns:core="sap.ui.core"
                         <Label id="_IDGenLabel1" text="Date" />
 						<Text id="_IDGenText1" text="{reimbursementDetailModel>/CreateDate}" />
 
-                        <Label id="_IDGenLabel2" text="Name" />
+                        <Label id="_IDGenLabel2" text="Reimbursement Name" />
 						<Input id="name" value="{reimbursementDetailModel>/Name}"
 						editable="{viewModel>/editable}"></Input>
 

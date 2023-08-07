@@ -61,8 +61,12 @@
 
 
 						<Label id="totalAmount" text="Total Advance Amount" />
-						<ObjectNumber number="{ parts:[{path:'advanceRequestHeader>/U_Amount'},'IDR','TwoWay'], type: 'sap.ui.model.type.Currency', formatOptions: {showMeasure: true,decimalSeparator : ',', groupingSeparator : '.'} }" unit="IDR" />
-
+						<ObjectNumber state="{=${createFragmentViewModel>/is_amountExceeded} ? 'Error' : 'None' }" number="{ parts:[{path:'advanceRequestHeader>/U_Amount'},'IDR','TwoWay'], type: 'sap.ui.model.type.Currency', formatOptions: {showMeasure: true,decimalSeparator : ',', groupingSeparator : '.'} }" unit="IDR" />
+						<ObjectStatus xmlns="sap.m"
+							state="Error"
+							text="{createFragmentViewModel>/amountExceeded}"
+							inverted="true"
+						/>
 
 						<core:Title id="_IDGenTitle2" text="Category Information" />
 
@@ -187,7 +191,7 @@
 		<footer>
 				<Toolbar id="_IDGenToolbar12">
 					<ToolbarSpacer id="_IDGenToolbarSpacer12" />
-                    <Button id="_IDGenButton12" type="Emphasized" text="Create Advance Request" press="onSaveButtonClick" />
+                    <Button id="createButton" type="Emphasized" text="Create Advance Request" press="onSaveButtonClick" enabled="{createFragmentViewModel>/createButtonEnabled}"/>
 				    <Button id="_IDGenButton13" text="Cancel" press="._closeDialog" />
 				</Toolbar>
 		</footer>

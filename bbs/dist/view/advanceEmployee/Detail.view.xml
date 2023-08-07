@@ -29,7 +29,7 @@ xmlns:core="sap.ui.core"
                         <Label id="_IDGenLabel1" text="Date" />
 						<Text id="_IDGenText1" text="{advanceRequestDetailModel>/CreateDate}" />
 
-                        <Label id="_IDGenLabel2" text="Name" />
+                        <Label id="_IDGenLabel2" text="Advance Name" />
 						<Input id="name" value="{advanceRequestDetailModel>/Name}"
 						editable="{viewModel>/editable}"></Input>
 
@@ -50,7 +50,7 @@ xmlns:core="sap.ui.core"
 									type:'sap.ui.model.type.Currency',
 									formatOptions: {showMeasure: true}
 								}" unit="IDR" />
-						<ObjectStatus xmlns="sap.m"
+						<ObjectStatus
 							state="Error"
 							text="{viewModel>/amountExceeded}"
 							inverted="true"
@@ -100,7 +100,6 @@ xmlns:core="sap.ui.core"
 						<Text text="{budget>/U_Classification}"/>
 
                        <Label id="_IDGenLabel443" text="Subclass" />
-
 						<Text text="{budget>/U_SubClass}"/>
 						
                         <Label id="_IDGenLabel444" text="Subclass2" />

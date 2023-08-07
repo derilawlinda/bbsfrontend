@@ -309,14 +309,25 @@ sap.ui.define([
 		onAmountChange : function(event){
 			const oModel = this.getView().getModel("new_ar_items");
 			var oModelData = oModel.getData().ADVANCEREQLINESCollection;
-			console.log(oModelData);
+			const viewModel = this.getView().getModel("createFragmentViewModel");
+			var oBudgetingData = this.getView().getModel("budgetHeader").getData();
+			const oModelHeader = this.getView().getModel("advanceRequestHeader");
 			let sum = 0;
 			for (let i = 0; i < oModelData.length; i++ ) {
 				sum += oModelData[i]["U_Amount"];
 			}
-			console.log(sum);
-			const oModelHeader = this.getView().getModel("advanceRequestHeader");
 			oModelHeader.setProperty("/U_Amount", sum);
+			var budgetAmount = oBudgetingData.U_RemainingBudget;
+			if(sum > budgetAmount){
+				viewModel.setProperty("/is_amountExceeded",true);
+				viewModel.setProperty("/createButtonEnabled",false);
+				viewModel.setProperty("/amountExceeded","Advance Amount exceeded Budget!");
+			}else{
+				viewModel.setProperty("/is_amountExceeded",false);
+				viewModel.setProperty("/createButtonEnabled",true);
+				viewModel.setProperty("/amountExceeded","");
+
+			}
 
 		}
     });

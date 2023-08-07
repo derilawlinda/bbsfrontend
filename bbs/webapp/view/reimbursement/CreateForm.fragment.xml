@@ -30,7 +30,6 @@
 						<ComboBox width="100%"
 								change="onBudgetChange"
 								value="{reimbursementHeader>/U_BudgetCode}"
-								selectionChange="onSelectionChange"
 								showSecondaryValues="true"
 								items="{
 								path: 'budgeting>/value',
@@ -61,7 +60,13 @@
 
 
 						<Label id="totalAmount" text="Total Reimbursement Amount" />
-						<ObjectNumber ariaLabelledBy="totalAmount" number="{ parts:[{path:'reimbursementHeader>/U_TotalAmount'},'IDR','TwoWay'], type: 'sap.ui.model.type.Currency', formatOptions: {showMeasure: true,decimalSeparator : ',', groupingSeparator : '.'} }" unit="IDR" />
+
+						<ObjectNumber ariaLabelledBy="totalAmount" state="{=${createFragmentViewModel>/is_amountExceeded} ? 'Error' : 'None' }" number="{ parts:[{path:'reimbursementHeader>/U_TotalAmount'},'IDR','TwoWay'], type: 'sap.ui.model.type.Currency', formatOptions: {showMeasure: true,decimalSeparator : ',', groupingSeparator : '.'} }" unit="IDR" />
+						<ObjectStatus xmlns="sap.m"
+							state="Error"
+							text="{createFragmentViewModel>/amountExceeded}"
+							inverted="true"
+						/>
 
 
 						<core:Title id="_IDGenTitle2" text="Category Information" />
@@ -196,6 +201,7 @@
 								change="onAmountChange"
 								/>
 						</table:template>
+
 					</table:Column>
 
 				</table:columns>
@@ -216,7 +222,7 @@
 		<footer>
 				<Toolbar id="_IDGenToolbar12">
 					<ToolbarSpacer id="_IDGenToolbarSpacer12" />
-                    <Button id="_IDGenButton12" type="Emphasized" text="Create Reimbursement Request" press="onSaveButtonClick" />
+                    <Button id="_IDGenButton12" type="Emphasized" text="Create Reimbursement Request" press="onSaveButtonClick" enabled="{createFragmentViewModel>/createButtonEnabled}" />
 				    <Button id="_IDGenButton13" text="Cancel" press="._closeDialog" />
 				</Toolbar>
 		</footer>

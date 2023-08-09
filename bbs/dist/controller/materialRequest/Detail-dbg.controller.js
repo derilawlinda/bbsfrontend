@@ -34,7 +34,7 @@ sap.ui.define([
 			
 			var viewModel = new JSONModel({
 				showFooter : false,
-				editable : true,
+				editable : false,
 				resubmit : false
 			});
 			this.getView().setModel(viewModel,"viewModel");
@@ -44,6 +44,9 @@ sap.ui.define([
 			this.getView().byId("materialRequestPageID").setBusy(true);
 			var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 			this.oJWT = oStore.get("jwt");
+
+			var accountModel = new JSONModel();
+			this.getView().setModel(accountModel,"accounts");
 
 			
 			this.materialRequestCode = oEvent.getParameter("arguments").materialRequestID;
@@ -91,7 +94,6 @@ sap.ui.define([
 				var materialRequestDetailData = this.getView().getModel("materialRequestDetailModel").getData();
 				
 				if(parametersMap.roleId == 4){
-					viewModel.setProperty("/editable", false);
 					viewModel.setProperty("/is_approver", true);
 					viewModel.setProperty("/is_requestor", false);
 					if(materialRequestDetailData.U_Status == 2){
@@ -99,7 +101,6 @@ sap.ui.define([
 					}
 				}
 				else if(parametersMap.roleId == 5){
-					viewModel.setProperty("/editable", false);
 					viewModel.setProperty("/is_approver", true);
 					viewModel.setProperty("/is_requestor", false);
 					if(materialRequestDetailData.U_Status == 1){
@@ -131,6 +132,12 @@ sap.ui.define([
 					'Authorization': 'Bearer ' + this.oJWT
 				});
 				this.getView().setModel(oBudgetingModel,"budgeting");
+
+				var accountModel = this.getView().getModel("accounts");
+				accountModel.loadData(backendUrl+"coa/getCOAsByBudget?budgetCode="+materialRequestDetailData.U_BudgetCode, null, true, "GET",false,false,{
+					'Authorization': 'Bearer ' + this.oJWT
+				});
+				accountModel.refresh();
 
 				var materialReqLineTable = this.getView().byId("materialReqLineTableID");
 				var oItemsModel = this.getView().getModel("items");
@@ -408,6 +415,7 @@ sap.ui.define([
 				sSelectedKey = oValidatedComboBox.getSelectedKey(),
 				sValue = oValidatedComboBox.getValue();
 
+
 			if (!sSelectedKey && sValue) {
 				oValidatedComboBox.setValueState(ValueState.Error);
 				oValidatedComboBox.setValueStateText("Please enter a valid Budget Code");
@@ -416,6 +424,13 @@ sap.ui.define([
 			}
 			if(oValidatedComboBox.getValueState() == ValueState.None){
 				this.getView().byId("materialRequestPageID").setBusy(true);
+
+				var accountModel = this.getView().getModel("accounts");
+				accountModel.loadData(backendUrl+"coa/getCOAsByBudget?budgetCode="+sSelectedKey, null, true, "GET",false,false,{
+					'Authorization': 'Bearer ' + this.oJWT
+				});
+				accountModel.refresh();
+
 				var selectedID = parseInt(oEvent.getParameters('selectedItem').value);
 				var budget = this.getView().getModel("budget");
 				await budget.loadData(backendUrl+"budget/getBudgetById?code="+selectedID, null, true, "GET",false,false,{

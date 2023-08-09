@@ -31,7 +31,7 @@ sap.ui.define([
 		_onObjectMatched: async function (oEvent) {
 			var viewModel = new JSONModel({
 				showFooter : false,
-				editable : true,
+				editable : false,
 				resubmit : false,
 				is_finance : false
 			});
@@ -72,7 +72,6 @@ sap.ui.define([
 				var advanceRequestDetailData = this.getView().getModel("advanceRequestDetailModel").getData();
 
 				if(userData.user.role_id == 4){
-					viewModel.setProperty("/editable", false);
 					viewModel.setProperty("/is_approver", true);
 					viewModel.setProperty("/is_requestor", false);
 					if(advanceRequestDetailData.U_Status == 2){
@@ -80,7 +79,6 @@ sap.ui.define([
 					}
 				}
 				else if(userData.user.role_id == 5){
-					viewModel.setProperty("/editable", false);
 					viewModel.setProperty("/is_approver", true);
 					viewModel.setProperty("/is_requestor", false);
 					if(advanceRequestDetailData.U_Status == 1){
@@ -104,7 +102,6 @@ sap.ui.define([
 					viewModel.setProperty("/is_finance", true);
 					viewModel.setProperty("/is_approver", false);
 					viewModel.setProperty("/is_requestor", false);
-					viewModel.setProperty("/editable", false);
 
 					if(advanceRequestDetailData.U_Status != 3){
 						viewModel.setProperty("/showFooter", false);

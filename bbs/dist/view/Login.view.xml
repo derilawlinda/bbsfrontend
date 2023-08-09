@@ -20,7 +20,7 @@
                     labelSpanM="12"
                     columnsL="1"
                     columnsM="1"
-                    width="500px">
+                    width="22rem">
                         <form:content>
                             <l:VerticalLayout id="_IDGenHorizontalLayout1" >
                                     <FlexBox  alignItems="Center" justifyContent="Center">

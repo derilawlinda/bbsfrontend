@@ -116,15 +116,14 @@ xmlns:core="sap.ui.core"
 								editable="{viewModel>/editable}"
 								selectedKey="{materialRequestDetailModel>U_AccountCode}"
 								items="{
-								path: 'accounts>/data',
+								path: 'accounts>/value',
 								templateShareable: true
 								}"
 							>
 
 								<core:ListItem
-									key="{accounts>AccountCode}"
-									text="{accounts>AccountCode} - {accounts>AccountName}"
-									additionalText="{accounts>AccountName}"
+									key="{accounts>Code}"
+									text="{accounts>Code} - {accounts>Name}"
 								/>
 
 							</ComboBox>

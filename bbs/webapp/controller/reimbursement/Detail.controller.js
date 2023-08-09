@@ -31,6 +31,9 @@ sap.ui.define([
         },
 		_onObjectMatched: async function (oEvent) {
 			var viewModel = new sap.ui.model.json.JSONModel({
+				showFooter : false,
+				editable : false,
+				resubmit : false,
 				NPWP: [
 					{"Name" : 0},
 					{"Name" : 2.5},
@@ -41,6 +44,7 @@ sap.ui.define([
 			this.getView().byId("reimbursementPageID").setBusy(true);
 			var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 			this.oJWT = oStore.get("jwt");
+
 
 			var oUserModel = new JSONModel();
 			await oUserModel.loadData(backendUrl+"checkToken", null, true, "POST",false,false,{
@@ -76,28 +80,32 @@ sap.ui.define([
 			reimbursementDetailModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
 				var userData = oUserModel.getData();
 				var reimbursementDetailData = this.getView().getModel("reimbursementDetailModel").getData();
+
 				if(userData.user.role_id == 4){
-					viewModel.setProperty("/editable", false);
-					viewModel.setProperty("/is_approver", true);
-					viewModel.setProperty("/is_requestor", false);
-					if(reimbursementDetailData.U_Status == 3){
-						viewModel.setProperty("/showFooter", false);
-					}
-				}
-				else if(userData.user.role_id == 5){
-					viewModel.setProperty("/editable", false);
 					viewModel.setProperty("/is_approver", true);
 					viewModel.setProperty("/is_requestor", false);
 					if(reimbursementDetailData.U_Status == 2){
-						viewModel.setProperty("/showFooter", false);
+						viewModel.setProperty("/showFooter", true);
+					}
+				}
+				else if(userData.user.role_id == 5){
+					viewModel.setProperty("/is_approver", true);
+					viewModel.setProperty("/is_requestor", false);
+					if(reimbursementDetailData.U_Status == 1){
+						viewModel.setProperty("/showFooter", true);
 					}
 				}
 				else if(userData.user.role_id == 3){
 					viewModel.setProperty("/is_approver", false);
 					viewModel.setProperty("/is_requestor", true);
-					if(reimbursementDetailData.U_Status != 1){
-						viewModel.setProperty("/showFooter", false);
-						viewModel.setProperty("/editable", false);
+					viewModel.setProperty("/resubmit", false);
+
+					if(reimbursementDetailData.U_Status == 4){
+						viewModel.setProperty("/resubmit", true);
+					}
+					if((reimbursementDetailData.U_Status == 4 || reimbursementDetailData.U_Status == 1) ){
+						viewModel.setProperty("/showFooter", true);
+						viewModel.setProperty("/editable", true);
 					}
 				};
 
@@ -127,48 +135,54 @@ sap.ui.define([
 
 				}.bind(this));
 
-				var oItemsModel = this.getView().getModel("items");
-				oItemsModel.setProperty("/data", []);
-				var oItemData = oItemsModel.getData();
-				var itemsByAccount = new JSONModel();
+				accountModel.dataLoaded().then(function() {
+					var reimbursementLineTableID = this.getView().byId("reimbursementLineTableID");
+					var oItemsModel = this.getView().getModel("items");
+					oItemsModel.setProperty("/data/",[]);
+					oItemsModel.refresh();
+					var oItemByAccountModel = new JSONModel();
+					var reimbursements = reimbursementDetailData.REIMBURSEMENTLINESCollection;
+					var oJWT = this.oJWT;
 
-				var accounts = [];
-				for (let i = 0; i < reimbursementDetailData.REIMBURSEMENTLINESCollection.length; i++) {
-					if(!(reimbursementDetailData.REIMBURSEMENTLINESCollection[i].U_AccountCode.toString() in accounts)){
-						accounts.push(reimbursementDetailData.REIMBURSEMENTLINESCollection[i].U_AccountCode);
-					};
-				}
-				var uniqueAccounts = [... new Set(accounts)];
-				
-				for (let i = 0; i < uniqueAccounts.length; i++) {
-					this.getView().byId("reimbursementPageID").setBusy(true);
+					for (let i = 0; i < reimbursements.length; i++) {
+						reimbursementLineTableID.getRows()[i].getCells()[1].setBusy(true);
+						var oItemsData = oItemsModel.getData();
+						let account = (reimbursements[i].U_AccountCode).toString();
 
-					itemsByAccount.loadData(backendUrl+"items/getItemsByAccount?accountCode="+uniqueAccounts[i], null, true, "GET",false,false,{
-						'Authorization': 'Bearer ' + this.oJWT
-					});
-					itemsByAccount.dataLoaded().then(function(){
-						var itemsByAccountData = itemsByAccount.getData();
-						oItemData.data[uniqueAccounts[i]] = itemsByAccountData;
-						var newItemModel = new sap.ui.model.json.JSONModel(oItemData);
-						this.getView().setModel(newItemModel, 'items');
-						newItemModel.refresh();
-						this.getView().byId("reimbursementPageID").setBusy(false);
-					}.bind(this))
-				};
 
-				var reimbursementLineTableID = this.getView().byId("reimbursementLineTableID");
-				for (let i = 0; i < reimbursementDetailData.REIMBURSEMENTLINESCollection.length; i++) {
-					reimbursementLineTableID.getRows()[i].getCells()[1].setBusy(true);
-					let account = (reimbursementDetailData.REIMBURSEMENTLINESCollection[i].U_AccountCode).toString();
-					reimbursementLineTableID.getRows()[i].getCells()[1].bindAggregation("items", {
-						path: 'items>/data/'+ account,
-						template: new sap.ui.core.Item({
-							key: "{items>ItemCode}",
-							text: "{items>ItemCode} - {items>ItemName}"
-						})
-					});
-					reimbursementLineTableID.getRows()[i].getCells()[1].setBusy(false);
-				}
+						if(!(reimbursements[i].U_AccountCode in oItemsData)){
+							oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount?accountCode="+account, null, true, "GET",false,false,{
+								'Authorization': 'Bearer ' + oJWT
+							});
+							oItemByAccountModel.dataLoaded().then(function() {
+								var oItemByAccountData = oItemByAccountModel.getData();
+								var oItemsModel = this.getView().getModel("items");
+								oItemsModel.setProperty("/data/"+account,oItemByAccountData);
+								oItemsModel.refresh();
+								reimbursementLineTableID.getRows()[i].getCells()[1].bindAggregation("items", {
+									path: 'items>/data/'+ account,
+									template: new sap.ui.core.Item({
+										key: "{items>ItemCode}",
+										text: "{items>ItemCode} - {items>ItemName}"
+									})
+								});
+								reimbursementLineTableID.getRows()[i].getCells()[1].setBusy(false);
+
+								
+							}.bind(this))
+						}else{
+							reimbursementLineTableID.getRows()[i].getCells()[1].bindAggregation("items", {
+								path: 'items>/data/'+ account,
+								template: new sap.ui.core.Item({
+									key: "{items>ItemCode}",
+									text: "{items>ItemCode} - {items>ItemName}"
+								})
+							});
+							reimbursementLineTableID.getRows()[i].getCells()[1].setBusy(false);
+						}
+					}
+					
+				}.bind(this))
 				
 			}.bind(this));
 		},

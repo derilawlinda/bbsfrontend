@@ -33,7 +33,7 @@ sap.ui.define([
 			
 			var viewModel = new JSONModel({
 				showFooter : false,
-				editable : true,
+				editable : false,
 				resubmit : false
 			});
 			this.getView().setModel(viewModel,"viewModel");
@@ -53,16 +53,6 @@ sap.ui.define([
 			await oUserModel.loadData(backendUrl+"checkToken", null, true, "POST",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
 			});
-			oUserModel.dataLoaded().then(function() {
-				var userData = oUserModel.getData();
-				if(userData.user.role_id == 3 ){
-					viewModel.setProperty("/editable", true);
-				}else{
-					viewModel.setProperty("/editable", false);
-				}
-			});
-			
-
 			
 			this.getView().bindElement({
 				path: "/value/" + window.decodeURIComponent(oEvent.getParameter("arguments").ID),
@@ -92,7 +82,6 @@ sap.ui.define([
 				var materialIssueDetailData = this.getView().getModel("materialIssueDetailModel").getData();
 				
 				if(userData.user.role_id == 4){
-					viewModel.setProperty("/editable", false);
 					viewModel.setProperty("/is_approver", true);
 					viewModel.setProperty("/is_requestor", false);
 					if(materialIssueDetailData.U_Status == 2){
@@ -100,7 +89,6 @@ sap.ui.define([
 					}
 				}
 				else if(userData.user.role_id == 5){
-					viewModel.setProperty("/editable", false);
 					viewModel.setProperty("/is_approver", true);
 					viewModel.setProperty("/is_requestor", false);
 					if(materialIssueDetailData.U_Status == 1){
@@ -130,14 +118,16 @@ sap.ui.define([
 				accountModel.loadData(backendUrl+"coa/getCOAsByBudget?budgetCode="+materialIssueDetailData.U_BudgetCode, null, true, "GET",false,false,{
 					'Authorization': 'Bearer ' + this.oJWT
 				});
+				accountModel.refresh();
 
 				var materialIssueLineTable = this.getView().byId("materialIssueLineTableID");
 				var oItemsModel = this.getView().getModel("items");
 				oItemsModel.setProperty("/data", []);
 				var oItemData = oItemsModel.getData();
 				var itemsByAccount = new JSONModel();
-
+				
 				var accounts = [];
+				console.log(materialIssueDetailData.MATERIALISSUELINESCollection);
 				for (let i = 0; i < materialIssueDetailData.MATERIALISSUELINESCollection.length; i++) {
 					if(!(materialIssueDetailData.MATERIALISSUELINESCollection[i].U_AccountCode.toString() in accounts)){
 						accounts.push(materialIssueDetailData.MATERIALISSUELINESCollection[i].U_AccountCode);

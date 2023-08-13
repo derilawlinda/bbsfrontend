@@ -84,7 +84,7 @@ xmlns:core="sap.ui.core"
 				</form:SimpleForm>
 
 				<table:Table id="materialReqLineTableID" 
-                        rows="{materialRequestDetailModel>/METERIALREQLINESCollection}"
+                        rows="{materialRequestDetailModel>/MATERIALREQLINESCollection}"
 						visibleRowCount="7"
 						rowActionCount="1"
 						 

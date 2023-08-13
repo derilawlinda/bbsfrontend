@@ -129,7 +129,7 @@ sap.ui.define(
   
         if (!isValid) {
           this._isValid = false;
-          this._addMessage(oControl);
+          // this._addMessage(oControl);
         }
   
         // if the control could not be validated, it may have aggregations
@@ -149,19 +149,24 @@ sap.ui.define(
       Validator.prototype._validateRequired = function(oControl) {
         // check control for any properties worth validating
         var isValid = true;
-  
+        
         for (var i = 0; i < this._aValidateProperties.length; i += 1) {
           try {
             oControl.getBinding(this._aValidateProperties[i]);
             var oExternalValue = oControl.getProperty(
               this._aValidateProperties[i]
             );
-  
-            if (!oExternalValue || oExternalValue === "") {
+            console.log(oControl.getBinding());
+            // oExternalValue=oExternalValue.replace(/\,/g,'')
+            // oExternalValue=Number(oExternalValue)
+            // console.log(Number(oExternalValue));
+            // console.log(oExternalValue);
+
+            if (!oExternalValue || oExternalValue === "" || Number(oExternalValue) === 0 ) {
               this._setValueState(
                 oControl,
                 ValueState.Error,
-                "Please fill this mandatory field!"
+                "Field required!"
               );
               isValid = false;
             } else if (
@@ -239,10 +244,11 @@ sap.ui.define(
           eMessageType = MessageType.Error;
   
         if (sMessage === undefined) sMessage = "Wrong input"; // Default message
-  
+        console.log(oControl.getMetadata().getName());
         switch (oControl.getMetadata().getName()) {
           case "sap.m.CheckBox":
           case "sap.m.Input":
+            this._setValueState(oControl, ValueState.Error, "Wrong input");
           case "sap.m.Select":
             sLabel = oControl
               .getParent()

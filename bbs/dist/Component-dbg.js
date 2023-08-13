@@ -52,10 +52,10 @@ sap.ui.define([
                     "APPROVED_BY_DIRECTOR" : 3
                 };
                 this.setModel(models.createCompanyModel(), "companies");
-                this.setModel(models.createPillarModel(), "oPillarModel");
-                this.setModel(models.createClassificationModel(), "oClassificationModel");
-                this.setModel(models.createSubClassModel(), "oSubClassModel");
-                this.setModel(models.createSubClass2Model(), "oSubClass2Model");
+                // this.setModel(models.createPillarModel(), "oPillarModel");
+                // this.setModel(models.createClassificationModel(), "oClassificationModel");
+                // this.setModel(models.createSubClassModel(), "oSubClassModel");
+                // this.setModel(models.createSubClass2Model(), "oSubClass2Model");
                 this.setModel(models.createSalesOrderModel(), "salesOrder");
 		        this.setModel(models.createAccountModel(),"accounts");
                 

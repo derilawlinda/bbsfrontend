@@ -106,7 +106,7 @@ sap.ui.define([
 			var dynamicProperties = [];
 			oMaterialRequestDetailModel.setData(dynamicProperties);
 			this.getView().setModel(oMaterialRequestDetailModel,"materialRequestgDetailModel");
-			this.getView().getModel("new_mr_items").setProperty("/METERIALREQLINESCollection", []);
+			this.getView().getModel("new_mr_items").setProperty("/MATERIALREQLINESCollection", []);
 
 		}.bind(this));
 	   },
@@ -241,7 +241,7 @@ sap.ui.define([
 			const oModel = this.getView().getModel("materialRequestHeader");
 			const oModelAccounts = this.getView().getModel("new_mr_items");
 			var materialRequestModel = this.getView().getModel("materialRequest");
-			oModel.setProperty("/METERIALREQLINESCollection", oModelAccounts.getData().MATERIALREQLINESCollection);
+			oModel.setProperty("/MATERIALREQLINESCollection", oModelAccounts.getData().MATERIALREQLINESCollection);
 			var oProperty = oModel.getProperty("/");
 			var view = this.getView();
 			var oJWT = this.oJWT;
@@ -270,7 +270,7 @@ sap.ui.define([
 				  	console.log("Got an error response: " + textStatus + errorThrown);
 				}
 			  });
-			// alert(JSON.stringify(oProperty));
+			// console.log(JSON.stringify(oProperty));
 	   },
 		  onAddPress : function(oEvent){
 			const oModel = this.getView().getModel("new_mr_items");
@@ -292,7 +292,7 @@ sap.ui.define([
 			var oModel = this.getView().getModel("new_mr_items");
 			var oModelLineData = oModel.getData().MATERIALREQLINESCollection;
 			oModelLineData.splice(iIdx, 1);
-			oModel.setProperty("/METERIALREQLINESCollection",oModelLineData);
+			oModel.setProperty("/MATERIALREQLINESCollection",oModelLineData);
 			oModel.refresh();
 		},
 		textFormatter : function(sStatus){

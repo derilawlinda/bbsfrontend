@@ -24,7 +24,9 @@
 						<Text text="{createFragmentViewModel>/Date}" />
 
                         <Label id="_IDGenLabel2" text="Name" />
-						<Input id="name" value="{materialRequestHeader>/Name}" ></Input>
+						<Input id="name" 
+						value="{materialRequestHeader>/Name}"
+						 ></Input>
 
 						<Label id="_IDGenLabel4" text="Budget#" />
 						<ComboBox width="100%"
@@ -107,7 +109,9 @@
 					<table:Column >
 						<Text text="Account Code" />
 						<table:template>
-							<ComboBox width="100%"
+							<ComboBox 
+								id="inputAccount"
+								width="100%"
 								change="onAccountCodeChange"
 								selectedKey="{new_mr_items>U_AccountCode}"
 								items="{

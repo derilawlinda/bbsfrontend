@@ -30,10 +30,12 @@ xmlns:core="sap.ui.core"
 
                         <Label id="_IDGenLabel2" text="Budget Name" />
 						<Input id="name" value="{budgetingDetailModel>/Name}"
-						editable="{viewModel>/editable}"></Input>
+						editable="{viewModel>/editable}"
+						required="true"></Input>
 
 						<Label id="_IDGenLabel3" text="Company" />
 						<ComboBox id="company" 
+						required="true"
 						selectedKey="{budgetingDetailModel>/U_Company}"
 						change="onCompanyChange"
 						value="{budgetingDetailModel>/U_Company}"
@@ -79,7 +81,8 @@ xmlns:core="sap.ui.core"
 
 						<ComboBox id="CreatePillar" 
 									change="onPillarChange"
-									editable="{viewModel>/editable}">
+									editable="{viewModel>/editable}"
+									required="true">
 									
 						</ComboBox>
 
@@ -89,7 +92,8 @@ xmlns:core="sap.ui.core"
 						<ComboBox id="CreateClassification" 
 									change="onClassificationChange"
 									selectedKey="{budgetingDetailModel>/U_Classification}"
-									editable="{viewModel>/editable}">
+									editable="{viewModel>/editable}"
+									required="true">
 						</ComboBox>
 
                        <Label id="_IDGenLabel443" text="Subclass" />
@@ -97,28 +101,30 @@ xmlns:core="sap.ui.core"
 						<ComboBox id="CreateSubClassification" 
 									change="onSubClassificationChange"
 									selectedKey="{budgetingDetailModel>/U_SubClass}"
-									editable="{viewModel>/editable}">
+									editable="{viewModel>/editable}"
+									required="true">
 						</ComboBox>
 						
                         <Label id="_IDGenLabel444" text="Subclass2" />
 
 						<ComboBox id="CreateSubClassification2" 
 									selectedKey="{budgetingDetailModel>/U_SubClass2}"
-									editable="{viewModel>/editable}">
+									editable="{viewModel>/editable}"
+									required="true">
 						</ComboBox>
 
 						 <Label id="_IDGenLabel5" text="Project" />
-						<Select id="project"
-						editable="{viewModel>/editable}" >
-                            <layoutData>
-								<form:ColumnElementData id="_IDGenColumnElementData1" cellsSmall="12" cellsLarge="8" />
-							</layoutData>
-							<items>
-								<core:Item id="_IDGenItem5" text="BLIF 2023" key="BLIF2023" />
-								<core:Item id="_IDGenItem6" text="Finance Dept." key="FICO" />
-							</items>
-						</Select>
+
+						 <ComboBox id="budgetingProjects" 
+							editable="{viewModel>/editable}"
+							required="true"
+							selectedKey="{budgetingDetailModel>/U_ProjectCode}"
+							change="onProjectChange"
+							items="{projects>/value/}"
+						>
+						<core:Item text="{projects>Name}" key="{projects>Code}" />
 						
+						</ComboBox>
 						
 						
 						
@@ -152,6 +158,7 @@ xmlns:core="sap.ui.core"
 							<ComboBox width="100%"
 								showSecondaryValues= "false"
 								filterSecondaryValues= "true"
+								change="onAccountChange"
 								selectedKey="{budgetingDetailModel>U_AccountCode}"
 								editable="{viewModel>/editable}"
 								items="{

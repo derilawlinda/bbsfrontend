@@ -10,8 +10,8 @@
 	<Dialog
 		id="mainDialog"
 		title="Create Budgeting">
-			<VBox class="sapUiSmallMargin" id="formContainer">
-				<f:SimpleForm id="SimpleFormChangeColumn_twoGroups234"
+			<VBox class="sapUiSmallMargin" id="createBudgetFormContainer">
+				<f:SimpleForm id="createBudgetForm"
 						editable="true"
                         layout="ColumnLayout"
                         columnsM="2"
@@ -23,19 +23,23 @@
                         <Label text="Date" />
 						<Text text="{createFragmentViewModel>/Date}"  />
 
-                        <Label text="Name" />
-						<Input value="{budgetingDetailModel>/Name}" id="name" > </Input>
+                        <Label text="Budget Name" required="true" />
+						<Input id="name" 
+						required="true"
+						value="{budgetingDetailModel>/Name}"
+						> </Input>
 
-						<Label id="_IDGenLabel44" text="Company" />
+						<Label id="_IDGenLabel44" text="Company" required="true"/>
 
 						<ComboBox id="CreateCompany" 
 						value="{budgetingDetailModel>/U_Company}"
 						change="onCompanyChange"
-									items="{
-								path: 'companies>/',
-								templateShareable: false
-								}">
-									<core:Item id="_IDGenItem441" key="{companies>text}" text="{companies>text}" />
+						required="true"
+						items="{
+							path: 'companies>/',
+							templateShareable: false
+							}">
+						<core:Item id="_IDGenItem441" key="{companies>text}" text="{companies>text}" />
 						</ComboBox>
 <!-- 
 						<Label id="_IDGenLabel45" text="Sales Order" />
@@ -46,8 +50,11 @@
 									<core:Item id="_IDGenItem451" key="{salesOrder>Value}" text="{salesOrder>Value}" />
 						</ComboBox> -->
 
-						<Label id="_IDGenLabe20" text="Amount" />
-						<ObjectNumber binding="{budgetingDetailModel>/U_TotalAmount}"  number="{ parts:[{path:'budgetingDetailModel>/U_TotalAmount'},{path:'CurrencyCode'}], type: 'sap.ui.model.type.Currency', formatOptions: {showMeasure: false,decimalSeparator : ',', groupingSeparator : '.'} }" unit="IDR" />
+						<Label id="_IDGenLabe20" text="Amount" required="true"/>
+						<ObjectNumber 
+							binding="{budgetingDetailModel>/U_TotalAmount}"  
+							number="{ parts:[{path:'budgetingDetailModel>/U_TotalAmount'},{path:'CurrencyCode'}], type: 'sap.ui.model.type.Currency', formatOptions: {showMeasure: false,decimalSeparator : ',', groupingSeparator : '.'} }" 
+							unit="IDR" />
 
 
 						<core:Title text="Category Information" />
@@ -64,48 +71,49 @@
 							</items>
 						</Select> -->
 
-						<Label id="_IDGenLabel441" text="Pillar" />
+						<Label id="_IDGenLabel441" text="Pillar" required="true"/>
 
 						<ComboBox id="CreatePillar" 
+									required="true"
 									enabled="false"
-									value="{budgetingDetailModel>/U_Pillar}"
 									change="onPillarChange">
 						</ComboBox>
 
 
-                       <Label id="_IDGenLabel442" text="Classification" />
+
+                       <Label id="_IDGenLabel442" text="Classification" required="true"/>
 
 						<ComboBox id="CreateClassification" 
+									required="true"
 									enabled="false"
-									value="{budgetingDetailModel>/U_Classification}"
 									change="onClassificationChange">
 						</ComboBox>
 
-                       <Label id="_IDGenLabel443" text="Subclass" />
+                       <Label id="_IDGenLabel443" text="Subclass" required="true"/>
 
 						<ComboBox id="CreateSubClassification" 
+									required="true"
 									change="onSubClassificationChange"
-									value="{budgetingDetailModel>/U_SubClass}"
 									enabled="false">
-									<core:Item id="_IDGenItem444" key="{oSubClassModel>text}" text="{oSubClassModel>text}" />
 						</ComboBox>
 						
-                        <Label id="_IDGenLabel444" text="Subclass2" />
+                        <Label id="_IDGenLabel444" text="Subclass2" required="true"/>
 
 						<ComboBox id="CreateSubClassification2" 
-									items="{oSubClass2Model>/}"
-									value="{budgetingDetailModel>/U_SubClass2}"
-									enabled="false">
-									<core:Item key="{oSubClass2Model>text}" text="{oSubClass2Model>text}" />
+									required="true"
+									enabled="false"
+									change="onSubClassification2Change"
+									>
 						</ComboBox>
 						
-						<Label text="Project" />
+						<Label text="Project" required="true"/>
 
 						<ComboBox id="budgetingProjects" 
-						value="{budgetingDetailModel>/U_Project}"
-									>
-									<core:Item text="BLIF 2023" key="BLIF2023" />
-									<core:Item text="Finance Dept." key="FICO" />
+							required="true"
+							change="onProjectChange"
+							items="{projects>/value/}"
+						>
+						<core:Item text="{projects>Name}" key="{projects>Code}" />
 						</ComboBox>
 						
 						
@@ -133,14 +141,17 @@
                   
 				<table:columns>
 					<table:Column >
-						<Text text="Account Code" />
+						<Text text="Account Code" id="InputAccountLabel" />
 						<table:template>
 							<ComboBox width="100%"
+								change="onAccountChange"
+								ariaLabelledBy="InputAccountLabel"
 								selectedKey="{new_budgeting_accounts>U_AccountCode}"
+								required="true"
 								items="{
-								path: 'accounts>/data',
-								templateShareable: false
-								}"
+									path: 'accounts>/data',
+									templateShareable: false
+									}"
 							>
 
 								<core:Item
@@ -160,13 +171,17 @@
 							<Input
 								id="inputNumber"
 								placeholder="Enter number"
+								required="true"
 								value="{
 									parts: [
 										{path:'new_budgeting_accounts>U_Amount'}, 
 										 'IDR',
 										 'TwoWay'], 
 									type:'sap.ui.model.type.Currency',
-									formatOptions: {showMeasure: true}
+									formatOptions: {showMeasure: true},
+									constraints : { 
+										minimum : 1
+									}
 								}"
 								ariaLabelledBy="InputNumberLabel"
 								change="onAmountChange"

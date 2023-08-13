@@ -145,8 +145,8 @@ sap.ui.define([
 				var oItemData = oItemsModel.getData();
 				var itemsByAccount = new JSONModel();
 				
-				for (let i = 0; i < materialRequestDetailData.METERIALREQLINESCollection.length; i++) {
-					let account = (materialRequestDetailData.METERIALREQLINESCollection[i].U_AccountCode).toString();
+				for (let i = 0; i < materialRequestDetailData.MATERIALREQLINESCollection.length; i++) {
+					let account = (materialRequestDetailData.MATERIALREQLINESCollection[i].U_AccountCode).toString();
 					materialReqLineTable.getRows()[i].getCells()[1].setBusy(true);
 					if(!(account in oItemData)){
 						itemsByAccount.loadData(backendUrl+"items/getItemsByAccount?accountCode="+account, null, true, "GET",false,false,{
@@ -197,7 +197,6 @@ sap.ui.define([
 			pageDOM.setBusy(true);
 			const oModel = this.getView().getModel("materialRequestDetailModel");
 			var oProperty = oModel.getProperty("/");
-		
 			var oJWT = this.oJWT;
 			$.ajax({
 				type: "POST",
@@ -304,7 +303,7 @@ sap.ui.define([
 				"U_ItemCode": "",
 				"U_Qty": ""
 			};
-			oModelData.METERIALREQLINESCollection.push(oNewObject);
+			oModelData.MATERIALREQLINESCollection.push(oNewObject);
 			var f = new sap.ui.model.json.JSONModel(oModelData);
 			this.getView().setModel(f, 'materialRequestDetailModel');
 			f.refresh();
@@ -315,9 +314,9 @@ sap.ui.define([
 			var row = oEvent.getParameters().row;
 			var iIdx = row.getIndex();
 			var oModel = this.getView().getModel("materialRequestDetailModel");
-			var oModelLineData = oModel.getData().METERIALREQLINESCollection;
+			var oModelLineData = oModel.getData().MATERIALREQLINESCollection;
 			oModelLineData.splice(iIdx, 1);
-			oModel.setProperty("/METERIALREQLINESCollection",oModelLineData);
+			oModel.setProperty("/MATERIALREQLINESCollection",oModelLineData);
 			oModel.refresh();
 		},
 

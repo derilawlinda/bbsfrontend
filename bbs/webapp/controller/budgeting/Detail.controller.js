@@ -39,7 +39,7 @@ sap.ui.define([
 		_onObjectMatched: function (oEvent) {
 			var viewModel = new JSONModel({
 				showFooter : false,
-				editable : true,
+				editable : false,
 				resubmit : false
 			});
 			this.getView().setModel(viewModel,"viewModel");
@@ -71,14 +71,6 @@ sap.ui.define([
 			var budgetCode = this.budgetCode;
 			var viewModel = this.getView().getModel("viewModel");
 
-			if(parametersMap.roleId == 4 || parametersMap.roleId == 5 ){
-				viewModel.setProperty("/is_approver", true);
-				viewModel.setProperty("/is_requestor", false);
-			}else if(parametersMap.roleId == 3){
-				viewModel.setProperty("/is_approver", false);
-				viewModel.setProperty("/is_requestor", true);
-			}
-
 			if(budgetCode === undefined){
 				var url = window.location.href;
 				var urlArray = url.split("/");
@@ -88,6 +80,12 @@ sap.ui.define([
 			budgetingDetailModel.loadData(backendUrl+"budget/getBudgetById?code="+budgetCode, null, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
 			});
+
+			var oProjectModel = new JSONModel();
+			oProjectModel.loadData(backendUrl+"project/getProjects", null, true, "GET",false,false,{
+				'Authorization': 'Bearer ' + this.oJWT
+			});
+			this.getView().setModel(oProjectModel,"projects");
 			
 			this.getView().setModel(budgetingDetailModel,"budgetingDetailModel");
 			budgetingDetailModel.dataLoaded().then(function(){
@@ -305,18 +303,35 @@ sap.ui.define([
 			this.getView().byId("CreateSubClassification").setEnabled(false);
 			this.getView().byId("CreateSubClassification2").setEnabled(false);
 
+			console.log(sSelectedKey);
+			console.log(sValue);
 
-			var comboPath = oEvent.oSource.getSelectedItem().getBindingContext("companies").getPath();
-			this.companyPath = comboPath;
-			var comboPillar = this.getView().byId("CreatePillar");
-			comboPillar.setEnabled(true);
-			comboPillar.bindAggregation("items", {
-				path: "companies>"+ comboPath + "/nodes",
-				template: new sap.ui.core.Item({
-					key: "{companies>text}",
-					text: "{companies>text}"
-				})
-			});
+			var oValidatedComboBox = oEvent.getSource(),
+				sSelectedKey = oValidatedComboBox.getSelectedKey(),
+				sValue = oValidatedComboBox.getValue();
+
+			if (!sSelectedKey && sValue) {
+				oValidatedComboBox.setValueState(ValueState.Error);
+				oValidatedComboBox.setValueStateText("Please enter a valid Company");
+				this.getView().byId("CreatePillar").setEnabled(false);
+
+			} else {
+				oValidatedComboBox.setValueState(ValueState.None);
+				var comboPath = oEvent.oSource.getSelectedItem().getBindingContext("companies").getPath();
+				this.companyPath = comboPath;
+				var comboPillar = this.getView().byId("CreatePillar");
+				comboPillar.setEnabled(true);
+				comboPillar.bindAggregation("items", {
+					path: "companies>"+ comboPath + "/nodes",
+					template: new sap.ui.core.Item({
+						key: "{companies>text}",
+						text: "{companies>text}"
+					})
+				});
+			}
+
+
+			
 		},
 		onPillarChange : function(oEvent){
 			this.getView().byId("CreateClassification").setSelectedKey("");

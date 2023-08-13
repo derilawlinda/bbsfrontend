@@ -4,12 +4,19 @@ sap.ui.define([
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/model/odata/v4/ODataModel",
 	"sap/m/MessageToast",
-	"frontend/bbs/model/models"
- ], function (Controller,History,JSONModel,ODataModel,MessageToast,Models) {
+	"frontend/bbs/model/models",
+	"sap/ui/core/library",
+	"sap/m/MessageBox",
+	"frontend/bbs/utils/Validator"
+
+ ], function (Controller,History,JSONModel,ODataModel,MessageToast,Models,coreLibrary,MessageBox,Validator) {
     "use strict";
 	var endTerm;
 	var startTerm;
 	var matches = [];
+
+	// shortcut for sap.ui.core.ValueState
+	var ValueState = coreLibrary.ValueState;
 
     return Controller.extend("frontend.bbs.controller.budgeting.List", {
 		
@@ -30,8 +37,12 @@ sap.ui.define([
 			this.getView().byId("idBudgetTable").setBusy(false);
 		}.bind(this));
 		this.getView().setModel(oModel,"budgeting");
-		var oBudgetingAccount = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/budgeting_accounts.json"));
-		this.getView().setModel(oBudgetingAccount,"budgeting_accounts");
+
+		var oProjectModel = new JSONModel();
+		oProjectModel.loadData(backendUrl+"project/getProjects", null, true, "GET",false,false,{
+			'Authorization': 'Bearer ' + this.oJWT
+		});
+		this.getView().setModel(oProjectModel,"projects");
 
 		var userModel = this.getOwnerComponent().getModel("userModel");
 		if(userModel === undefined){
@@ -80,9 +91,6 @@ sap.ui.define([
 
 	   onCreateButtonClick : function(oEvent) {
 
-		
-
-
 		if (!this.createBudgetingDialog) {
 			this.createBudgetingDialog = this.loadFragment({
 				name: "frontend.bbs.view.budgeting.CreateForm"
@@ -120,41 +128,65 @@ sap.ui.define([
 		}.bind(this));
 	   },
 	   onSaveButtonClick : function(oEvent) {
+			var table = this.byId("tableId");
 			var oDialog = this.oDialog;
-			oDialog.setBusy(true);
 			const oModel = this.getView().getModel("budgetingDetailModel");
 			const oModelAccounts = this.getView().getModel("new_budgeting_accounts");
+			const oModelAccountData = oModelAccounts.getData();
 			var budgetingModel = this.getView().getModel("budgeting");
 			oModel.setProperty("/BUDGETREQLINESCollection", oModelAccounts.getData().BUDGETREQLINESCollection);
 			var oProperty = oModel.getProperty("/");
 			var view = this.getView();
-			
 			var oJWT = this.oJWT;
+			var oModelData = oModel.getData();
+			var bValidationError = false;
 
-			$.ajax({
-				type: "POST",
-				data: JSON.stringify(oProperty),
-				crossDomain: true,
-				headers: { 'Authorization': 'Bearer ' + oJWT },
-				url: backendUrl+'budget/createBudget',
-				contentType: "application/json",
-				success: function (res, status, xhr) {
-					  //success code
-					oDialog.setBusy(false);
-					oDialog.close();
-					MessageToast.show("Budget created");
-					$(".sapMMessageToast").css({"background-color": "#256f3a", "color": "white"});
-					budgetingModel.loadData(backendUrl+"getBudget", null, true, "GET",false,false,{
-						'Authorization': 'Bearer ' + oJWT
+			if(oModelData.BUDGETREQLINESCollection.length < 1 ){
+				MessageBox.error("Account can not empty");
+			}else {
+				// var validator = new Validator();
+				// var rows = table.getRows();
+				
+				// for (let i = 0; i < oModelAccountData.BUDGETREQLINESCollection.length; i++ ) {
+				// 	var cells = rows[i].getCells();
+				// 	for (let j = 0; j < cells.length; j++ ) {
+						
+				// 		validator.validate(cells[j]);
+				// 		// bValidationError = this._validateInput(cells[j]) || bValidationError;
+				// 	}
+				// }
+				// if (validator.validate(this.byId("createBudgetFormContainer"))) {
+				// 	console.log("Assssss");
+					oDialog.setBusy(true);
+					var oProperty = oModel.getProperty("/");
+					// console.log(JSON.stringify(oProperty));
+					$.ajax({
+						type: "POST",
+						data: JSON.stringify(oProperty),
+						crossDomain: true,
+						headers: { 'Authorization': 'Bearer ' + oJWT },
+						url: backendUrl+'budget/createBudget',
+						contentType: "application/json",
+						success: function (res, status, xhr) {
+							//success code
+							oDialog.setBusy(false);
+							oDialog.close();
+							MessageToast.show("Budget created");
+							$(".sapMMessageToast").css({"background-color": "#256f3a", "color": "white"});
+							budgetingModel.loadData(backendUrl+"getBudget", null, true, "GET",false,false,{
+								'Authorization': 'Bearer ' + oJWT
+							});
+							view.getModel('budgeting').refresh();
+							
+						},
+						error: function (jqXHR, textStatus, errorThrown) {
+							console.log("Got an error response: " + textStatus + errorThrown);
+						}
 					});
-					view.getModel('budgeting').refresh();
-					
-				},
-				error: function (jqXHR, textStatus, errorThrown) {
-				  	console.log("Got an error response: " + textStatus + errorThrown);
-				}
-			  });
-			// alert(JSON.stringify(oProperty));
+
+				// }
+			}
+
 	   },
 	   
 	    getRouter : function () {
@@ -224,17 +256,25 @@ sap.ui.define([
 		},
 
 		onAddPress : function(oEvent){
+
+
+			var validator = new Validator();
+  
+            // Validate input fields against root page with id 'somePage'
+          	if (validator.validate(this.byId("createBudgetForm"))) {
+				const oModel = this.getView().getModel("new_budgeting_accounts");
+				var oModelData = oModel.getData();
+				var oNewObject = {
+					"U_AccountCode": "",
+					"U_Amount": 0
+				};
+				oModelData.BUDGETREQLINESCollection.push(oNewObject);
+				var f = new sap.ui.model.json.JSONModel(oModelData);
+				this.getView().setModel(f, 'new_budgeting_accounts');
+				f.refresh();
+          	}
+
 			
-			const oModel = this.getView().getModel("new_budgeting_accounts");
-			var oModelData = oModel.getData();
-			var oNewObject = {
-				"U_AccountCode": "",
-				"U_Amount": ""
-			};
-			oModelData.BUDGETREQLINESCollection.push(oNewObject);
-			var f = new sap.ui.model.json.JSONModel(oModelData);
-			this.getView().setModel(f, 'new_budgeting_accounts');
-			f.refresh();
 		
 		},
 
@@ -259,21 +299,36 @@ sap.ui.define([
 			this.getView().byId("CreateSubClassification").setEnabled(false);
 			this.getView().byId("CreateSubClassification2").setEnabled(false);
 
+			var oValidatedComboBox = oEvent.getSource(),
+				sSelectedKey = oValidatedComboBox.getSelectedKey(),
+				sValue = oValidatedComboBox.getValue();
 
-			var comboPath = oEvent.oSource.getSelectedItem().getBindingContext("companies").getPath();
-			this.companyPath = comboPath;
-			var comboPillar = this.getView().byId("CreatePillar");
-			comboPillar.setEnabled(true);
-			comboPillar.bindAggregation("items", {
-				path: "companies>"+ comboPath + "/nodes",
-				template: new sap.ui.core.Item({
-					key: "{companies>text}",
-					text: "{companies>text}"
-				})
-			});
+			if (!sSelectedKey && sValue) {
+				this.getView().byId("CreatePillar").setEnabled(false);
+				oValidatedComboBox.setValueState(ValueState.Error);
+				oValidatedComboBox.setValueStateText("Please enter a valid Company");
+			} else {
+				oValidatedComboBox.setValueState(ValueState.None);
+				var comboPath = oEvent.oSource.getSelectedItem().getBindingContext("companies").getPath();
+				this.companyPath = comboPath;
+				var comboPillar = this.getView().byId("CreatePillar");
+				comboPillar.setEnabled(true);
+				comboPillar.bindAggregation("items", {
+					path: "companies>"+ comboPath + "/nodes",
+					template: new sap.ui.core.Item({
+						key: "{companies>code}",
+						text: "{companies>text}"
+					})
+				});
+				comboPillar.setSelectedKey(sSelectedKey);
+			}
+
+
+			
 		},
 
 		onPillarChange : function(oEvent){
+			var oBudgetingDetailModel = this.getView().getModel("budgetingDetailModel");
 			this.getView().byId("CreateClassification").setSelectedKey("");
 			this.getView().byId("CreateSubClassification").setSelectedKey("");
 			this.getView().byId("CreateSubClassification2").setSelectedKey("");
@@ -281,50 +336,144 @@ sap.ui.define([
 			this.getView().byId("CreateSubClassification").setEnabled(false);
 			this.getView().byId("CreateSubClassification2").setEnabled(false);
 
-			var comboPath = oEvent.oSource.getSelectedItem().getBindingContext("companies").getPath();
-			var comboBox = this.getView().byId("CreateClassification");
-			comboBox.setEnabled(true);
-			comboBox.bindAggregation("items", {
-				path: "companies>"+ comboPath + "/nodes",
-				template: new sap.ui.core.Item({
-					key: "{companies>text}",
-					text: "{companies>text}"
-				})
-			});
+			var oValidatedComboBox = oEvent.getSource(),
+				sSelectedKey = oValidatedComboBox.getSelectedKey(),
+				sValue = oValidatedComboBox.getValue();
+
+			if (!sSelectedKey && sValue) {
+				this.getView().byId("CreateClassification").setEnabled(false);
+				oValidatedComboBox.setValueState(ValueState.Error);
+				oValidatedComboBox.setValueStateText("Please enter a valid Pillar");
+			} else {
+				oValidatedComboBox.setValueState(ValueState.None);
+
+				var comboPath = oEvent.oSource.getSelectedItem().getBindingContext("companies").getPath();
+				oBudgetingDetailModel.setProperty("/U_Pillar",sValue);
+				oBudgetingDetailModel.setProperty("/U_PillarCode",sSelectedKey);
+				var comboBox = this.getView().byId("CreateClassification");
+				comboBox.setEnabled(true);
+				comboBox.bindAggregation("items", {
+					path: "companies>"+ comboPath + "/nodes",
+					template: new sap.ui.core.Item({
+						key: "{companies>code}",
+						text: "{companies>text}"
+					})
+				});
+			}
+
+			
 		},
 
 		onClassificationChange : function(oEvent){
 
+			var oBudgetingDetailModel = this.getView().getModel("budgetingDetailModel");
 			this.getView().byId("CreateSubClassification").setSelectedKey("");
 			this.getView().byId("CreateSubClassification2").setSelectedKey("");
 
 			this.getView().byId("CreateSubClassification2").setEnabled(false);
 
-			var comboPath = oEvent.oSource.getSelectedItem().getBindingContext("companies").getPath();
-			var comboBox = this.getView().byId("CreateSubClassification");
-			comboBox.setEnabled(true);
-			comboBox.bindAggregation("items", {
-				path: "companies>"+ comboPath + "/nodes",
-				template: new sap.ui.core.Item({
-					key: "{companies>text}",
-					text: "{companies>text}"
-				})
-			});
+			var oValidatedComboBox = oEvent.getSource(),
+				sSelectedKey = oValidatedComboBox.getSelectedKey(),
+				sValue = oValidatedComboBox.getValue();
+
+			if (!sSelectedKey && sValue) {
+				this.getView().byId("CreateSubClassification").setEnabled(false);
+				oValidatedComboBox.setValueState(ValueState.Error);
+				oValidatedComboBox.setValueStateText("Please enter a valid Classification");
+			} else {
+				oValidatedComboBox.setValueState(ValueState.None);
+				oBudgetingDetailModel.setProperty("/U_Classification",sValue);
+				oBudgetingDetailModel.setProperty("/U_ClassificationCode",sSelectedKey);
+				var comboPath = oEvent.oSource.getSelectedItem().getBindingContext("companies").getPath();
+				var comboBox = this.getView().byId("CreateSubClassification");
+				comboBox.setEnabled(true);
+				comboBox.bindAggregation("items", {
+					path: "companies>"+ comboPath + "/nodes",
+					template: new sap.ui.core.Item({
+						key: "{companies>code}",
+						text: "{companies>text}"
+					})
+				});
+			}
+
+			
 		},
 		onSubClassificationChange : function(oEvent){
 
 			this.getView().byId("CreateSubClassification2").setSelectedKey("");
+			var oBudgetingDetailModel = this.getView().getModel("budgetingDetailModel");
 
-			var comboPath = oEvent.oSource.getSelectedItem().getBindingContext("companies").getPath();
-			var comboBox = this.getView().byId("CreateSubClassification2");
-			comboBox.setEnabled(true);
-			comboBox.bindAggregation("items", {
-				path: "companies>"+ comboPath + "/nodes",
-				template: new sap.ui.core.Item({
-					key: "{companies>text}",
-					text: "{companies>text}"
-				})
-			});
+			var oValidatedComboBox = oEvent.getSource(),
+				sSelectedKey = oValidatedComboBox.getSelectedKey(),
+				sValue = oValidatedComboBox.getValue();
+
+			if (!sSelectedKey && sValue) {
+				this.getView().byId("CreateSubClassification2").setEnabled(false);
+				oValidatedComboBox.setValueState(ValueState.Error);
+				oValidatedComboBox.setValueStateText("Please enter a valid SubClassification");
+			} else {
+				oValidatedComboBox.setValueState(ValueState.None);
+				oBudgetingDetailModel.setProperty("/U_SubClass",sValue);
+				oBudgetingDetailModel.setProperty("/U_SubClassCode",sSelectedKey);
+				var comboPath = oEvent.oSource.getSelectedItem().getBindingContext("companies").getPath();
+				var comboBox = this.getView().byId("CreateSubClassification2");
+				comboBox.setEnabled(true);
+				comboBox.bindAggregation("items", {
+					path: "companies>"+ comboPath + "/nodes",
+					template: new sap.ui.core.Item({
+						key: "{companies>code}",
+						text: "{companies>text}"
+					})
+				});
+			}
+
+			
+		},
+
+		onSubClassification2Change : function(oEvent){
+
+			var oBudgetingDetailModel = this.getView().getModel("budgetingDetailModel");
+
+			var oValidatedComboBox = oEvent.getSource(),
+				sSelectedKey = oValidatedComboBox.getSelectedKey(),
+				sValue = oValidatedComboBox.getValue();
+
+			if (!sSelectedKey && sValue) {
+				oValidatedComboBox.setValueState(ValueState.Error);
+				oValidatedComboBox.setValueStateText("Please enter a valid SubClassification2");
+			} else {
+				oValidatedComboBox.setValueState(ValueState.None);
+				oBudgetingDetailModel.setProperty("/U_SubClass2",sValue);
+				oBudgetingDetailModel.setProperty("/U_SubClass2Code",sSelectedKey);
+			}
+		},
+
+		onProjectChange : function(oEvent){
+			var oBudgetingDetailModel = this.getView().getModel("budgetingDetailModel");
+			var oValidatedComboBox = oEvent.getSource(),
+				sSelectedKey = oValidatedComboBox.getSelectedKey(),
+				sValue = oValidatedComboBox.getValue();
+
+			if (!sSelectedKey && sValue) {
+				oValidatedComboBox.setValueState(ValueState.Error);
+				oValidatedComboBox.setValueStateText("Please enter a valid Project");
+			} else {
+				oValidatedComboBox.setValueState(ValueState.None);
+				oBudgetingDetailModel.setProperty("/U_Project",sValue);
+				oBudgetingDetailModel.setProperty("/U_ProjectCode",sSelectedKey);
+			}
+		},
+
+		onAccountChange : function(oEvent){
+			var oValidatedComboBox = oEvent.getSource(),
+				sSelectedKey = oValidatedComboBox.getSelectedKey(),
+				sValue = oValidatedComboBox.getValue();
+			if (!sSelectedKey && sValue) {
+				oValidatedComboBox.setValueState(ValueState.Error);
+				oValidatedComboBox.setValueStateText("Please enter a valid Account");
+			} else {
+				oValidatedComboBox.setValueState(ValueState.None);
+			}
 		},
 		onDelete: function(oEvent){
 
@@ -337,5 +486,23 @@ sap.ui.define([
 			oModel.refresh();
 			this.onAmountChange();
 		},
+
+		_validateInput: function (oInput) {
+			var sValueState = "None";
+			var bValidationError = false;
+			var oBinding = oInput.getBinding("value");
+			
+
+			try {
+				oBinding.getType().validateValue(oInput.getValue());
+			} catch (oException) {
+				sValueState = "Error";
+				bValidationError = true;
+			}
+
+			oInput.setValueState(sValueState);
+
+			return bValidationError;
+		}
     });
  });

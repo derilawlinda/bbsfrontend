@@ -23,7 +23,7 @@ xmlns:table="sap.ui.table"
 			<OverflowToolbar id="_IDGenOverflowToolbar1">
                 <Title id="title" text="Employee Advance"/>
                 <ToolbarSpacer id="_IDGenToolbarSpacer1" ></ToolbarSpacer>
-                <Button id="_IDGenButton2" text=" + Create Employee Advance" press="onCreateButtonClick" type="Emphasized"/>
+                <Button id="_IDGenButton2" text=" + Create Employee Advance" press="onCreateButtonClick" type="Emphasized" visible="{viewModel>/showCreateButton}"/>
             </OverflowToolbar>
             </headerToolbar>
             <columns>
@@ -46,6 +46,11 @@ xmlns:table="sap.ui.table"
                 <Column id="_IDGenColumn7" >
                         <Text id="_IDGenTextView8" text="Amount" />
                 </Column>
+
+                 <Column id="_IDGenColumn8" visible="{viewModel>/is_approver}" >
+                        <Text id="_IDGenTextView9" text="Requested By" />
+                </Column> 
+
                  <Column id="_IDGenColumn9">
                         <Text id="_IDGenTextView0" text="Status" />
                 </Column>
@@ -71,6 +76,7 @@ xmlns:table="sap.ui.table"
                                         formatOptions: {showMeasure: true}
                                 }"/>
                         <!-- <Button id="_IDGenButton1" text="{path : 'advanceRequests>U_Status', formatter:'.textFormatter'}"  type="{path:'advanceRequests>U_Status', formatter:'.buttonFormatter'}"/> -->
+                         <Text id="_IDGenText4" text="{advanceRequests>U_RequestorName}" />
                          <ObjectStatus text="{path : 'advanceRequests>U_Status', formatter:'.textFormatter'}" state="{path:'advanceRequests>U_Status', formatter:'.objectFormatter'}" inverted="true"></ObjectStatus>
                 </cells>
              </ColumnListItem>

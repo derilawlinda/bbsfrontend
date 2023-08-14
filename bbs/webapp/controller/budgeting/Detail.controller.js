@@ -71,6 +71,13 @@ sap.ui.define([
 			var budgetCode = this.budgetCode;
 			var viewModel = this.getView().getModel("viewModel");
 
+			var oAccountModel = new JSONModel();
+			oAccountModel.setSizeLimit(1000);
+			oAccountModel.loadData(backendUrl+"coa/getCOAs", null, true, "GET",false,false,{
+				'Authorization': 'Bearer ' + this.oJWT
+			});
+			this.getView().setModel(oAccountModel,"accounts");
+
 			if(budgetCode === undefined){
 				var url = window.location.href;
 				var urlArray = url.split("/");
@@ -185,6 +192,7 @@ sap.ui.define([
 		
 		onApproveButtonClick : function(oEvent){
 			var pageDOM = this.getView().byId("budgetingPageId");
+			var viewModel = this.getView().getModel("viewModel");
 			pageDOM.setBusy(true);
 			var code = this.getView().byId("_IDGenText101").getText();
 			$.ajax({
@@ -209,6 +217,7 @@ sap.ui.define([
 								type: ButtonType.Emphasized,
 								text: "OK",
 								press: function () {
+									viewModel.setProperty("/showFooter", false);							
 									this.oSuccessMessageDialog.close();
 								}.bind(this)
 							})
@@ -244,7 +253,8 @@ sap.ui.define([
 			pageDOM.setBusy(true);
 			var code = budgetingDetailData.Code;
 			var rejectionRemarks = this.getView().byId("RejectionRemarksID").getValue();
-			
+			var oDialog = this.getView().byId("rejectDialog");
+			var viewModel = this.getView().getModel("viewModel");
 			$.ajax({
 				type: "POST",
 				data: {
@@ -256,8 +266,8 @@ sap.ui.define([
 				url: backendUrl+'budget/rejectBudget',
 				success: function (res, status, xhr) {
 					  //success code
+					  oDialog.close();
 					  pageDOM.setBusy(false);
-					  this.rejectBudgetingDialog.close();
 					  if (!this.oSuccessMessageDialog) {
 						this.oSuccessMessageDialog = new Dialog({
 							type: DialogType.Message,
@@ -268,6 +278,7 @@ sap.ui.define([
 								type: ButtonType.Emphasized,
 								text: "OK",
 								press: function () {
+									viewModel.setProperty("/showFooter", false);	
 									this.oSuccessMessageDialog.close();
 								}.bind(this)
 							})
@@ -279,7 +290,7 @@ sap.ui.define([
 				error: function (jqXHR, textStatus, errorThrown) {
 				  	console.log("Got an error response: " + textStatus + errorThrown);
 				}
-			  }.bind(this));
+			  });
 		},
 
 		onAmountChange : function(event){

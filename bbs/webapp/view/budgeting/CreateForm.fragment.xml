@@ -124,6 +124,7 @@
                         rows="{new_budgeting_accounts>/BUDGETREQLINESCollection}"
 						visibleRowCount="7"
 						rowActionCount="1"
+						selectionMode="None"
 						 
 				>
 				

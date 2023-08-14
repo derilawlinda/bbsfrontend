@@ -203,22 +203,28 @@ sap.ui.define([
 			this.oDialog.close();
 		},
 		buttonFormatter: function(sStatus) {
-			if(sStatus == 2 || sStatus == 3){
-				return 'Accept'
-			}else if(sStatus == 1){
-				return 'Attention'
+			if(sStatus == 1 ){
+				return 'Warning';
+			}else if(sStatus == 2){
+				return 'Information';
+			}
+			else if(sStatus == 3){
+				return 'Success';
 			}else{
-				return 'Reject'
+				return 'Error';
 			}
 		  },
 
 		  objectFormatter: function(sStatus) {
-			if(sStatus == 2 || sStatus == 3){
-				return 'Success'
-			}else if(sStatus == 1){
-				return 'Warning'
+			if(sStatus == 1 ){
+				return 'Warning';
+			}else if(sStatus == 2){
+				return 'Information';
+			}
+			else if(sStatus == 3){
+				return 'Success';
 			}else{
-				return 'Error'
+				return 'Error';
 			}
 		  },
 		

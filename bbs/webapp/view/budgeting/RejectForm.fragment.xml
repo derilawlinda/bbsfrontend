@@ -8,7 +8,7 @@
     
     height="100%">
 	<Dialog
-		id="mainDialog" title="Rejection remarks">
+		id="rejectDialog" title="Rejection remarks">
 			<VBox class="sapUiSmallMargin" >
 				<f:SimpleForm 
 						editable="true"

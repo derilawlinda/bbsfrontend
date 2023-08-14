@@ -70,7 +70,7 @@ sap.ui.define([
 			advanceRequestDetailModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
 				var userData = oUserModel.getData();
 				var advanceRequestDetailData = this.getView().getModel("advanceRequestDetailModel").getData();
-
+				console.log(advanceRequestDetailData.U_Status);
 				if(userData.user.role_id == 4){
 					viewModel.setProperty("/is_approver", true);
 					viewModel.setProperty("/is_requestor", false);

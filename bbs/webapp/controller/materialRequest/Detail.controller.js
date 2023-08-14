@@ -474,6 +474,31 @@ sap.ui.define([
 			oSelectedRow.getCells()[1].setBusy(false);
 	
 			
+		},
+		objectFormatter: function(sStatus) {
+			if(sStatus == 1 ){
+				return 'Warning';
+			}else if(sStatus == 2){
+				return 'Information';
+			}
+			else if(sStatus == 3){
+				return 'Success';
+			}else{
+				return 'Error';
+			}
+		  },
+		
+		textFormatter : function(sStatus){
+			if(sStatus == 1){
+				return 'Pending'
+			}else if(sStatus == 2){
+				return 'Approved by Manager'
+			}else if(sStatus == 3){
+				return 'Approved by Director'
+			}else{
+				return 'Rejected'
+			}
+		  
 		}
 
 	});

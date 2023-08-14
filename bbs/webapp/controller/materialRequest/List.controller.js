@@ -38,7 +38,8 @@ sap.ui.define([
 		var oItemsModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/items.json"));
 		this.getView().setModel(oItemsModel,"items");
 		var viewModel = new sap.ui.model.json.JSONModel({
-			showCreateButton : true
+			showCreateButton : true,
+			is_approver : false
 		});
 		this.getView().setModel(viewModel,"viewModel");
 		// var dynamicProperties = [];
@@ -81,6 +82,7 @@ sap.ui.define([
 		console.log(parametersMap);
 			if(parametersMap.roleId == 4 || parametersMap.roleId == 5){
 				this.getView().getModel("viewModel").setProperty("/showCreateButton",false)
+				this.getView().getModel("viewModel").setProperty("/is_approver",true)
 			}
 	   },
 	   onCreateButtonClick : function(oEvent) {

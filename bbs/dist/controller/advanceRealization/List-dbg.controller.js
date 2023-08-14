@@ -31,7 +31,7 @@ sap.ui.define([
 			is_approver : false
 		});
 		this.getView().setModel(viewModel,"viewModel");
-		oModel.loadData(backendUrl+"advanceRequest/getAdvanceRequests", null, true, "GET",false,false,{
+		oModel.loadData(backendUrl+"advanceRequest/getAdvanceRealizations", null, true, "GET",false,false,{
 			'Authorization': 'Bearer ' + this.oJWT
 		});
 		this.getView().setModel(oModel,"advanceRealization");

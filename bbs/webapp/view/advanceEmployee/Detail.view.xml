@@ -33,8 +33,7 @@ xmlns:core="sap.ui.core"
 						<Input id="name" value="{advanceRequestDetailModel>/Name}"
 						editable="{viewModel>/editable}"></Input>
 
-						<Label id="_IDGenLabel3" text="Company" />
-						<Text id="_IDGenText5"  text="{budget>/U_Company}"/>
+						
 
 						<Label text="Status" />
 						<ObjectStatus text="{path : 'advanceRequestDetailModel>/U_Status', formatter:'.textFormatter'}" state="{path:'advanceRequestDetailModel>/U_Status', formatter:'.objectFormatter'}" inverted="true"></ObjectStatus>
@@ -42,6 +41,10 @@ xmlns:core="sap.ui.core"
 
 						<Label id="_IDGenLabel4" text="Remarks" />
 						<Text id="_IDGenText4"  text="{advanceRequestDetailModel>/U_Remarks}"/>
+
+						<Label text="Transfer Remarks" />
+						<Input id="transferRemarks" value="{advanceRequestDetailModel>/U_TransferRemarks}"
+						editable="{viewModel>/editable}"></Input>
 						
 						 <Label id="_IDGenLabelAmunt" text="Amount" />
 						<ObjectNumber 
@@ -92,10 +95,10 @@ xmlns:core="sap.ui.core"
 								/>
 
 						</ComboBox>
-						
-						<Label id="_IDGenLabel5" text="Project" />
-						<Text text="{budget>/U_Project}"/>
 
+						<Label id="_IDGenLabel3" text="Company" />
+						<Text id="_IDGenText5"  text="{budget>/U_Company}"/>
+						
                         <Label id="_IDGenLabel441" text="Pillar" />
 						<Text text="{budget>/U_Pillar}"/>
 
@@ -111,6 +114,11 @@ xmlns:core="sap.ui.core"
 
 						<Label id="_IDGenLabel6" text="Requested By" visible="{viewModel>/is_approver}"/>
 						<Text text="{advanceRequestDetailModel>/U_RequestorName}" visible="{viewModel>/is_approver}" />
+
+						
+						<Label id="_IDGenLabel5" text="Project" />
+						<Text text="{budget>/U_Project}"/>
+					
 					</form:content>
 				</form:SimpleForm>
 
@@ -118,6 +126,7 @@ xmlns:core="sap.ui.core"
                         rows="{advanceRequestDetailModel>/ADVANCEREQLINESCollection}"
 						visibleRowCount="7"
 						rowActionCount="1"
+						selectionMode="None"
 						 
 				>
 

@@ -82,7 +82,6 @@ sap.ui.define([
 				var ojwt = this.oJWT;
 				this.onAmountChange();
 
-				console.log(advanceRequestDetailData.U_RealiStatus);
 				if(userData.user.role_id == 4){
 					viewModel.setProperty("/editable", false);
 					viewModel.setProperty("/is_approver", true);
@@ -100,6 +99,9 @@ sap.ui.define([
 					}
 				}
 				else if(userData.user.role_id == 3){
+
+					console.log(advanceRequestDetailData.U_RealiStatus);
+				
 					viewModel.setProperty("/is_approver", false);
 					viewModel.setProperty("/is_requestor", true);
 					viewModel.setProperty("/resubmit", false);

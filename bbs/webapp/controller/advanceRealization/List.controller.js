@@ -27,6 +27,10 @@ sap.ui.define([
 		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 		this.oJWT = oStore.get("jwt");
 		var oModel = new JSONModel();
+		var viewModel = new sap.ui.model.json.JSONModel({
+			is_approver : false
+		});
+		this.getView().setModel(viewModel,"viewModel");
 		oModel.loadData(backendUrl+"advanceRequest/getAdvanceRequests", null, true, "GET",false,false,{
 			'Authorization': 'Bearer ' + this.oJWT
 		});
@@ -35,7 +39,26 @@ sap.ui.define([
 			this.getView().byId("advanceRealizationTableID").setBusy(false);
 		}.bind(this));
 
+		var userModel = this.getOwnerComponent().getModel("userModel");
+		if(userModel === undefined){
+			const bus = this.getOwnerComponent().getEventBus();
+			bus.subscribe("username", "checktoken", this.toggleCreateButton, this);
+		}else{
+			var userData = userModel.getData();
+			var a = { "userName" : userData.user.name,
+			  "roleId" : userData.user.role_id,
+			  "roleName" : userData.role[0].name,
+			  "status" : "success"
+			};
+			this.toggleCreateButton("username","checkToken",a);
+		}
+
        },
+	   toggleCreateButton : function(channelId, eventId, parametersMap){
+			if(parametersMap.roleId == 4 || parametersMap.roleId == 5){
+				this.getView().getModel("viewModel").setProperty("/is_approver",true)
+			}
+   		},
 	   onCreateButtonClick : function(oEvent) {
 		if (!this.createBudgetingDialog) {
 			this.createBudgetingDialog = this.loadFragment({

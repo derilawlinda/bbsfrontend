@@ -43,6 +43,11 @@ xmlns:table="sap.ui.table"
                 <Column id="_IDGenColumn7" >
                         <Text id="_IDGenTextView8" text="Advance Amount" />
                 </Column>
+
+                <Column id="_IDGenColumn8" visible="{viewModel>/is_approver}" >
+                        <Text id="_IDGenTextView9" text="Requested By" />
+                </Column> 
+
                  <Column >
                         <Text text="Advance Status" />
                 </Column>
@@ -72,7 +77,7 @@ xmlns:table="sap.ui.table"
                                 }"/>
                         <!-- <Button  text="{path : 'advanceRealization>U_Status',formatter:'.textFormatter'}" type="{path:'advanceRealization>U_Status', formatter:'.buttonFormatter'}"/>
                         <Button  text="{path : 'advanceRealization>U_RealiStatus',formatter:'.relizationTextFormatter'}" type="{path:'advanceRealization>U_RealiStatus', formatter:'.realizationButtonFormatter'}"/> -->
-
+                         <Text id="_IDGenText4" text="{advanceRealization>U_RequestorName}" />
                         <ObjectStatus text="{path : 'advanceRealization>U_Status', formatter:'.textFormatter'}" state="{path:'advanceRealization>U_Status', formatter:'.objectFormatter'}" inverted="true"></ObjectStatus>
                         <ObjectStatus text="{path : 'advanceRealization>U_RealiStatus', formatter:'.relizationTextFormatter'}" state="{path:'advanceRealization>U_RealiStatus', formatter:'.realizationObjectFormatter'}" inverted="true"></ObjectStatus>
                 </cells>

@@ -30,8 +30,11 @@ sap.ui.define([
 			'Authorization': 'Bearer ' + this.oJWT
 		});
 		var viewModel = new sap.ui.model.json.JSONModel({
-			showCreateButton : true
+			showCreateButton : true,
+			is_approver : false,
+			is_requestor : false
 		});
+		
 		this.getView().setModel(viewModel,"viewModel");
 		oModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
 			this.getView().byId("idBudgetTable").setBusy(false);
@@ -71,6 +74,7 @@ sap.ui.define([
 	toggleCreateButton : function(channelId, eventId, parametersMap){
 			if(parametersMap.roleId == 4 || parametersMap.roleId == 5){
 				this.getView().getModel("viewModel").setProperty("/showCreateButton",false)
+				this.getView().getModel("viewModel").setProperty("/is_approver",true)
 			}
 	   },
 

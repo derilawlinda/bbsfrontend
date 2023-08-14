@@ -40,7 +40,9 @@ sap.ui.define([
 			var viewModel = new JSONModel({
 				showFooter : false,
 				editable : false,
-				resubmit : false
+				resubmit : false,
+				is_approver : false,
+				is_requestor : false
 			});
 			this.getView().setModel(viewModel,"viewModel");
 			this.getView().byId("budgetingPageId").setBusy(true);
@@ -101,7 +103,6 @@ sap.ui.define([
 				if(parametersMap.roleId == 4){
 					viewModel.setProperty("/editable", false);
 					viewModel.setProperty("/is_approver", true);
-					viewModel.setProperty("/is_requestor", false);
 					if(budgetingDetailData.U_Status == 2){
 						viewModel.setProperty("/showFooter", true);
 					}
@@ -109,16 +110,13 @@ sap.ui.define([
 				else if(parametersMap.roleId == 5){
 					viewModel.setProperty("/editable", false);
 					viewModel.setProperty("/is_approver", true);
-					viewModel.setProperty("/is_requestor", false);
 					if(budgetingDetailData.U_Status == 1){
 						viewModel.setProperty("/showFooter", true);
 					}
 				}
 				else if(parametersMap.roleId == 3){
-					viewModel.setProperty("/is_approver", false);
 					viewModel.setProperty("/is_requestor", true);
 					viewModel.setProperty("/resubmit", false);
-
 					if(budgetingDetailData.U_Status == 4){
 						viewModel.setProperty("/resubmit", true);
 					}

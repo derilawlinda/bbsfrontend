@@ -38,7 +38,7 @@ xmlns:core="sap.ui.core"
 						<ComboBox width="100%"
 								change="onAccountCodeChange"
 								selectedKey="{advanceRequestDetailModel>U_AccountCode}"
-								editable="{viewModel>/editable}"
+								editable="false"
 								items="{
 								path: 'accounts>/value/',
 								templateShareable: false

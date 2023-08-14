@@ -20,6 +20,7 @@ xmlns:core="sap.ui.core"
                         rows="{advanceRequestDetailModel>/ADVANCEREQLINESCollection}"
 						visibleRowCount="5"
                         class="topMargin"
+						selectionMode="None"
 						 
 				>
 
@@ -34,7 +35,21 @@ xmlns:core="sap.ui.core"
 					<table:Column >
 						<Text text="Account Code" />
 						<table:template>
-                        <Text text="{advanceRequestDetailModel>U_AccountCode} - "/>
+						<ComboBox width="100%"
+								change="onAccountCodeChange"
+								selectedKey="{advanceRequestDetailModel>U_AccountCode}"
+								editable="{viewModel>/editable}"
+								items="{
+								path: 'accounts>/value/',
+								templateShareable: false
+								}"
+							>
+								<core:Item
+									key="{accounts>Code}"
+									text="{accounts>Code} - {accounts>Name}"
+								/>
+
+							</ComboBox>
 						</table:template>
 					</table:Column>
 
@@ -93,6 +108,7 @@ xmlns:core="sap.ui.core"
 					rows="{advanceRequestDetailModel>/REALIZATIONREQLINESCollection}"
 					visibleRowCount="5"
 					rowActionCount="1"
+					selectionMode="None"
 				>
 				
 				<table:extension>
@@ -116,6 +132,7 @@ xmlns:core="sap.ui.core"
 							<ComboBox width="100%"
 								change="onAccountCodeChange"
 								selectedKey="{advanceRequestDetailModel>U_AccountCode}"
+								editable="{viewModel>/editable}"
 								items="{
 								path: 'accounts>/value/',
 								templateShareable: false
@@ -136,6 +153,7 @@ xmlns:core="sap.ui.core"
 						<Text text="Item Name" />
 						<table:template>
 							<ComboBox width="100%"
+								editable="{viewModel>/editable}"
 								selectedKey="{advanceRequestDetailModel>U_ItemCode}"
 								enabled="true"
 							>
@@ -151,7 +169,7 @@ xmlns:core="sap.ui.core"
 								id="inputDescription"
 								type="Text"
 								placeholder="Description"
-								editable="{viewModel>editable}"
+								editable="{viewModel>/editable}"
 								value="{advanceRequestDetailModel>U_Description}"
 								/>
 						</table:template>
@@ -161,6 +179,7 @@ xmlns:core="sap.ui.core"
 						<Text text="NPWP" />
 						<table:template>
 								<Select selectedKey="{advanceRequestDetailModel>U_NPWP}" 
+								editable="{viewModel>/editable}"
 								items="{
 								path: 'viewModel>/NPWP',
 								templateShareable: false
@@ -176,7 +195,7 @@ xmlns:core="sap.ui.core"
 							<Input
 								id="inputNumber"
 								placeholder="Enter number"
-								editable="{viewModel>editable}"
+								editable="{viewModel>/editable}"
 								value="{
 									parts: [
 										{path:'advanceRequestDetailModel>U_Amount'}, 

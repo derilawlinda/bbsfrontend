@@ -44,6 +44,13 @@ sap.ui.define([
 		});
 		this.getView().setModel(oProjectModel,"projects");
 
+		var oAccountModel = new JSONModel();
+		oAccountModel.setSizeLimit(1000);
+		oAccountModel.loadData(backendUrl+"coa/getCOAs", null, true, "GET",false,false,{
+			'Authorization': 'Bearer ' + this.oJWT
+		});
+		this.getView().setModel(oAccountModel,"accounts");
+
 		var userModel = this.getOwnerComponent().getModel("userModel");
 		if(userModel === undefined){
 			const bus = this.getOwnerComponent().getEventBus();

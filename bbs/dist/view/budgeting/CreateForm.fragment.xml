@@ -149,14 +149,14 @@
 								selectedKey="{new_budgeting_accounts>U_AccountCode}"
 								required="true"
 								items="{
-									path: 'accounts>/data',
+									path: 'accounts>/value',
 									templateShareable: false
 									}"
 							>
 
 								<core:Item
-									key="{accounts>AccountCode}"
-									text="{accounts>AccountCode} - {accounts>AccountName}"
+									key="{accounts>Code}"
+									text="{accounts>Code} - {accounts>Name}"
 								/>
 
 							</ComboBox>

@@ -50,6 +50,10 @@ xmlns:core="sap.ui.core"
 									
 						</ComboBox>
 
+						<Label text="Status" />
+						<ObjectStatus text="{path : 'budgetingDetailModel>/U_Status', formatter:'.textFormatter'}" state="{path:'budgetingDetailModel>/U_Status', formatter:'.objectFormatter'}" inverted="true"></ObjectStatus>
+
+
 						<Label id="_IDGenLabel4" text="Remarks" />
 						<Text text="{budgetingDetailModel>/U_Remarks}" />
 <!-- 
@@ -125,6 +129,10 @@ xmlns:core="sap.ui.core"
 						<core:Item text="{projects>Name}" key="{projects>Code}" />
 						
 						</ComboBox>
+
+						 <Label id="_IDGenLabel6" text="Requested By" />
+						 <Text text="{budgetingDetailModel>/U_RequestorName}" />
+
 						
 						
 						

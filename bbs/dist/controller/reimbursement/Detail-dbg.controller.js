@@ -330,6 +330,63 @@ sap.ui.define([
 				viewModel.setProperty("/amountExceeded","")
 			}
 
+		},
+		onRejectButtonClick : function(oEvent){
+			if (!this.rejectReimbursementDialog) {
+				this.rejectReimbursementDialog = this.loadFragment({
+					name: "frontend.bbs.view.reimbursement.RejectForm"
+				});
+			}
+			this.rejectReimbursementDialog.then(function (oDialog) {
+				this.oDialog = oDialog;
+				this.oDialog.open();
+			}.bind(this));
+		},
+
+		onConfirmRejectClick : function(){
+			var pageDOM = this.getView().byId("reimbursementPageID");
+			var reimbursementDetailData = this.getView().getModel("reimbursementDetailModel").getData();
+			pageDOM.setBusy(true);
+			var oDialog = this.getView().byId("rejectDialog");
+			var code = reimbursementDetailData.Code;
+			var rejectionRemarks = this.getView().byId("RejectionRemarksID").getValue();
+			var viewModel = this.getView().getModel("viewModel");
+			
+			$.ajax({
+				type: "POST",
+				data: {
+					"Code": code,
+					"Remarks" : rejectionRemarks
+				},
+				headers: {"Authorization": "Bearer "+ this.oJWT},
+				crossDomain: true,
+				url: backendUrl+'reimbursement/rejectReimbursement',
+				success: function (res, status, xhr) {
+					  //success code
+					  oDialog.close();
+					  pageDOM.setBusy(false);
+					  if (!this.oSuccessMessageDialog) {
+						this.oSuccessMessageDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Success",
+							state: ValueState.Success,
+							content: new Text({ text: "Reimbursement rejected" }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									viewModel.setProperty("/showFooter", false);
+									this.oSuccessMessageDialog.close();
+								}.bind(this)
+							})
+						});
+					}
+					this.oSuccessMessageDialog.open();
+				}.bind(this),
+				error: function (jqXHR, textStatus, errorThrown) {
+				  	console.log("Got an error response: " + textStatus + errorThrown);
+				}
+			  });
 		}
 	});
 });

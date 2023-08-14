@@ -82,6 +82,7 @@ sap.ui.define([
 		}
        },
 	   toggleCreateButton : function(channelId, eventId, parametersMap){
+		console.log(parametersMap.roleId);
 			if(parametersMap.roleId == 4 || parametersMap.roleId == 5){
 				this.getView().getModel("viewModel").setProperty("/showCreateButton",false)
 			}

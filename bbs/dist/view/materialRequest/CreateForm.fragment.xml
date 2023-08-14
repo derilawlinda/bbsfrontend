@@ -23,7 +23,7 @@
                         <Label id="_IDGenLabel1" text="Date" />
 						<Text text="{createFragmentViewModel>/Date}" />
 
-                        <Label id="_IDGenLabel2" text="Name" />
+                        <Label id="_IDGenLabel2" text=" MR Name" />
 						<Input id="name" 
 						value="{materialRequestHeader>/Name}"
 						 ></Input>

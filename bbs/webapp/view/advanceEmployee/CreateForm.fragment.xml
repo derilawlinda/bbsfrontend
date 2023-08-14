@@ -23,7 +23,7 @@
                         <Label id="_IDGenLabel1" text="Date" />
 						<Text text="{createFragmentViewModel>/Date}" />
 
-                        <Label id="_IDGenLabel2" text="Name" />
+                        <Label id="_IDGenLabel2" text="Advance Name" />
 						<Input id="name" value="{advanceRequestHeader>/Name}" ></Input>
 
 						<Label id="_IDGenLabel4" text="Budget#" />

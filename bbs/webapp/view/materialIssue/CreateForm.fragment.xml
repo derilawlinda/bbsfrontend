@@ -23,7 +23,7 @@
                         <Label id="_IDGenLabel1" text="Date" />
 						<Text text="{createFragmentViewModel>/Date}" />
 
-                        <Label id="_IDGenLabel2" text="Name" />
+                        <Label id="_IDGenLabel2" text="Material Issue Name" />
 						<Input id="name" value="{materialIssueHeader>/Name}" ></Input>
 
 						<Label id="_IDGenLabel4" text="Budget#" />

@@ -270,6 +270,7 @@ sap.ui.define([
 			oModelLineData.splice(iIdx, 1);
 			oModel.setProperty("/ADVANCEREQLINESCollection",oModelLineData);
 			oModel.refresh();
+			this.onAmountChange();
 		},
 		onSaveButtonClick : function(oEvent) {
 			var oDialog = this.oDialog;

@@ -34,6 +34,12 @@ sap.ui.define([
 
 		var oItemModel = new JSONModel();
 		this.getView().setModel(oItemModel,"items");
+
+		var viewModel = new sap.ui.model.json.JSONModel({
+			showCreateButton : true,
+			is_approver : false
+		});
+		this.getView().setModel(viewModel,"viewModel");
 		
 		//GET BUDGET DATA
 		var budgetRequestHeader = new sap.ui.model.json.JSONModel({
@@ -50,9 +56,28 @@ sap.ui.define([
 		var oNewMaterialIssueAccounts = new sap.ui.model.json.JSONModel();
 		this.getView().setModel(oNewMaterialIssueAccounts,"new_mi_items");
 		this.getView().getModel("new_mi_items").setProperty("/MATERIALISSUELINESCollection", []);
-		
 
+		var userModel = this.getOwnerComponent().getModel("userModel");
+		if(userModel === undefined){
+			const bus = this.getOwnerComponent().getEventBus();
+			bus.subscribe("username", "checktoken", this.toggleCreateButton, this);
+		}else{
+			var userData = userModel.getData();
+			var a = { "userName" : userData.user.name,
+			  "roleId" : userData.user.role_id,
+			  "roleName" : userData.role[0].name,
+			  "status" : "success"
+			};
+			this.toggleCreateButton("username","checkToken",a);
+		}
+		
        },
+	   toggleCreateButton : function(channelId, eventId, parametersMap){
+		if(parametersMap.roleId == 4 || parametersMap.roleId == 5){
+			this.getView().getModel("viewModel").setProperty("/showCreateButton",false)
+			this.getView().getModel("viewModel").setProperty("/is_approver",true)
+			}
+   		},
 	    getRouter : function () {
 			return sap.ui.core.UIComponent.getRouterFor(this);
 		},
@@ -193,6 +218,8 @@ sap.ui.define([
 
 				this.getView().setModel(oMaterialIssueDetailModel,"materialIssueDetailModel");
 				this.getView().getModel("new_mi_items").setProperty("/MATERIALISSUELINESCollection", []);
+
+
 	
 			}.bind(this));
 		   },

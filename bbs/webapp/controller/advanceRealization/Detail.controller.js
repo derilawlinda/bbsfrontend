@@ -113,7 +113,7 @@ sap.ui.define([
 						viewModel.setProperty("/is_save", true);
 						viewModel.setProperty("/is_submit", false);
 					}
-					if((advanceRequestDetailData.U_RealiStatus == 5 || advanceRequestDetailData.U_RealiStatus == 1) ){
+					if((advanceRequestDetailData.U_RealiStatus == 5 || advanceRequestDetailData.U_RealiStatus == 2) ){
 						viewModel.setProperty("/showFooter", true);
 						viewModel.setProperty("/editable", true);
 					}

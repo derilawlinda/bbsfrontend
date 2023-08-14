@@ -23,7 +23,7 @@ xmlns:table="sap.ui.table"
 			<OverflowToolbar id="_IDGenOverflowToolbar1">
                 <Title id="title" text="Material Issue"/>
                 <ToolbarSpacer id="_IDGenToolbarSpacer1" ></ToolbarSpacer>
-                <Button id="_IDGenButton2" text=" + Create Material Issue" press="onCreateButtonClick" type="Emphasized"/>
+                <Button id="_IDGenButton2" text=" + Create Material Issue" press="onCreateButtonClick" type="Emphasized" visible="{viewModel>/showCreateButton}"/>
             </OverflowToolbar>
             </headerToolbar>
             <columns>
@@ -41,6 +41,11 @@ xmlns:table="sap.ui.table"
                 <Column id="_IDGenColumn7" >
                         <Text id="_IDGenTextView8" text="Amount" />
                 </Column>
+
+                 <Column id="_IDGenColumn8" visible="{viewModel>/is_approver}">
+                        <Text id="_IDGenTextView9" text="Requested By" />
+                </Column>
+
                  <Column id="_IDGenColumn9">
                         <Text id="_IDGenTextView0" text="Status" />
                 </Column>
@@ -58,6 +63,7 @@ xmlns:table="sap.ui.table"
                         	number="{
 								parts:[{path:'materialIssue>U_Qty'}]
 							}"/>
+                        <Text id="_IDGenText3" text="{materialIssue>U_RequestorName}" visible="{viewModel>/is_approver}"/>
                         <ObjectStatus text="{path : 'materialIssue>U_Status', formatter:'.textFormatter'}" state="{path:'materialIssue>U_Status', formatter:'.objectFormatter'}" inverted="true"></ObjectStatus>
                         
 

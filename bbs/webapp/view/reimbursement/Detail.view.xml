@@ -33,14 +33,17 @@ xmlns:core="sap.ui.core"
 						<Input id="name" value="{reimbursementDetailModel>/Name}"
 						editable="{viewModel>/editable}"></Input>
 
-						<Label id="_IDGenLabel3" text="Company" />
-						<Text id="_IDGenText5"  text="{budget>/U_Company}"/>
+					
 
 						<Label text="Status" />
 						<ObjectStatus text="{path : 'reimbursementDetailModel>/U_Status', formatter:'.textFormatter'}" state="{path:'reimbursementDetailModel>/U_Status', formatter:'.objectFormatter'}" inverted="true"></ObjectStatus>
 
 						<Label id="_IDGenLabel4" text="Remarks" />
 						<Text id="_IDGenText4"  text="{budget>/U_RejRemarks}"/>
+
+						<Label text="Transfer Remarks" />
+						<Input id="transferRemarks" value="{reimbursementDetailModel>/U_TransferRemarks}"
+						editable="{viewModel>/editable}"></Input>
 						
 						 <Label id="_IDGenLabelAmunt" text="Amount" />
 						<ObjectNumber number="{
@@ -89,10 +92,11 @@ xmlns:core="sap.ui.core"
 								/>
 
 						</ComboBox>
-						
-						<Label id="_IDGenLabel5" text="Project" />
-						<Text text="{budget>/U_Project}"/>
 
+						<Label id="_IDGenLabel3" text="Company" />
+						<Text id="_IDGenText5"  text="{budget>/U_Company}"/>
+						
+					
                         <Label id="_IDGenLabel441" text="Pillar" />
 						<Text text="{budget>/U_Pillar}"/>
 
@@ -107,9 +111,12 @@ xmlns:core="sap.ui.core"
                         <Label id="_IDGenLabel444" text="Subclass2" />
 						<Text text="{budget>/U_SubClass2}"/>
 
+						<Label id="_IDGenLabel5" text="Project" />
+						<Text text="{budget>/U_Project}"/>
+
 						<Label id="_IDGenLabel6" text="Requested By" visible="{viewModel>/is_approver}"/>
 						<Text text="{reimbursementDetailModel>/U_RequestorName}" visible="{viewModel>/is_approver}" />
-						
+
 					</form:content>
 				</form:SimpleForm>
 

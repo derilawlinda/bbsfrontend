@@ -41,6 +41,7 @@ sap.ui.define([
 		var oAdvanceRequestHeader = new sap.ui.model.json.JSONModel();
 		var viewModel = new sap.ui.model.json.JSONModel({
 			showCreateButton : true,
+			is_approver : false,
 			NPWP: [
 				{"Name" : 0},
 				{"Name" : 2.5},
@@ -85,6 +86,7 @@ sap.ui.define([
 		console.log(parametersMap.roleId);
 			if(parametersMap.roleId == 4 || parametersMap.roleId == 5){
 				this.getView().getModel("viewModel").setProperty("/showCreateButton",false)
+				this.getView().getModel("viewModel").setProperty("/is_approver",true)
 			}
 	   },
 	   onAmountChange : function(event){

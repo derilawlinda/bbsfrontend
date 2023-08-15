@@ -6,8 +6,9 @@ sap.ui.define([
 	"sap/m/Button",
 	"sap/m/library",
 	"sap/m/Text",
-	"sap/ui/core/library"
-], function (Controller, History, JSONModel,Dialog,Button,mobileLibrary,Text,coreLibrary) {
+	"sap/ui/core/library",
+	"sap/m/MessageToast"
+], function (Controller, History, JSONModel,Dialog,Button,mobileLibrary,Text,coreLibrary,MessageToast) {
 	"use strict";
 
 	var ButtonType = mobileLibrary.ButtonType;
@@ -103,8 +104,8 @@ sap.ui.define([
 					viewModel.setProperty("/is_approver", false);
 					viewModel.setProperty("/is_requestor", false);
 
-					if(advanceRequestDetailData.U_Status != 3){
-						viewModel.setProperty("/showFooter", false);
+					if(advanceRequestDetailData.U_Status == 3){
+						viewModel.setProperty("/showFooter", true);
 
 					}
 				};;
@@ -289,7 +290,7 @@ sap.ui.define([
 		  onApproveButtonClick : function (){
 			var pageDOM = this.getView().byId("advanceRequestPageId");
 			var viewModel = this.getView().getModel("viewModel");
-			// pageDOM.setBusy(true);
+			pageDOM.setBusy(true);
 			var code = this.getView().byId("_IDGenText101").getText();
 			const oModel = this.getView().getModel("advanceRequestDetailModel");
 			var budgetInformation = this.getView().getModel("budget").getData();
@@ -307,7 +308,7 @@ sap.ui.define([
 				contentType: "application/json",
 				success: function (res, status, xhr) {
 					  //success code
-					//   pageDOM.setBusy(false);
+					  pageDOM.setBusy(false);
 					  
 					  if (!this.oSuccessMessageDialog) {
 						this.oSuccessMessageDialog = new Dialog({
@@ -323,7 +324,7 @@ sap.ui.define([
 								}.bind(this)
 							})
 						});
-						// viewModel.setProperty("/showFooter", false);
+						viewModel.setProperty("/showFooter", false);
 					}
 		
 					this.oSuccessMessageDialog.open();
@@ -331,7 +332,53 @@ sap.ui.define([
 				error: function (jqXHR, textStatus, errorThrown) {
 				  	console.log("Got an error response: " + textStatus + errorThrown);
 				}
-			  });
+			});
+		},
+
+		onTransferButtonClick : function(){
+			if (!this.transferAdvanceRequestDialog) {
+				this.transferAdvanceRequestDialog = this.loadFragment({
+					name: "frontend.bbs.view.advanceEmployee.Transfer"
+				});
+			}
+			this.transferAdvanceRequestDialog.then(function (oDialog) {
+				this.oDialog = oDialog;
+				this.oDialog.open();
+			}.bind(this));
+		
+		},
+
+
+		onTransferConfirm: function(){
+			const oModel = this.getView().getModel("advanceRequestDetailModel");
+			var oJWT = this.oJWT;
+			var DisbursedDate = this.getView().byId("DatePicker").getValue();
+			var code = oModel.getData().Code;
+			var pageDOM = this.getView().byId("advanceRequestPageId");
+			var transferDialog = this.getView().byId("transferDialog");
+			transferDialog.close();
+			pageDOM.setBusy(true);
+			$.ajax({
+				type: "POST",
+				data: JSON.stringify({
+					"Code": code,
+					"DisbursedDate" : DisbursedDate
+				}),
+				headers: {"Authorization": "Bearer "+ oJWT},
+				crossDomain: true,
+				url: backendUrl+'advanceRequest/transferAR',
+				contentType: "application/json",
+				success: function (res, status, xhr) {
+					pageDOM.setBusy(false);
+					MessageToast.show("Advance Transfered");
+					$(".sapMMessageToast").css({"background-color": "#256f3a", "color": "white"});
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+					  pageDOM.setBusy(false);
+					  console.log("Got an error response: " + textStatus + errorThrown);
+				}
+			});
+
 		},
 
         onNavBack: function () {

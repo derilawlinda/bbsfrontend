@@ -133,8 +133,30 @@ sap.ui.define([
 					}
 				};
 
+				const oBudgetModel = new JSONModel();
+				oBudgetModel.loadData(backendUrl+"budget/getBudgetById?code="+advanceRequestDetailData.U_BudgetCode, null, true, "GET",false,false,{
+					'Authorization': 'Bearer ' + this.oJWT
+				});
+				this.getOwnerComponent().setModel(oBudgetModel,"budget");
+				oBudgetModel.dataLoaded().then(function() {
+					var budgetingData = oBudgetModel.getData();
+					var approvedBudget = budgetingData.U_TotalAmount;
+					var usedBudget = budgetingData.BUDGETUSEDCollection;
+					let sumUsedBudget = 0;
+					if(usedBudget.length > 0){
+						for (let i = 0; i < usedBudget.length; i++ ) {
+							sumUsedBudget += usedBudget[i]["U_Amount"];
+						};
+					}
+					var budgetRequestHeader = this.getView().getModel("budget");
+					budgetRequestHeader.setProperty("/U_RemainingBudget",approvedBudget - sumUsedBudget);
+					this.getView().byId("advanceRequestPageId").setBusy(false);
+
+				}.bind(this));
+
+
 				var accountModel = new JSONModel();
-				accountModel.loadData(backendUrl+"coa/getCOAsByBudget?budgetCode="+advanceRequestDetailData.U_BudgetCode, null, true, "GET",false,false,{
+				accountModel.loadData(backendUrl+"coa/getCOAsByAR?ARCode="+advanceRequestDetailData.Code, null, true, "GET",false,false,{
 					'Authorization': 'Bearer ' + ojwt
 				});
 				this.getView().setModel(accountModel,"accounts");
@@ -540,6 +562,74 @@ sap.ui.define([
 				var oRouter = this.getOwnerComponent().getRouter();
 				oRouter.navTo("dashboard", {}, true);
 			}
+		},
+		objectFormatter: function(sStatus) {
+			if(sStatus == 1 ){
+				return 'Warning';
+			}else if(sStatus == 2){
+				return 'Information';
+			}
+			else if(sStatus == 3){
+				return 'Success';
+			}else if(sStatus == 5){
+				return 'Information';
+			}else{
+				return 'Error';
+			}
+		  },
+		
+		textFormatter : function(sStatus){
+			if(sStatus == 1){
+				return 'Pending'
+			}else if(sStatus == 2){
+				return 'Approved by Manager'
+			}else if(sStatus == 3){
+				return 'Approved by Director'
+			}else if(sStatus == 5){
+				return 'Transferred'
+			}else{
+				return 'Rejected'
+			}
+		  
+		},
+		realizationButtonFormatter: function(sStatus) {
+			if(sStatus == 3 || sStatus == 4){
+				return 'Success'
+			}else if(sStatus == 1 || sStatus == 2){
+				return 'Warning'
+			}else{
+				return 'Error'
+			}
+		  },
+		  realizationObjectFormatter: function(sStatus) {
+			if(sStatus == 1 ){
+				return 'Information'}
+			else if(sStatus == 2){
+				return 'Warning'
+			}
+			else if(sStatus == 3){
+				return 'Success'
+			}else if(sStatus == 4){
+				return 'Information'
+			}
+			else{
+				return 'Error'
+			}
+		  },
+		
+		relizationTextFormatter : function(sStatus){
+			if(sStatus == 1){
+				return 'Unrealized'
+			}else if(sStatus == 2){
+				return 'Submitted'
+			}else if(sStatus == 3){
+				return 'Approved by Manager'
+			}else if(sStatus == 4){
+				return 'Approved by Director'
+			}else{
+				return 'Rejected'
+			}
+		  
 		}
 	});
 });

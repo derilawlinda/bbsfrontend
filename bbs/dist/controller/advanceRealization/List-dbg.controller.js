@@ -55,7 +55,7 @@ sap.ui.define([
 
        },
 	   toggleCreateButton : function(channelId, eventId, parametersMap){
-			if(parametersMap.roleId == 4 || parametersMap.roleId == 5){
+			if(parametersMap.roleId == 4 || parametersMap.roleId == 5 || parametersMap.roleId == 2){
 				this.getView().getModel("viewModel").setProperty("/is_approver",true)
 			}
    		},
@@ -103,12 +103,17 @@ sap.ui.define([
 		  },
 
 		  objectFormatter: function(sStatus) {
-			if(sStatus == 2 || sStatus == 3){
-				return 'Success'
-			}else if(sStatus == 1){
-				return 'Warning'
+			if(sStatus == 1 ){
+				return 'Warning';
+			}else if(sStatus == 2){
+				return 'Information';
+			}
+			else if(sStatus == 3){
+				return 'Success';
+			}else if(sStatus == 5){
+				return 'Information';
 			}else{
-				return 'Error'
+				return 'Error';
 			}
 		  },
 		
@@ -119,6 +124,8 @@ sap.ui.define([
 				return 'Approved by Manager'
 			}else if(sStatus == 3){
 				return 'Approved by Director'
+			}else if(sStatus == 5){
+				return 'Transferred'
 			}else{
 				return 'Rejected'
 			}
@@ -139,8 +146,10 @@ sap.ui.define([
 			else if(sStatus == 2){
 				return 'Warning'
 			}
-			else if(sStatus == 3 || sStatus == 4){
+			else if(sStatus == 3){
 				return 'Success'
+			}else if(sStatus == 4){
+				return 'Information'
 			}
 			else{
 				return 'Error'
@@ -172,10 +181,15 @@ sap.ui.define([
 
 		},
 		dateFormatter : function(date){
-			var unformattedDate = new Date(date);
-			var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({pattern : "YYYY-MM-dd" });   
-			var dateFormatted = dateFormat.format(unformattedDate);
-			return dateFormatted;
+			if(date){
+				var unformattedDate = new Date(date);
+				var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({pattern : "YYYY-MM-dd" });   
+				var dateFormatted = dateFormat.format(unformattedDate);
+				return dateFormatted;
+			}else {
+				return "-";
+			}
+			
 		},
     });
  });

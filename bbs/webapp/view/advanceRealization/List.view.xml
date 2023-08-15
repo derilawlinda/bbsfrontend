@@ -64,7 +64,7 @@ xmlns:table="sap.ui.table"
                         <Text id="_IDGenText1"
 						     text="{path : 'advanceRealization>CreateDate', formatter:'.dateFormatter'}" />
                         <Text id="_IDGenText3"
-						    text="{advanceRealization>U_DisbursedAt}" />
+						   text="{path : 'advanceRealization>U_DisbursedAt', formatter:'.dateFormatter'}"  />
                         <Text id="_IDGenText2" text="{advanceRealization>Name}" />
                         <ObjectNumber id="_IDGenObjectNumber1" 
                         	number="{

@@ -107,20 +107,22 @@ sap.ui.define([
 					if(advanceRequestDetailData.U_RealiStatus == 1){
 						viewModel.setProperty("/is_save", false);
 						viewModel.setProperty("/is_submit", true);
+						viewModel.setProperty("/showFooter", true);
 					}
 
 					if(advanceRequestDetailData.U_RealiStatus == 2){
 						viewModel.setProperty("/is_save", true);
 						viewModel.setProperty("/is_submit", false);
-					}
-					if((advanceRequestDetailData.U_RealiStatus == 5 || advanceRequestDetailData.U_RealiStatus == 2) ){
 						viewModel.setProperty("/showFooter", true);
 						viewModel.setProperty("/editable", true);
+
 					}
-					if(advanceRequestDetailData.U_RealiStatus == 5){
+					if((advanceRequestDetailData.U_RealiStatus == 5) ){
+						viewModel.setProperty("/editable", true);
 						viewModel.setProperty("/is_save", true);
 						viewModel.setProperty("/resubmit", true);
 					}
+					
 					
 				}
 				else if(userData.user.role_id == 2){

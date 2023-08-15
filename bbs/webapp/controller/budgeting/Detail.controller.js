@@ -170,6 +170,17 @@ sap.ui.define([
 
 				this.getView().byId("budgetingPageId").setBusy(false);
 
+				var usedBudget = budgetingDetailData.BUDGETUSEDCollection;
+				let sumUsedBudget = 0;
+				if(usedBudget.length > 0){
+					for (let i = 0; i < usedBudget.length; i++ ) {
+						sumUsedBudget += usedBudget[i]["U_Amount"];
+					};
+				}
+				budgetingDetailModel.setProperty("/U_TotalUsedBudget", sumUsedBudget);
+				var remainingBudget = budgetingDetailData.U_TotalAmount - sumUsedBudget;
+				budgetingDetailModel.setProperty("/U_RemainingBudget", remainingBudget);
+
 			}.bind(this));
 		  },
 

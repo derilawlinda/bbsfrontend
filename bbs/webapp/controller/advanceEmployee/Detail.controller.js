@@ -123,7 +123,6 @@ sap.ui.define([
 				this.getOwnerComponent().setModel(oBudgetModel,"budget");
 				oBudgetModel.dataLoaded().then(function() {
 					var budgetingData = oBudgetModel.getData();
-					console.log(budgetingData);
 					var approvedBudget = budgetingData.U_TotalAmount;
 					var usedBudget = budgetingData.BUDGETUSEDCollection;
 					let sumUsedBudget = 0;
@@ -353,25 +352,24 @@ sap.ui.define([
 			const oModel = this.getView().getModel("advanceRequestDetailModel");
 			var oJWT = this.oJWT;
 			var DisbursedDate = this.getView().byId("DatePicker").getValue();
+			oModel.setProperty("/DisbursedDate", DisbursedDate)
 			var code = oModel.getData().Code;
 			var pageDOM = this.getView().byId("advanceRequestPageId");
 			var transferDialog = this.getView().byId("transferDialog");
-			transferDialog.close();
-			pageDOM.setBusy(true);
+			var oProperty = oModel.getProperty("/");
+			// transferDialog.close();
+			// pageDOM.setBusy(true);
 			$.ajax({
 				type: "POST",
-				data: JSON.stringify({
-					"Code": code,
-					"DisbursedDate" : DisbursedDate
-				}),
+				data: JSON.stringify(oProperty),
 				headers: {"Authorization": "Bearer "+ oJWT},
 				crossDomain: true,
 				url: backendUrl+'advanceRequest/transferAR',
 				contentType: "application/json",
 				success: function (res, status, xhr) {
-					pageDOM.setBusy(false);
-					MessageToast.show("Advance Transfered");
-					$(".sapMMessageToast").css({"background-color": "#256f3a", "color": "white"});
+					// pageDOM.setBusy(false);
+					// MessageToast.show("Advance Transfered");
+					// $(".sapMMessageToast").css({"background-color": "#256f3a", "color": "white"});
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					  pageDOM.setBusy(false);

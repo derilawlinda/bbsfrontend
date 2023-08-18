@@ -150,6 +150,8 @@ sap.ui.define([
 				return 'Success'
 			}else if(sStatus == 4){
 				return 'Information'
+			}else if(sStatus == 6){
+				return 'Success'
 			}
 			else{
 				return 'Error'
@@ -165,6 +167,8 @@ sap.ui.define([
 				return 'Approved by Manager'
 			}else if(sStatus == 4){
 				return 'Approved by Director'
+			}else if(sStatus == 6){
+				return 'Realized'
 			}else{
 				return 'Rejected'
 			}

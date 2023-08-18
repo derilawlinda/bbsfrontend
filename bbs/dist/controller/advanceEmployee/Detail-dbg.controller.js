@@ -357,8 +357,8 @@ sap.ui.define([
 			var pageDOM = this.getView().byId("advanceRequestPageId");
 			var transferDialog = this.getView().byId("transferDialog");
 			var oProperty = oModel.getProperty("/");
-			// transferDialog.close();
-			// pageDOM.setBusy(true);
+			transferDialog.close();
+			pageDOM.setBusy(true);
 			$.ajax({
 				type: "POST",
 				data: JSON.stringify(oProperty),
@@ -367,9 +367,9 @@ sap.ui.define([
 				url: backendUrl+'advanceRequest/transferAR',
 				contentType: "application/json",
 				success: function (res, status, xhr) {
-					// pageDOM.setBusy(false);
-					// MessageToast.show("Advance Transfered");
-					// $(".sapMMessageToast").css({"background-color": "#256f3a", "color": "white"});
+					pageDOM.setBusy(false);
+					MessageToast.show("Advance Transfered");
+					$(".sapMMessageToast").css({"background-color": "#256f3a", "color": "white"});
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					  pageDOM.setBusy(false);
@@ -377,6 +377,11 @@ sap.ui.define([
 				}
 			});
 
+		},
+
+		onAdvanceRealizationConfirm : function(){
+
+			
 		},
 
         onNavBack: function () {
@@ -565,29 +570,33 @@ sap.ui.define([
 			  });
 	   },
 	   objectFormatter: function(sStatus) {
-			if(sStatus == 1 ){
-				return 'Warning';
-			}else if(sStatus == 2){
-				return 'Information';
-			}
-			else if(sStatus == 3){
-				return 'Success';
-			}else{
-				return 'Error';
-			}
-		},
-	
-		textFormatter : function(sStatus){
-			if(sStatus == 1){
-				return 'Pending'
-			}else if(sStatus == 2){
-				return 'Approved by Manager'
-			}else if(sStatus == 3){
-				return 'Approved by Director'
-			}else{
-				return 'Rejected'
-			}
-		
+		if(sStatus == 1 ){
+			return 'Warning';
+		}else if(sStatus == 2){
+			return 'Information';
 		}
+		else if(sStatus == 3){
+			return 'Success';
+		}else if(sStatus == 5){
+			return 'Information';
+		}else{
+			return 'Error';
+		}
+	  },
+	
+	textFormatter : function(sStatus){
+		if(sStatus == 1){
+			return 'Pending'
+		}else if(sStatus == 2){
+			return 'Approved by Manager'
+		}else if(sStatus == 3){
+			return 'Approved by Director'
+		}else if(sStatus == 5){
+			return 'Transferred'
+		}else{
+			return 'Rejected'
+		}
+	  
+	}
 	});
 });

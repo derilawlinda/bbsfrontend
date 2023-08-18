@@ -218,12 +218,92 @@ sap.ui.define([
 		},
 
 		onSubmitButtonClick : function(oEvent) {
-			this.getView().byId("advanceRequestPageId").setBusy(true);
 			const oModel = this.getView().getModel("advanceRequestDetailModel");
 			var oProperty = oModel.getProperty("/");
-			var view = this.getView();
-			var oJWT = this.oJWT;
+			oModel.setProperty("/U_DifferenceAmt", oProperty.U_Amount - oProperty.U_RealizationAmt);
+			if(oProperty.U_RealizationAmt < oProperty.U_Amount){
+				if (!this.transferAdvanceRequestDialog) {
+					this.transferAdvanceRequestDialog = this.loadFragment({
+						name: "frontend.bbs.view.advanceRealization.Transfer"
+					});
+				}
+				this.transferAdvanceRequestDialog.then(function (oDialog) {
+					this.oDialog = oDialog;
+					this.oDialog.open();
+				}.bind(this));
+			}else{
+				if (!this.oTransferConfirmationMessageDialog) {
+					this.oTransferConfirmationMessageDialog = new Dialog({
+						type: DialogType.Message,
+						title: "Confirmation",
+						state: ValueState.Attention,
+						content: new Text({ text: "Realized Amount equals to the advance amount.  Continue ?" }),
+						beginButton: new Button({
+							type: ButtonType.Emphasized,
+							text: "OK",
+							press: function () {
+								this.submitAdvanceRealization();
+								viewModel.setProperty("/showFooter", false);
+								this.oTransferConfirmationMessageDialog.close();
+							}.bind(this)
+						}),
+						endButton : new Button({
+							type: ButtonType.Default,
+							text: "Cancel",
+							press: function () {
+								this.oTransferConfirmationMessageDialog.close();
+							}.bind(this)
+						})
+					});
+				}
+				this.oTransferConfirmationMessageDialog.open();
+			}
+
+			
+			// alert(JSON.stringify(oProperty));
+	   },
+
+	   onConfirmButtonClick : function(){
+
+			const oModel = this.getView().getModel("advanceRequestDetailModel");
 			var pageView = this.getView().byId("advanceRequestPageId");
+			var view = this.getView();
+			var oProperty = oModel.getProperty("/");
+			var oJWT = this.oJWT;
+			pageView.setBusy(true);
+
+			$.ajax({
+				type: "POST",
+				data: JSON.stringify(oProperty),
+				crossDomain: true,
+				headers: { 'Authorization': 'Bearer ' + oJWT },
+				url: backendUrl+'advanceRequest/confirmAdvanceRealization',
+				contentType: "application/json",
+				success: function (res, status, xhr) {
+					//success code
+					pageView.setBusy(false);
+					MessageToast.show("Advance Realization confimed");
+					$(".sapMMessageToast").css({"background-color": "#256f3a", "color": "white"});
+
+					view.getModel('advanceRequestDetailModel').refresh();
+					
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+					pageView.setBusy(false);
+					console.log("Got an error response: " + textStatus + errorThrown);
+				}
+			});
+
+	   },
+
+	   submitAdvanceRealization : function(){
+			const oModel = this.getView().getModel("advanceRequestDetailModel");
+			var view = this.getView();
+			var pageView = this.getView().byId("advanceRequestPageId");
+			var dialogID = this.getView().byId("transferDialogID");
+			var oProperty = oModel.getProperty("/");
+			var oJWT = this.oJWT;
+			pageView.setBusy(true);
 
 			$.ajax({
 				type: "POST",
@@ -233,20 +313,23 @@ sap.ui.define([
 				url: backendUrl+'advanceRequest/submitAdvanceRealization',
 				contentType: "application/json",
 				success: function (res, status, xhr) {
-					  //success code
+					//success code
 					pageView.setBusy(false);
 					MessageToast.show("Advance Realization Submitted");
 					$(".sapMMessageToast").css({"background-color": "#256f3a", "color": "white"});
-					view.getModel('materialRequest').refresh();
+					view.getModel('advanceRequestDetailModel').refresh();
+					dialogID.close();
 					
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					pageView.setBusy(false);
-				  	console.log("Got an error response: " + textStatus + errorThrown);
+					dialogID.close();
+					console.log("Got an error response: " + textStatus + errorThrown);
 				}
-			  });
-			// alert(JSON.stringify(oProperty));
+			});
+			
 	   },
+
 
 	   onRejectButtonClick : function(oEvent){
 			if (!this.rejectAdvanceRealizationDialog) {
@@ -402,6 +485,7 @@ sap.ui.define([
 			}
 			const oModelHeader = this.getView().getModel("advanceRequestDetailModel");
 			oModelHeader.setProperty("/U_RealizationAmt", sum);
+			oModelHeader.setProperty("/U_DifferenceAmt", advanceAmount - sum);
 			if(sum > advanceAmount) {
 				this.getView().byId("realizationAmount").setState(ValueState.Error);
 				viewModel.setProperty("/amountExceeded","Realization Amount exceeded Advance Amount");
@@ -484,23 +568,20 @@ sap.ui.define([
 			pageDOM.setBusy(true);
 			var code = this.getView().byId("_IDGenText101").getText();
 			const oModel = this.getView().getModel("advanceRequestDetailModel");
-			var budgetInformation = this.getView().getModel("budget").getData();
-			oModel.setProperty("/budgeting",budgetInformation);
-			var oProperty = oModel.getProperty("/");
-			var view = this.getView();
-			var oDialog = this.oDialog;
+			var oAdvanceRequestData = oModel.getData();
+			var code = oAdvanceRequestData.Code;
 			var oJWT = this.oJWT;
 			$.ajax({
 				type: "POST",
-				data: JSON.stringify(oProperty),
+				data: {
+					"Code": code
+				},
 				headers: {"Authorization": "Bearer "+ oJWT},
 				crossDomain: true,
 				url: backendUrl+'advanceRequest/approveAdvanceRealization',
-				contentType: "application/json",
 				success: function (res, status, xhr) {
 					  //success code
 					  pageDOM.setBusy(false);
-					  
 					  if (!this.oSuccessMessageDialog) {
 						this.oSuccessMessageDialog = new Dialog({
 							type: DialogType.Message,
@@ -613,6 +694,8 @@ sap.ui.define([
 				return 'Success'
 			}else if(sStatus == 4){
 				return 'Information'
+			}else if(sStatus == 6){
+				return 'Success'
 			}
 			else{
 				return 'Error'
@@ -628,6 +711,8 @@ sap.ui.define([
 				return 'Approved by Manager'
 			}else if(sStatus == 4){
 				return 'Approved by Director'
+			}else if(sStatus == 6){
+				return 'Realized'
 			}else{
 				return 'Rejected'
 			}

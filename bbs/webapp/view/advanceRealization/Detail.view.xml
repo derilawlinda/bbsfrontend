@@ -13,8 +13,8 @@ xmlns:core="sap.ui.core"
 		showFooter="{viewModel>/showFooter}">
     
     <content>
-      <VBox class="sapUiSmallMargin" id="createARForm" justifyContent="Start">
-		<Panel expandable="true" expanded="true" headerText="Detail Information" width="auto" class="sapUiSmallMargin">
+      <VBox class="sapUiTinyMargin" id="createARForm" justifyContent="Start">
+		<Panel expandable="true" expanded="true" headerText="Detail Information" width="auto" class="sapUiTinyMargin">
 			<content>
 			<form:SimpleForm 
 						editable="true"
@@ -41,7 +41,7 @@ xmlns:core="sap.ui.core"
 						<ObjectStatus text="{path : 'advanceRequestDetailModel>/U_RealiStatus', formatter:'.relizationTextFormatter'}" state="{path:'advanceRequestDetailModel>/U_RealiStatus', formatter:'.realizationObjectFormatter'}" inverted="true"></ObjectStatus>
 
 
-						<Label id="_IDGenLabel4" text="Remarks" />
+						<Label id="_IDGenLabel4" text="Advance Remarks" />
 						<Text id="_IDGenText4"  text="{advanceRequestDetailModel>/U_Remarks}"/>
 
 						<Label text="Transfer Remarks" />
@@ -109,7 +109,7 @@ xmlns:core="sap.ui.core"
 			</content>
 			
 		</Panel>
-		<Panel expandable="true" expanded="true" headerText="Advance Request" width="auto" class="sapUiSmallMargin">
+		<Panel expandable="true" expanded="true" headerText="Advance Request" width="auto" class="sapUiTinyMargin">
 				<table:Table id="advanceReqLineTableID" 
                         rows="{advanceRequestDetailModel>/ADVANCEREQLINESCollection}"
 						visibleRowCount="5"
@@ -121,7 +121,7 @@ xmlns:core="sap.ui.core"
 				<table:extension>
 					<OverflowToolbar  class="sapMTBHeader-CTX">
 						<Title text="Items"/>
-						<Text text="{advanceRequestDetailModel>/Code} - {advanceRequestDetailModel>/Name} (Transferred : {advanceRequestDetailModel>/CreateDate} )"/>
+						<Text text="{advanceRequestDetailModel>/Code} - {advanceRequestDetailModel>/Name} (Transferred : {advanceRequestDetailModel>/U_DisbursedAt} )"/>
 					</OverflowToolbar>
 				</table:extension>
 		                  
@@ -196,7 +196,7 @@ xmlns:core="sap.ui.core"
                 </table:Table>
 		</Panel>
 
-		<Panel expandable="true" expanded="true" headerText="Realizations" width="auto" class="sapUiSmallMargin">
+		<Panel expandable="true" expanded="true" headerText="Realizations" width="auto" class="sapUiTinyMargin">
 			<table:Table id="advanceRealLineTableID"
 					rows="{advanceRequestDetailModel>/REALIZATIONREQLINESCollection}"
 					visibleRowCount="5"
@@ -337,27 +337,13 @@ xmlns:core="sap.ui.core"
 				
                 </table:Table>
 		</Panel>
-	  
 
-				<form:SimpleForm id="SimpleFormChangeColumn_twoGroups234"
-						editable="true"
-                        layout="ColumnLayout"
-                        columnsM="2"
-                        columnsL="2"
-                        columnsXL="2"
-						class="topMargin" >
-					<form:content>
+		<Panel expandable="true" expanded="true" headerText="Remarks" width="auto" class="sapUiTinyMargin">
 
-					<Label id="_IDGenLabel101" text="Remarks" />
-					<Text id="_IDGenText101" text="{advanceRequestDetailModel>/U_RealizationRemarks}" />
+			<Text id="_IDGenText101" text="{advanceRequestDetailModel>/U_RealizationRemarks}" />
+		
 
-					</form:content>
-				
-				</form:SimpleForm>
-
-				
-
-                
+		</Panel>
 			</VBox>
     </content>
 	<footer  >
@@ -367,7 +353,7 @@ xmlns:core="sap.ui.core"
 					<Button id="saveButton" type="Emphasized" text="Save" press="onSaveButtonClick" visible="{viewModel>/is_save}" />
 					<Button id="approveButton" type="Accept" text="Approve" press="onApproveButtonClick" visible="{viewModel>/is_approver}" />
 					<Button id="rejectButton" type="Reject" text="Reject" press="onRejectButtonClick" visible="{viewModel>/is_approver}" />
-					<Button id="transferedButton" type="Emphasized" text="Transfered" press="onTransferButtonClick" visible="{viewModel>/is_finance}" />
+					<Button id="transferedButton" type="Emphasized" text="Confirm" press="onConfirmButtonClick" visible="{viewModel>/is_finance}" />
 					<Button id="resubmitButton" type="Critical" text="Resubmit" press="onResubmitButtonClick" visible="{viewModel>/resubmit}" />
               
 				</Toolbar>

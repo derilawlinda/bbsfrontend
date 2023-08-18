@@ -1,0 +1,66 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:table="sap.ui.table"
+	xmlns:f="sap.ui.layout.form"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout"
+    
+    height="100%"
+	binding="{advanceRequestDetailModel>/}">
+	<Dialog
+		id="transferDialogID" title="Transfer">
+			<VBox class="sapUiSmallMargin" >
+				<f:SimpleForm 
+						editable="true"
+                        layout="ColumnLayout"
+                        columnsM="1"
+                        columnsL="1"
+                        columnsXL="1">
+					<f:content>
+
+						<Label  text="Transfer Amount"  />
+						<ObjectNumber id="_IDGenObjectNumber1" 
+                        	number="{
+                                        parts: [
+                                                {path:'advanceRequestDetailModel>/U_DifferenceAmt'}, 
+                                                        'IDR',
+                                                        'TwoWay'], 
+                                        type:'sap.ui.model.type.Currency',
+                                        formatOptions: {showMeasure: true}
+                        }"/>
+
+                  		<Label  text="Transfer To" required="true"  />
+						<Select id="Bank" selectedKey="{advanceRequestDetailModel>/U_RealTrfBank}">
+							<items>
+								<core:Item text="BCA" key="BCA" />
+								<core:Item text="Bank INA" key="INA" />
+								<core:Item text="Bank Mandiri" key="MAN" />
+								<core:Item text="Bank Mega" key="MEG" />
+								<core:Item text="Bank QNB" key="QNB" />
+								<core:Item text="Bank Sinarmas" key="SIN" />
+							</items>
+						</Select> 
+						
+
+						<Label  text="Transfer Detail" />
+						<TextArea  rows="3" id="TransferRemarksID" value="{advanceRequestDetailModel>/U_RealTrfRemarks}" />
+
+					</f:content>
+				</f:SimpleForm>
+
+			</VBox>
+
+        <Page>
+			
+			<footer>
+					<Toolbar>
+						<ToolbarSpacer />
+						<Button type="Accept" text="OK" press="submitAdvanceRealization" />
+						<Button text="Cancel" press="._closeDialog" />
+					</Toolbar>
+			</footer>
+
+         </Page>
+	</Dialog>
+</core:FragmentDefinition>

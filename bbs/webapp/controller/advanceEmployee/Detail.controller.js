@@ -108,7 +108,7 @@ sap.ui.define([
 						viewModel.setProperty("/showFooter", true);
 
 					}
-				};;
+				};
 
 				var accountModel = new JSONModel();
 				accountModel.loadData(backendUrl+"coa/getCOAsByBudget?budgetCode="+advanceRequestDetailData.U_BudgetCode, null, true, "GET",false,false,{
@@ -378,12 +378,6 @@ sap.ui.define([
 			});
 
 		},
-
-		onAdvanceRealizationConfirm : function(){
-
-			
-		},
-
         onNavBack: function () {
 			var oHistory = History.getInstance();
 			var sPreviousHash = oHistory.getPreviousHash();

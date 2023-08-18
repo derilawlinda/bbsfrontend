@@ -35,6 +35,7 @@ sap.ui.define([
 				editable : false,
 				resubmit : false,
 				is_approver : false,
+				is_finance : false,
 				NPWP: [
 					{"Name" : 0},
 					{"Name" : 2.5},
@@ -107,6 +108,15 @@ sap.ui.define([
 					if((reimbursementDetailData.U_Status == 4 || reimbursementDetailData.U_Status == 1) ){
 						viewModel.setProperty("/showFooter", true);
 						viewModel.setProperty("/editable", true);
+					}
+				}else if(userData.user.role_id == 2){
+					viewModel.setProperty("/is_finance", true);
+					viewModel.setProperty("/is_approver", false);
+					viewModel.setProperty("/is_requestor", false);
+
+					if(reimbursementDetailData.U_Status == 3){
+						viewModel.setProperty("/showFooter", true);
+
 					}
 				};
 
@@ -186,6 +196,37 @@ sap.ui.define([
 				}.bind(this))
 				
 			}.bind(this));
+		},
+
+		onTransferConfirm: function(){
+			const oModel = this.getView().getModel("reimbursementDetailModel");
+			var oJWT = this.oJWT;
+			var DisbursedDate = this.getView().byId("DatePicker").getValue();
+			oModel.setProperty("/DisbursedDate", DisbursedDate)
+			var code = oModel.getData().Code;
+			var pageDOM = this.getView().byId("reimbursementPageID");
+			var transferDialog = this.getView().byId("transferDialog");
+			var oProperty = oModel.getProperty("/");
+			transferDialog.close();
+			pageDOM.setBusy(true);
+			$.ajax({
+				type: "POST",
+				data: JSON.stringify(oProperty),
+				headers: {"Authorization": "Bearer "+ oJWT},
+				crossDomain: true,
+				url: backendUrl+'reimbursement/transferReimbursement',
+				contentType: "application/json",
+				success: function (res, status, xhr) {
+					pageDOM.setBusy(false);
+					MessageToast.show("Reimbursement Transfered");
+					$(".sapMMessageToast").css({"background-color": "#256f3a", "color": "white"});
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+					  pageDOM.setBusy(false);
+					  console.log("Got an error response: " + textStatus + errorThrown);
+				}
+			});
+
 		},
 
 		onApproveButtonClick : function (){
@@ -389,6 +430,18 @@ sap.ui.define([
 				}
 			  });
 		},
+		onTransferButtonClick : function(){
+			if (!this.transferAdvanceRequestDialog) {
+				this.transferAdvanceRequestDialog = this.loadFragment({
+					name: "frontend.bbs.view.reimbursement.Transfer"
+				});
+			}
+			this.transferAdvanceRequestDialog.then(function (oDialog) {
+				this.oDialog = oDialog;
+				this.oDialog.open();
+			}.bind(this));
+		
+		},
 		objectFormatter: function(sStatus) {
 			if(sStatus == 1 ){
 				return 'Warning';
@@ -397,6 +450,8 @@ sap.ui.define([
 			}
 			else if(sStatus == 3){
 				return 'Success';
+			}else if(sStatus == 5){
+				return 'Information';
 			}else{
 				return 'Error';
 			}
@@ -409,10 +464,12 @@ sap.ui.define([
 				return 'Approved by Manager'
 			}else if(sStatus == 3){
 				return 'Approved by Director'
+			}else if(sStatus == 5){
+				return 'Transferred'
 			}else{
 				return 'Rejected'
 			}
 		  
 		}
-	});
+		});
 });

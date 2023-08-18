@@ -84,7 +84,7 @@ sap.ui.define([
        },
 	   toggleCreateButton : function(channelId, eventId, parametersMap){
 		console.log(parametersMap.roleId);
-			if(parametersMap.roleId == 4 || parametersMap.roleId == 5){
+			if(parametersMap.roleId == 4 || parametersMap.roleId == 5 || parametersMap.roleId == 2){
 				this.getView().getModel("viewModel").setProperty("/showCreateButton",false)
 				this.getView().getModel("viewModel").setProperty("/is_approver",true)
 			}
@@ -334,18 +334,6 @@ sap.ui.define([
 			oModel.refresh();
 			this.onAmountChange();
 		},
-		textFormatter : function(sStatus){
-			if(sStatus == 1){
-				return 'Pending'
-			}else if(sStatus == 2){
-				return 'Approved by Manager'
-			}else if(sStatus == 3){
-				return 'Approved by Director'
-			}else{
-				return 'Rejected'
-			}
-		  
-		},
 		dateFormatter : function(date){
 			var unformattedDate = new Date(date);
 			var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({pattern : "YYYY-MM-dd" });   
@@ -353,14 +341,34 @@ sap.ui.define([
 			return dateFormatted;
 		},
 		objectFormatter: function(sStatus) {
-			if(sStatus == 2 || sStatus == 3){
-				return 'Success'
-			}else if(sStatus == 1){
-				return 'Warning'
+			if(sStatus == 1 ){
+				return 'Warning';
+			}else if(sStatus == 2){
+				return 'Information';
+			}
+			else if(sStatus == 3){
+				return 'Success';
+			}else if(sStatus == 5){
+				return 'Information';
 			}else{
-				return 'Error'
+				return 'Error';
 			}
 		  },
+		
+		textFormatter : function(sStatus){
+			if(sStatus == 1){
+				return 'Pending'
+			}else if(sStatus == 2){
+				return 'Approved by Manager'
+			}else if(sStatus == 3){
+				return 'Approved by Director'
+			}else if(sStatus == 5){
+				return 'Transferred'
+			}else{
+				return 'Rejected'
+			}
+		  
+		},
 		onSelectionChange : function(oEvent){
 
 			console.log(oEvent.getParameters("selected"));

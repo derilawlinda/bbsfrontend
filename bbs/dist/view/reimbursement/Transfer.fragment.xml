@@ -1,0 +1,54 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:table="sap.ui.table"
+	xmlns:f="sap.ui.layout.form"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout"
+    
+    height="100%"
+	binding="{reimbursementDetailModel>/}">
+	<Dialog
+		id="transferDialog" title="Transfer">
+			<VBox class="sapUiSmallMargin" >
+				<f:SimpleForm 
+						editable="true"
+                        layout="ColumnLayout"
+                        columnsM="1"
+                        columnsL="1"
+                        columnsXL="1">
+					<f:content>
+
+                  		<Label  text="Transfer At" required="true"  />
+						<DatePicker
+							id="DatePicker"
+							class="sapUiSmallMarginBottom"
+							value="{
+								'path': 'reimbursementDetailModel>/U_DisbursedAt',
+								'type': 'sap.ui.model.type.Date',
+								'formatOptions': {
+									'pattern': 'y-MM-dd'
+								}
+							}"/>
+
+						<Label  text="Transfer Detail" />
+						<Text text="{reimbursementDetailModel>/U_TransferRemarks}" />
+
+					</f:content>
+				</f:SimpleForm>
+
+			</VBox>
+
+        <Page>
+			
+			<footer>
+					<Toolbar>
+						<ToolbarSpacer />
+						<Button type="Accept" text="OK" press="onTransferConfirm" />
+						<Button text="Cancel" press="._closeDialog" />
+					</Toolbar>
+			</footer>
+
+         </Page>
+	</Dialog>
+</core:FragmentDefinition>

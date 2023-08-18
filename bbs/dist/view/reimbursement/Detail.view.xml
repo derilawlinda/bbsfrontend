@@ -257,7 +257,7 @@ xmlns:core="sap.ui.core"
                    	<Button id="submitButton" type="Emphasized" text="Save" press="onSaveButtonClick" visible="{viewModel>/is_requestor}" />
 					<Button id="acceptButton" type="Accept" text="Approve" press="onApproveButtonClick" visible="{viewModel>/is_approver}" />
 					<Button id="rejectButton" type="Reject" text="Reject" press="onRejectButtonClick" visible="{viewModel>/is_approver}" />
-              
+             		<Button id="transferButton" type="Emphasized" text="Transfer" press="onTransferButtonClick" visible="{viewModel>/is_finance}" />
 				</Toolbar>
 		</footer>
   </Page>

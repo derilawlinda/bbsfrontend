@@ -533,7 +533,8 @@ sap.ui.define([
 		},
 		onSearch : function(oEvent){
 			var mParamas = oEvent.getParameters();
-			if(mParamas){
+			console.log(mParamas);
+			if(mParamas.filterKeys){
 				var statusFilter = Object.keys(mParamas.filterKeys).toString();
 			}else{
 				var statusFilter = "";

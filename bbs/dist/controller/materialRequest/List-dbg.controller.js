@@ -3,10 +3,13 @@ sap.ui.define([
     "sap/ui/core/routing/History",
 	"sap/m/library",
 	"sap/m/MessageToast",
-	"sap/ui/model/json/JSONModel",
+	"frontend/bbs/model/PagingJSONModel",
 	"sap/ui/core/library",
+	'sap/ui/core/Fragment',
+	'sap/ui/Device',
+	"sap/ui/model/odata/v4/ODataModel",
 	'frontend/bbs/libs/lodash',
- ], function (Controller,History, mobileLibrary, MessageToast, JSONModel,coreLibrary) {
+ ], function (Controller,History, mobileLibrary, MessageToast, JSONModel,coreLibrary,Fragment,Device,ODataModel) {
     "use strict";
 
 	// shortcut for sap.m.ButtonType
@@ -19,6 +22,7 @@ sap.ui.define([
     return Controller.extend("frontend.bbs.controller.materialRequest.List", {
        onInit: async function () {
 		this.getView().byId("materialRequestTableID").setBusy(true);
+		this._mViewSettingsDialogs = {};
 		var currentRoute = this.getRouter().getHashChanger().getHash();
 		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 		this.oJWT = oStore.get("jwt");
@@ -29,22 +33,20 @@ sap.ui.define([
 		this.getView().setModel(oModel,"materialRequest");
 		oModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
 			this.getView().byId("materialRequestTableID").setBusy(false);
+			console.log(oModel.oData["@odata.count"]);
 		}.bind(this));
 
 		var oSalesOrderModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/sales_order.json"));
 		this.getView().setModel(oSalesOrderModel,"salesOrder");
 		var oCompaniesModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/companies.json"));
 		this.getView().setModel(oCompaniesModel,"companies");
-		var oItemsModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/items.json"));
+		var oItemsModel = new JSONModel();
 		this.getView().setModel(oItemsModel,"items");
 		var viewModel = new sap.ui.model.json.JSONModel({
 			showCreateButton : true,
 			is_approver : false
 		});
 		this.getView().setModel(viewModel,"viewModel");
-		// var dynamicProperties = [];
-		// oBudgetingDetailModel.setData(dynamicProperties);
-		
 		var budgetRequestHeader = new sap.ui.model.json.JSONModel({
 			U_RemainingBudget : 0
 		});
@@ -77,9 +79,11 @@ sap.ui.define([
 		
 
        },
+	   onGrowingStarted: function () {
+			//API calls to fetch more data
+		},
 
 	   toggleCreateButton : function(channelId, eventId, parametersMap){
-		console.log(parametersMap);
 			if(parametersMap.roleId == 4 || parametersMap.roleId == 5){
 				this.getView().getModel("viewModel").setProperty("/showCreateButton",false)
 				this.getView().getModel("viewModel").setProperty("/is_approver",true)
@@ -314,6 +318,47 @@ sap.ui.define([
 			var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({pattern : "YYYY-MM-dd" });   
 			var dateFormatted = dateFormat.format(unformattedDate);
 			return dateFormatted;
+		},
+		handleFilterButtonPressed: function () {
+			this.getViewSettingsDialog("frontend.bbs.view.materialRequest.FilterForm")
+				.then(function (oViewSettingsDialog) {
+					oViewSettingsDialog.open();
+				});
+		},
+		getViewSettingsDialog: function (sDialogFragmentName) {
+			var pDialog = this._mViewSettingsDialogs[sDialogFragmentName];
+
+			if (!pDialog) {
+				pDialog = Fragment.load({
+					id: this.getView().getId(),
+					name: sDialogFragmentName,
+					controller: this
+				}).then(function (oDialog) {
+					if (Device.system.desktop) {
+						oDialog.addStyleClass("sapUiSizeCompact");
+					}
+					return oDialog;
+				});
+				this._mViewSettingsDialogs[sDialogFragmentName] = pDialog;
+			}
+			return pDialog;
+		},
+
+		onSearch : function(oEvent){
+			this.getView().byId("materialRequestTableID").setBusy(true);
+			var search = this.getView().byId("searchField").getValue();
+			var oJWT = this.oJWT;
+			var oModel = new JSONModel();
+			oModel.loadData(backendUrl+"materialRequest/getMaterialRequests", {
+				"search" : search
+			}, true, "GET",false,false,{
+				'Authorization': 'Bearer ' + oJWT
+			});
+			oModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
+				this.getView().byId("materialRequestTableID").setBusy(false);
+			}.bind(this));
+			this.getView().setModel(oModel,"materialRequest");
+
 		}
     });
  });

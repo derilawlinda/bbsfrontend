@@ -1,0 +1,1 @@
+sap.ui.define(["frontend/bbs/model/PagingJSONListBinding","sap/ui/model/json/JSONModel"],function(n,i){return i.extend("frontend.bbs.model.PagingJSONModel",{constructor:function(n){i.apply(this,arguments)},bindList:function(i,e,t,o,d){return new n(this,i,e,t,o,d)}})});

@@ -117,7 +117,7 @@ sap.ui.define([
 				placement: PlacementType.Bottom,
 				content: [
 					new Button({
-						text: 'Logout',
+						text: 'Change Company',
 						type: ButtonType.Transparent
 					})
 				]

@@ -2,7 +2,7 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/core/routing/History",
 	"sap/m/library",
-	"sap/ui/model/json/JSONModel",
+	"frontend/bbs/model/PagingJSONModel",
 	"sap/m/MessageToast",
 	"sap/ui/core/library",
 	'frontend/bbs/libs/lodash'

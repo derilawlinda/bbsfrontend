@@ -12,16 +12,35 @@ xmlns:table="sap.ui.table"
         id="materialRequestTableID" 
         inset="false"
         selectionChange="handleSelectionChange"
+        growing="true"
+	growingThreshold="10"
         items="{
-					path: 'materialRequest>/value',
-					sorter: {
-						path: 'Code'
-					}
-				}">
+                path: 'materialRequest>/value',
+                sorter: {
+                        path: 'Code'
+                },
+                parameters: {
+                        $count: true
+                }
+        }">
          	<headerToolbar>
-			<OverflowToolbar id="_IDGenOverflowToolbar1">
-                <Title id="title" text="Material Request"/>
+                
+                <OverflowToolbar id="_IDGenOverflowToolbar1" style="Clear">
+                <Title id="title" text="{$count} Material Request(s)"/>
+              
                 <ToolbarSpacer id="_IDGenToolbarSpacer1" ></ToolbarSpacer>
+               	<Button
+                        tooltip="Filter"
+                        icon="sap-icon://filter"
+                        press="handleFilterButtonPressed"/>
+
+                  <ToolbarSeparator />
+                <SearchField
+                        id="searchField"
+                        width="20%"
+                        placeholder="Search here..."
+                        search=".onSearch"/>
+                
                 <Button id="_IDGenButton2" text=" + Create Material Request" press="onCreateButtonClick" type="Emphasized" visible="{viewModel>/showCreateButton}" />
             </OverflowToolbar>
             </headerToolbar>

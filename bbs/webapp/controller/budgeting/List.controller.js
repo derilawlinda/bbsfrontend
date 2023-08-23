@@ -1,15 +1,17 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/core/routing/History",
-	"sap/ui/model/json/JSONModel",
+	"frontend/bbs/model/PagingJSONModel",
 	"sap/ui/model/odata/v4/ODataModel",
 	"sap/m/MessageToast",
 	"frontend/bbs/model/models",
 	"sap/ui/core/library",
 	"sap/m/MessageBox",
-	"frontend/bbs/utils/Validator"
+	"frontend/bbs/utils/Validator",
+	'sap/ui/core/Fragment',
+	'sap/ui/Device'
 
- ], function (Controller,History,JSONModel,ODataModel,MessageToast,Models,coreLibrary,MessageBox,Validator) {
+ ], function (Controller,History,JSONModel,ODataModel,MessageToast,Models,coreLibrary,MessageBox,Validator,Fragment,Device) {
     "use strict";
 	var endTerm;
 	var startTerm;
@@ -23,9 +25,11 @@ sap.ui.define([
        onInit: async function () {
 		this.getView().byId("idBudgetTable").setBusy(true);
 		var currentRoute = this.getRouter().getHashChanger().getHash();
+		this._mViewSettingsDialogs = {};
 		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 		this.oJWT = oStore.get("jwt");
 		var oModel = new JSONModel();
+		oModel.setSizeLimit(1000);
 		oModel.loadData(backendUrl+"getBudget", null, true, "GET",false,false,{
 			'Authorization': 'Bearer ' + this.oJWT
 		});
@@ -34,8 +38,14 @@ sap.ui.define([
 			is_approver : false,
 			is_requestor : false
 		});
-		
 		this.getView().setModel(viewModel,"viewModel");
+
+		var searchModel = new sap.ui.model.json.JSONModel({
+			sortBy : "",
+			filterBy : "",
+		});
+		this.getView().setModel(searchModel,"searchModel");
+
 		oModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
 			this.getView().byId("idBudgetTable").setBusy(false);
 		}.bind(this));
@@ -520,6 +530,53 @@ sap.ui.define([
 			oInput.setValueState(sValueState);
 
 			return bValidationError;
-		}
+		},
+		onSearch : function(oEvent){
+			var mParamas = oEvent.getParameters();
+			if(mParamas){
+				var statusFilter = Object.keys(mParamas.filterKeys).toString();
+			}else{
+				var statusFilter = "";
+			}
+			this.getView().byId("idBudgetTable").setBusy(true);
+			var search = this.getView().byId("searchField").getValue();
+			var oJWT = this.oJWT;
+			var oModel = new JSONModel();
+			oModel.loadData(backendUrl+"getBudget", {
+				"search" : search,
+				"status" : statusFilter
+			}, true, "GET",false,false,{
+				'Authorization': 'Bearer ' + oJWT
+			});
+			oModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
+				this.getView().byId("idBudgetTable").setBusy(false);
+			}.bind(this));
+			this.getView().setModel(oModel,"budgeting");
+
+		},
+		handleFilterButtonPressed: function () {
+			this.getViewSettingsDialog("frontend.bbs.view.budgeting.FilterForm")
+				.then(function (oViewSettingsDialog) {
+					oViewSettingsDialog.open();
+				});
+		},
+		getViewSettingsDialog: function (sDialogFragmentName) {
+			var pDialog = this._mViewSettingsDialogs[sDialogFragmentName];
+
+			if (!pDialog) {
+				pDialog = Fragment.load({
+					id: this.getView().getId(),
+					name: sDialogFragmentName,
+					controller: this
+				}).then(function (oDialog) {
+					if (Device.system.desktop) {
+						oDialog.addStyleClass("sapUiSizeCompact");
+					}
+					return oDialog;
+				});
+				this._mViewSettingsDialogs[sDialogFragmentName] = pDialog;
+			}
+			return pDialog;
+		},
     });
  });

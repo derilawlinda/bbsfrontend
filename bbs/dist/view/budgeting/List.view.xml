@@ -12,13 +12,31 @@ xmlns:table="sap.ui.table"
         id="idBudgetTable" 
         inset="false"
         selectionChange="handleSelectionChange"
+        growing="true"
+	growingThreshold="10"
+        growingScrollToLoad="true" 
         items="{
-					path: 'budgeting>/value'
+					path: 'budgeting>/value',
+                                        parameters: {
+                                                $count: true
+                                        }
 				}">
          	<headerToolbar>
 			<OverflowToolbar id="_IDGenOverflowToolbar1">
                 <Title id="title" text="Budgeting"/>
                 <ToolbarSpacer id="_IDGenToolbarSpacer1" ></ToolbarSpacer>
+                	<Button
+                        tooltip="Filter"
+                        icon="sap-icon://filter"
+                        press="handleFilterButtonPressed"/>
+
+                  <ToolbarSeparator />
+                <SearchField
+                        id="searchField"
+                        width="20%"
+                        placeholder="Search here..."
+                        search=".onSearch"/>
+                
                 <Button id="_IDGenButton2" visible="{viewModel>/showCreateButton}" text=" + Create Budget" press="onCreateButtonClick" type="Emphasized"/>
             </OverflowToolbar>
             </headerToolbar>

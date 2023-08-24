@@ -268,6 +268,7 @@ sap.ui.define([
 			var budgetingDetailData = this.getView().getModel("budgetingDetailModel").getData();
 			pageDOM.setBusy(true);
 			var code = budgetingDetailData.Code;
+			var company = budgetingDetailData.U_Company;
 			var rejectionRemarks = this.getView().byId("RejectionRemarksID").getValue();
 			var oDialog = this.getView().byId("rejectDialog");
 			var viewModel = this.getView().getModel("viewModel");
@@ -275,7 +276,8 @@ sap.ui.define([
 				type: "POST",
 				data: {
 					"Code": code,
-					"Remarks" : rejectionRemarks
+					"Remarks" : rejectionRemarks,
+					"Company" : company
 				},
 				headers: {"Authorization": "Bearer "+ this.oJWT},
 				crossDomain: true,

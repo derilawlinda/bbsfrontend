@@ -180,12 +180,12 @@ sap.ui.define([
 				let sumUsedBudget = 0;
 				if(usedBudget.length > 0){
 					for (let i = 0; i < usedBudget.length; i++ ) {
-						sumUsedBudget += usedBudget[i]["U_Amount"];
+						sumUsedBudget += Number(usedBudget[i]["U_Amount"]);
 					};
 				}
-				budgetingDetailModel.setProperty("/U_TotalUsedBudget", sumUsedBudget);
-				var remainingBudget = budgetingDetailData.U_TotalAmount - sumUsedBudget;
-				budgetingDetailModel.setProperty("/U_RemainingBudget", remainingBudget);
+				budgetingDetailModel.setProperty("/U_TotalUsedBudget", Number(sumUsedBudget));
+				var remainingBudget = Number(budgetingDetailData.U_TotalAmount - sumUsedBudget);
+				budgetingDetailModel.setProperty("/U_RemainingBudget", Number(remainingBudget));
 
 			}.bind(this));
 		  },
@@ -317,19 +317,19 @@ sap.ui.define([
 			var oModelData = budgetingDetailModel.getData().BUDGETREQLINESCollection;
 			let sum = 0;
 			for (let i = 0; i < oModelData.length; i++ ) {
-				sum += oModelData[i]["U_Amount"];
+				sum += Number(oModelData[i]["U_Amount"]);
 			}
 			budgetingDetailModel.setProperty("/U_TotalAmount", sum);
 			var usedBudget = budgetingDetailData.BUDGETUSEDCollection;
 			let sumUsedBudget = 0;
 			if(usedBudget.length > 0){
 				for (let i = 0; i < usedBudget.length; i++ ) {
-					sumUsedBudget += usedBudget[i]["U_Amount"];
+					sumUsedBudget += Number(usedBudget[i]["U_Amount"]);
 				};
 			}
-			budgetingDetailModel.setProperty("/U_TotalUsedBudget", sumUsedBudget);
-			var remainingBudget = budgetingDetailData.U_TotalAmount - sumUsedBudget;
-			budgetingDetailModel.setProperty("/U_RemainingBudget", remainingBudget);
+			budgetingDetailModel.setProperty("/U_TotalUsedBudget", Number(sumUsedBudget));
+			var remainingBudget = Number(budgetingDetailData.U_TotalAmount) - Number(sumUsedBudget);
+			budgetingDetailModel.setProperty("/U_RemainingBudget", Number(remainingBudget));
 
 
 		},

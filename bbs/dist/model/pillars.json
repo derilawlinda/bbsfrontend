@@ -1690,6 +1690,13 @@
                                         "is_editable": "false",
                                         "code": "Hij_jog",
                                         "nodes": []
+                                    },
+                                    {
+                                        "text": "Festival Hijriah Solo",
+                                        "subheader": "Subclass2",
+                                        "is_editable": "false",
+                                        "code": "Hij_solo",
+                                        "nodes": []
                                     }
                                 ]
                             }

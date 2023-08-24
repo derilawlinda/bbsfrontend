@@ -337,7 +337,7 @@ sap.ui.define([
 			var oModelData = oModel.getData().BUDGETREQLINESCollection;
 			let sum = 0;
 			for (let i = 0; i < oModelData.length; i++ ) {
-				sum += oModelData[i]["U_Amount"];
+				sum += Number(oModelData[i]["U_Amount"]);
 			}
 			const oModelHeader = this.getView().getModel("budgetingDetailModel");
 			oModelHeader.setProperty("/U_TotalAmount", sum);

@@ -50,7 +50,7 @@
 						</ComboBox>
 
 						<Label id="_IDGenLabel3" text="Company" />
-						<Text id="_IDGenText5"  text="{budgetHeader>/U_Company}"/>
+						<Text id="companyText"  text="{budgetHeader>/U_Company}"/>
 
 						<Label id="_IDGenLabe20" text="Remaining Budget" />
 						<ObjectNumber number="{

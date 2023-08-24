@@ -26,8 +26,11 @@ sap.ui.define([
 		var currentRoute = this.getRouter().getHashChanger().getHash();
 		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 		this.oJWT = oStore.get("jwt");
+		this.company = oStore.get("company");
 		var oModel = new JSONModel();
-		oModel.loadData(backendUrl+"materialRequest/getMaterialRequests", null, true, "GET",false,false,{
+		oModel.loadData(backendUrl+"materialRequest/getMaterialRequests", {
+			company : this.company
+		}, true, "GET",false,false,{
 			'Authorization': 'Bearer ' + this.oJWT
 		});
 		this.getView().setModel(oModel,"materialRequest");
@@ -52,7 +55,9 @@ sap.ui.define([
 		});
 		this.getView().setModel(budgetRequestHeader,"budgetHeader");
 		var _oBudgetingModel = new JSONModel();
-		_oBudgetingModel.loadData(backendUrl+"budget/getApprovedBudget", null, true, "GET",false,false,{
+		_oBudgetingModel.loadData(backendUrl+"budget/getApprovedBudget", {
+			company : this.company,
+		}, true, "GET",false,false,{
 			'Authorization': 'Bearer ' + this.oJWT
 		});
 		this.getView().setModel(_oBudgetingModel,"MRbudgets");
@@ -218,7 +223,10 @@ sap.ui.define([
 				this.getView().getModel("new_mr_items").setProperty("/MATERIALREQLINESCollection", []);
 				var selectedID = parseInt(oEvent.getParameters('selectedItem').value);
 				var budgetingModel = new JSONModel();
-				await budgetingModel.loadData(backendUrl+"budget/getBudgetById?code="+selectedID, null, true, "GET",false,false,{
+				await budgetingModel.loadData(backendUrl+"budget/getBudgetById?", {
+					code : selectedID,
+					company : this.company
+				}, true, "GET",false,false,{
 					'Authorization': 'Bearer ' + this.oJWT
 				});
 				var accountModel = new JSONModel();
@@ -245,6 +253,7 @@ sap.ui.define([
 			var oDialog = this.oDialog;
 			oDialog.setBusy(true);
 			const oModel = this.getView().getModel("materialRequestHeader");
+			var company = this.getView().byId("companyText").getText();
 			const oModelAccounts = this.getView().getModel("new_mr_items");
 			var materialRequestModel = this.getView().getModel("materialRequest");
 			oModel.setProperty("/MATERIALREQLINESCollection", oModelAccounts.getData().MATERIALREQLINESCollection);
@@ -254,7 +263,10 @@ sap.ui.define([
 		
 			$.ajax({
 				type: "POST",
-				data: JSON.stringify(oProperty),
+				data: JSON.stringify({
+					company : company,
+					oProperty : oProperty
+				}),
 				crossDomain: true,
 				headers: { 'Authorization': 'Bearer ' + oJWT },
 				url: backendUrl+'materialRequest/createMaterialRequest',
@@ -263,7 +275,9 @@ sap.ui.define([
 					  //success code
 					oDialog.setBusy(false);
 					oDialog.close();
-					materialRequestModel.loadData(backendUrl+"materialRequest/getMaterialRequests", null, true, "GET",false,false,{
+					materialRequestModel.loadData(backendUrl+"materialRequest/getMaterialRequests", {
+						company : company
+					}, true, "GET",false,false,{
 						'Authorization': 'Bearer ' + oJWT
 					});
 					MessageToast.show("Material Request created");
@@ -350,7 +364,8 @@ sap.ui.define([
 			var oJWT = this.oJWT;
 			var oModel = new JSONModel();
 			oModel.loadData(backendUrl+"materialRequest/getMaterialRequests", {
-				"search" : search
+				"search" : search,
+				company : this.company
 			}, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + oJWT
 			});

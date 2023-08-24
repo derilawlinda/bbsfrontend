@@ -1684,6 +1684,13 @@
                                         "is_editable": "false",
                                         "code": "Peter_Sc",
                                         "nodes": []
+                                    },
+                                    {
+                                        "text": "Motul 2023/2024",
+                                        "subheader": "Subclass2",
+                                        "is_editable": "false",
+                                        "code": "Motul_23",
+                                        "nodes": []
                                     }
                                 ]
                             },

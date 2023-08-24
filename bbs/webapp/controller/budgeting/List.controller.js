@@ -25,12 +25,17 @@ sap.ui.define([
        onInit: async function () {
 		this.getView().byId("idBudgetTable").setBusy(true);
 		var currentRoute = this.getRouter().getHashChanger().getHash();
+		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
+		var company = oStore.get("company");
+		this.company = company;
 		this._mViewSettingsDialogs = {};
 		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 		this.oJWT = oStore.get("jwt");
 		var oModel = new JSONModel();
 		oModel.setSizeLimit(1000);
-		oModel.loadData(backendUrl+"getBudget", null, true, "GET",false,false,{
+		oModel.loadData(backendUrl+"getBudget", {
+			company : company
+		}, true, "GET",false,false,{
 			'Authorization': 'Bearer ' + this.oJWT
 		});
 		var viewModel = new sap.ui.model.json.JSONModel({
@@ -52,7 +57,9 @@ sap.ui.define([
 		this.getView().setModel(oModel,"budgeting");
 
 		var oProjectModel = new JSONModel();
-		oProjectModel.loadData(backendUrl+"project/getProjects", null, true, "GET",false,false,{
+		oProjectModel.loadData(backendUrl+"project/getProjects", {
+			company : company
+		}, true, "GET",false,false,{
 			'Authorization': 'Bearer ' + this.oJWT
 		});
 		this.getView().setModel(oProjectModel,"projects");
@@ -118,15 +125,28 @@ sap.ui.define([
 			});
 		}
 		this.createBudgetingDialog.then(function (oDialog) {
+			this.getView().byId("CreateCompany").setSelectedKey(this.company);
+			this.getView().byId("CreateCompany").fireSelectionChange();
 			this.getView().byId("CreatePillar").setSelectedKey("");
 			this.getView().byId("CreateClassification").setSelectedKey("");
 			this.getView().byId("CreateSubClassification").setSelectedKey("");
 			this.getView().byId("CreateSubClassification2").setSelectedKey("");
 
-			this.getView().byId("CreatePillar").setEnabled(false);
 			this.getView().byId("CreateClassification").setEnabled(false);
 			this.getView().byId("CreateSubClassification").setEnabled(false);
 			this.getView().byId("CreateSubClassification2").setEnabled(false);
+
+			var comboPath = this.getView().byId("CreateCompany").getSelectedItem().getBindingContext("companies").getPath();
+			this.companyPath = comboPath;
+			var comboPillar = this.getView().byId("CreatePillar");
+			comboPillar.setEnabled(true);
+			comboPillar.bindAggregation("items", {
+				path: "companies>"+ comboPath + "/nodes",
+				template: new sap.ui.core.Item({
+					key: "{companies>code}",
+					text: "{companies>text}"
+				})
+			});
 
 
 			this.oDialog = oDialog;
@@ -137,6 +157,7 @@ sap.ui.define([
 			this.getView().setModel(oCreateFragmentViewModel,"createFragmentViewModel");
 			var oBudgetingDetailModel = new sap.ui.model.json.JSONModel({
 				U_TotalAmount : 0,
+				U_Company : this.company
 			});
 			// var dynamicProperties = [];
 			// oBudgetingDetailModel.setData(dynamicProperties);
@@ -161,6 +182,7 @@ sap.ui.define([
 			var oJWT = this.oJWT;
 			var oModelData = oModel.getData();
 			var bValidationError = false;
+			var company = this.company;
 
 			if(oModelData.BUDGETREQLINESCollection.length < 1 ){
 				MessageBox.error("Account can not empty");
@@ -194,7 +216,9 @@ sap.ui.define([
 							oDialog.close();
 							MessageToast.show("Budget created");
 							$(".sapMMessageToast").css({"background-color": "#256f3a", "color": "white"});
-							budgetingModel.loadData(backendUrl+"getBudget", null, true, "GET",false,false,{
+							budgetingModel.loadData(backendUrl+"getBudget", {
+								company : company
+							}, true, "GET",false,false,{
 								'Authorization': 'Bearer ' + oJWT
 							});
 							view.getModel('budgeting').refresh();
@@ -545,7 +569,8 @@ sap.ui.define([
 			var oModel = new JSONModel();
 			oModel.loadData(backendUrl+"getBudget", {
 				"search" : search,
-				"status" : statusFilter
+				"status" : statusFilter,
+				"company" : this.company
 			}, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + oJWT
 			});

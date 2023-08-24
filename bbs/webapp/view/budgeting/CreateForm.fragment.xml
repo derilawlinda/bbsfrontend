@@ -35,6 +35,7 @@
 						value="{budgetingDetailModel>/U_Company}"
 						change="onCompanyChange"
 						required="true"
+						editable="false"
 						items="{
 							path: 'companies>/',
 							templateShareable: false
@@ -75,7 +76,7 @@
 
 						<ComboBox id="CreatePillar" 
 									required="true"
-									enabled="false"
+									enabled="true"
 									change="onPillarChange">
 						</ComboBox>
 

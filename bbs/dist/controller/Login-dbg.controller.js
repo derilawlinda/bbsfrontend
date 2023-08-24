@@ -23,6 +23,9 @@ sap.ui.define(
             // this.getOwnerComponent().getRouter().getTargets().display("notFound", {
 			// 	fromTarget : "login"
 			// });
+            var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
+            let company = this.getView().byId("Company").getSelectedKey();
+            oStore.put("company",company)
             let username = this.getView().byId("username").valueOf().getValue();
             let password = this.getView().byId("password").valueOf().getValue();
             let loginErrorToast = this.getView().byId("loginError");
@@ -30,7 +33,6 @@ sap.ui.define(
            
             var oHistory, sPreviousHash;
             this.oHistory = History.getInstance();
-            var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
             var sPreviousHash = oStore.get("prevHash");
             console.log(sPreviousHash);
 

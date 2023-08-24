@@ -59,6 +59,9 @@ sap.ui.define([
                 this.setModel(models.createSalesOrderModel(), "salesOrder");
 		        this.setModel(models.createAccountModel(),"accounts");
                 
+                var globalModel = new JSONModel();
+                this.setModel(globalModel,"globalModel");
+                
                 this.router = this.getRouter();
 
                 

@@ -310,14 +310,25 @@ sap.ui.define([
 		},
 
 		onAmountChange : function(event){
-			const oModel = this.getView().getModel("budgetingDetailModel");
-			var oModelData = oModel.getData().BUDGETREQLINESCollection;
+			const budgetingDetailModel = this.getView().getModel("budgetingDetailModel");
+			var budgetingDetailData = budgetingDetailModel.getData();
+			var oModelData = budgetingDetailModel.getData().BUDGETREQLINESCollection;
 			let sum = 0;
 			for (let i = 0; i < oModelData.length; i++ ) {
 				sum += oModelData[i]["U_Amount"];
 			}
-			const oModelHeader = this.getView().getModel("budgetingDetailModel");
-			oModelHeader.setProperty("/U_TotalAmount", sum);
+			budgetingDetailModel.setProperty("/U_TotalAmount", sum);
+			var usedBudget = budgetingDetailData.BUDGETUSEDCollection;
+			let sumUsedBudget = 0;
+			if(usedBudget.length > 0){
+				for (let i = 0; i < usedBudget.length; i++ ) {
+					sumUsedBudget += usedBudget[i]["U_Amount"];
+				};
+			}
+			budgetingDetailModel.setProperty("/U_TotalUsedBudget", sumUsedBudget);
+			var remainingBudget = budgetingDetailData.U_TotalAmount - sumUsedBudget;
+			budgetingDetailModel.setProperty("/U_RemainingBudget", remainingBudget);
+
 
 		},
 		onCompanyChange : function(oEvent){

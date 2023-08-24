@@ -27,6 +27,7 @@ sap.ui.define([
 			this.currentRoute = this.getOwnerComponent().getRouter().getHashChanger().getHash();
 			this.oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 			this.oJWT = this.oStore.get("jwt");
+			this.company = this.oStore.get("company");
 			var oOwnerComponent = this.getOwnerComponent();
 			var oSalesOrderModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/sales_order.json"));
 			this.getView().setModel(oSalesOrderModel,"salesOrder");
@@ -66,6 +67,7 @@ sap.ui.define([
 		},
 
 		buildForm: function(channelId, eventId, parametersMap) {
+			var company = this.company;
 			if(parametersMap.status == "error"){
 				alert("Error");
 				this.getView().byId("budgetingPageId").setBusy(false);
@@ -86,12 +88,16 @@ sap.ui.define([
 				budgetCode = urlArray[urlArray.length - 1];
 			}
 			const budgetingDetailModel = new JSONModel();
-			budgetingDetailModel.loadData(backendUrl+"budget/getBudgetById?code="+budgetCode, null, true, "GET",false,false,{
+			budgetingDetailModel.loadData(backendUrl+"budget/getBudgetById?code="+budgetCode, {
+				company : company
+			}, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
 			});
 
 			var oProjectModel = new JSONModel();
-			oProjectModel.loadData(backendUrl+"project/getProjects", null, true, "GET",false,false,{
+			oProjectModel.loadData(backendUrl+"project/getProjects", {
+				company : company
+			}, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
 			});
 			this.getView().setModel(oProjectModel,"projects");

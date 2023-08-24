@@ -1598,6 +1598,13 @@
                                         "is_editable": "false",
                                         "code": "Hers_Pr",
                                         "nodes": []
+                                    },
+                                    {
+                                        "text": "Vidio X Peter Schmeichel",
+                                        "subheader": "Subclass2",
+                                        "is_editable": "false",
+                                        "code": "Peter_Sc",
+                                        "nodes": []
                                     }
                                 ]
                             }
@@ -1835,13 +1842,6 @@
                                         "subheader": "Subclass2",
                                         "is_editable": "false",
                                         "code": "BP_Spo",
-                                        "nodes": []
-                                    },
-                                    {
-                                        "text": "Vidio X Peter Schmeichel",
-                                        "subheader": "Subclass2",
-                                        "is_editable": "false",
-                                        "code": "Peter_Sc",
                                         "nodes": []
                                     }
                                 ]

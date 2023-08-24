@@ -213,7 +213,8 @@ sap.ui.define([
 			$.ajax({
 				type: "POST",
 				data: {
-					"Code": code
+					"Code": code,
+					"company" : this.company
 				},
 				headers: {"Authorization": "Bearer "+ this.oJWT},
 				crossDomain: true,

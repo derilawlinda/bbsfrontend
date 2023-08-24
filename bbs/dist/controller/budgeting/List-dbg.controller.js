@@ -27,6 +27,7 @@ sap.ui.define([
 		var currentRoute = this.getRouter().getHashChanger().getHash();
 		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 		var company = oStore.get("company");
+		console.log(company);
 		this.company = company;
 		this._mViewSettingsDialogs = {};
 		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);

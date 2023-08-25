@@ -1827,6 +1827,13 @@
                                         "is_editable": "false",
                                         "code": "Oro",
                                         "nodes": []
+                                    },
+                                    {
+                                        "text": "Add on Varsity dan Hoodie BLIS",
+                                        "subheader": "Subclass2",
+                                        "is_editable": "false",
+                                        "code": "Var-blis",
+                                        "nodes": []
                                     }
                                 ]
                             }

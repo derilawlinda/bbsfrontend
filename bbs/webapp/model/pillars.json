@@ -1822,6 +1822,13 @@
                                         "nodes": []
                                     },
                                     {
+                                        "text": "Festival Hijriah - Surabaya",
+                                        "subheader": "Subclass2",
+                                        "is_editable": "false",
+                                        "code": "Hij_sby",
+                                        "nodes": []
+                                    },
+                                    {
                                         "text": "Oronamin C Meet n Greet Denny",
                                         "subheader": "Subclass2",
                                         "is_editable": "false",

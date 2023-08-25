@@ -823,6 +823,13 @@
                                         "is_editable": "false",
                                         "code": "CAP_EFP",
                                         "nodes": []
+                                    },
+                                    {
+                                        "text": "Maintenance equipment U-Live",
+                                        "subheader": "Subclass2",
+                                        "is_editable": "false",
+                                        "code": "Mtc-live",
+                                        "nodes": []
                                     }
                                 ]
                             },
@@ -1721,6 +1728,13 @@
                                         "is_editable": "false",
                                         "code": "Add_As",
                                         "nodes": []
+                                    },
+                                    {
+                                        "text": "Capex Kelengkapan Sound-Agt 23",
+                                        "subheader": "Subclass2",
+                                        "is_editable": "false",
+                                        "code": "Capex-ev",
+                                        "nodes": []
                                     }
                                 ]
                             },
@@ -1791,6 +1805,20 @@
                                         "subheader": "Subclass2",
                                         "is_editable": "false",
                                         "code": "Hij_solo",
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Festival Hijriah - Bandung",
+                                        "subheader": "Subclass2",
+                                        "is_editable": "false",
+                                        "code": "Hij_Bdg",
+                                        "nodes": []
+                                    },
+                                    {
+                                        "text": "Festival Hijriah - Bekasi",
+                                        "subheader": "Subclass2",
+                                        "is_editable": "false",
+                                        "code": "Hij_bek",
                                         "nodes": []
                                     }
                                 ]

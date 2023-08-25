@@ -162,18 +162,17 @@ sap.ui.define([
 					})
 				});
 				this.getView().byId("CreateSubClassification").setSelectedKey(budgetingDetailData.U_SubClass);
-				var classificationPath = this.getView().byId("CreateSubClassification").getSelectedItem().getBindingContext("companies").getPath();
+				var subClassificationPath = this.getView().byId("CreateSubClassification").getSelectedItem().getBindingContext("companies").getPath();
 
 				this.getView().byId("CreateSubClassification2").bindAggregation("items", {
-					path: "companies>"+ classificationPath + "/nodes",
+					path: "companies>"+ subClassificationPath + "/nodes",
 					template: new sap.ui.core.Item({
 						key: "{companies>text}",
 						text: "{companies>text}"
 					})
 				});
 				this.getView().byId("CreateSubClassification2").setSelectedKey(budgetingDetailData.U_SubClass2);
-				var classificationPath = this.getView().byId("CreateSubClassification2").getSelectedItem().getBindingContext("companies").getPath();
-
+				
 				this.getView().byId("budgetingPageId").setBusy(false);
 
 				var usedBudget = budgetingDetailData.BUDGETUSEDCollection;

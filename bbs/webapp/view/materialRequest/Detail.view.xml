@@ -86,6 +86,8 @@ xmlns:core="sap.ui.core"
 
 						 <Label id="_IDGenLabel6" text="Requested By" visible="{viewModel>/is_approver}"/>
 						 <Text text="{materialRequestDetailModel>/U_RequestorName}" visible="{viewModel>/is_approver}" />
+
+						 
 					</form:content>
 				</form:SimpleForm>
 

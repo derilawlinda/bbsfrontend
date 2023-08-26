@@ -51,13 +51,31 @@ sap.ui.define([
                     "APPROVED_BY_MANAGER" : 2, 
                     "APPROVED_BY_DIRECTOR" : 3
                 };
-                this.setModel(models.createCompanyModel(), "companies");
+                var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
+                var company = oStore.get("company");
+                var oJWT = oStore.get("jwt");
+
+                var oPillarConfigurationModel = new sap.ui.model.json.JSONModel(); 
+                oPillarConfigurationModel.loadData(backendUrl+"main/getPillar", {
+                    company : company
+                }, true, "GET",false,false,{
+                    'Authorization': 'Bearer ' + oJWT
+                });
+                var oCompanyModel = new sap.ui.model.json.JSONModel();
+
+                oPillarConfigurationModel.dataLoaded().then(function(){
+                    var pillarJson = oPillarConfigurationModel.getData();
+                    oCompanyModel.setData(pillarJson);
+                    
+                });
+
+                this.setModel(oCompanyModel, "companies");
                 // this.setModel(models.createPillarModel(), "oPillarModel");
                 // this.setModel(models.createClassificationModel(), "oClassificationModel");
                 // this.setModel(models.createSubClassModel(), "oSubClassModel");
                 // this.setModel(models.createSubClass2Model(), "oSubClass2Model");
-                this.setModel(models.createSalesOrderModel(), "salesOrder");
-		        this.setModel(models.createAccountModel(),"accounts");
+                // this.setModel(models.createSalesOrderModel(), "salesOrder");
+		        // this.setModel(models.createAccountModel(),"accounts");
                 
                 var globalModel = new JSONModel();
                 this.setModel(globalModel,"globalModel");

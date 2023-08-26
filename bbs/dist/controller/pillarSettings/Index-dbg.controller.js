@@ -16,9 +16,24 @@ sap.ui.define([
 
 		onInit: function(evt) {
 			// set explored app's demo model on this sample
+			this.getView().byId("Tree").setBusy(true);
 			this.oSemanticPage = this.byId("_IDSemanticPage1");
 			this.oEditAction = this.byId("editAction");
-			var oModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/pillars.json"));
+			var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
+			var company = oStore.get("company");
+			this.company = company;
+
+			this.oJWT = oStore.get("jwt");
+			var oModel = new JSONModel();
+			oModel.setSizeLimit(1000);
+			oModel.loadData(backendUrl+"main/getPillar", {
+				company : company
+			}, true, "GET",false,false,{
+				'Authorization': 'Bearer ' + this.oJWT
+			});
+			oModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
+				this.getView().byId("Tree").setBusy(false);
+			}.bind(this));
 			var oViewConfigModel = new JSONModel(this._viewConfigData);
 			this.getView().setModel(oViewConfigModel,"viewConfig");
 			oModel.attachRequestCompleted(null,function() { 
@@ -29,6 +44,42 @@ sap.ui.define([
 				this.getView().setModel(pillarModel,'pillarModel');
 				this.getView().setModel(oModel); 
 			}, this);
+
+			this.oPillarModel = new JSONModel();
+			this.oPillarModel.setSizeLimit(200);
+			this.oPillarModel.loadData(backendUrl+"profitCenter/getPillars", {
+				company : company
+			}, true, "GET",false,false,{
+				'Authorization': 'Bearer ' + this.oJWT
+			});
+
+			this.oClassificationModel = new JSONModel();
+			this.oClassificationModel.setSizeLimit(200);
+			this.oClassificationModel.loadData(backendUrl+"profitCenter/getClassifications", {
+				company : company
+			}, true, "GET",false,false,{
+				'Authorization': 'Bearer ' + this.oJWT
+			});
+
+			this.oSubClassModel = new JSONModel();
+			this.oSubClassModel.setSizeLimit(200);
+			this.oSubClassModel.loadData(backendUrl+"profitCenter/getSubClass", {
+				company : company
+			}, true, "GET",false,false,{
+				'Authorization': 'Bearer ' + this.oJWT
+			});
+
+			this.oSubClass2Model = new JSONModel();
+			this.oSubClass2Model.setSizeLimit(200);
+			this.oSubClass2Model.loadData(backendUrl+"profitCenter/getSubClass2", {
+				company : company
+			}, true, "GET",false,false,{
+				'Authorization': 'Bearer ' + this.oJWT
+			});
+
+
+
+
 			// var oItems = this.getView().byId('Tree').getBinding('items');
 			// var pillarFilter = new sap.ui.model.Filter({
 			// 	path: "subheader",
@@ -66,12 +117,36 @@ sap.ui.define([
 			this.oSemanticPage.setShowFooter(bShow);
 		},
 		onSave: function() {
+			var tree = this.getView().byId("Tree");
+			tree.setBusy(true);
 			this.showFooter(false);
 			this.oEditAction.setVisible(true);
-			var oModel = this.getView().getModel("viewConfig");
-			oModel.setProperty("/addButtonVisibility", false);
-			oModel.setProperty("/removeButtonVisibility", false);
-			MessageBox.alert("Successfully saved!");
+			var oViewModel = this.getView().getModel("viewConfig");
+			oViewModel.setProperty("/addButtonVisibility", false);
+			oViewModel.setProperty("/removeButtonVisibility", false);
+
+			var oModel = this.getView().getModel();
+
+			$.ajax({
+				type: "POST",
+				data: JSON.stringify({
+					company : this.company,
+					data : oModel.getData()
+				}),
+				crossDomain: true,
+				headers: { 'Authorization': 'Bearer ' + this.oJWT },
+				url: backendUrl+'main/saveJSONPillar',
+				contentType: "application/json",
+				success: function (res, status, xhr) {
+					//success code
+					tree.setBusy(false);
+					MessageToast.show("Pillar data saved");
+					$(".sapMMessageToast").css({"background-color": "#256f3a", "color": "white"});
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+					console.log("Got an error response: " + textStatus + errorThrown);
+				}
+			});
 		},
 		onCancel: function() {
 			this.showFooter(false);
@@ -87,16 +162,25 @@ sap.ui.define([
 			var _oModel = this.getView().getModel();
 			var aData = _oModel.getProperty(_sBindingPath);
 			var oModel = this.getView().getModel("viewConfig");
+			oModel.setProperty("/bindingPath",_sBindingPath);
+			oModel.setProperty("/aData",aData);
 			var windowText;
+			
 			if(aData.subheader == 'Company'){
-				windowText = 'Pillar'
+				windowText = 'Pillar';
+				this.getView().setModel(this.oPillarModel,"nodes");
 			}else if(aData.subheader == 'Pillar'){
-				windowText = 'Classification'
+				windowText = 'Classification';
+				this.getView().setModel(this.oClassificationModel,"nodes");
 			}else if(aData.subheader == 'Classification'){
-				windowText = 'Subclass'
+				windowText = 'Subclass';
+				this.getView().setModel(this.oSubClassModel,"nodes");
 			}else if(aData.subheader == 'Subclass'){
-				windowText = 'SubClass2'
+				windowText = 'Subclass2'
+				this.getView().setModel(this.oSubClass2Model,"nodes");
+
 			}
+			this.windowText = windowText;
 
 			oModel.setProperty("/windowText", windowText);
 			if (!this.createTileDialog) {
@@ -109,22 +193,37 @@ sap.ui.define([
 				this.oDialog.open();
 			}.bind(this));
 
-    		var _oChildNodes = [];
+    		
+			
+		   },
+		onAddNode : function(oEvent){
+			var _oModel = this.getView().getModel();
+			var oModel = this.getView().getModel("viewConfig");
+			var oModelData = oModel.getData();
+			var aData = oModelData.aData;
+			var _sBindingPath = oModelData.bindingPath;
+			var _oChildNodes = [];
 			if (aData.nodes !== undefined) {
 				_oChildNodes = aData.nodes; 
 			} else {
 				aData.nodes = _oChildNodes;
 			}
-		//    // you can hard code new child data or open a popup to get input from user
+			var is_editable = true;
+			console.log(this.windowText);
+			
+
+
 			var newData = {
-				"text": "New",
-				"subheader": "New 1",
-				"is_editable": true
+				"text": this.getView().byId("nodeCombo").getValue(),
+				"subheader": this.windowText,
+				"is_editable": true,
+				"code": this.getView().byId("nodeCombo").getSelectedKey
 			};
 			_oChildNodes.push(newData);
 			_oModel.setProperty(_sBindingPath, aData);
-			
-		   },
+			this.oDialog.close();
+
+		},
 		_closeDialog: function () {
 			this.oDialog.close();
 		},

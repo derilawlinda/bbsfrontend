@@ -44,7 +44,7 @@ sap.ui.define([
 			this.getView().byId("materialRequestPageID").setBusy(true);
 			var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 			this.oJWT = oStore.get("jwt");
-
+			this.company = oStore.get("company");
 			var accountModel = new JSONModel();
 			this.getView().setModel(accountModel,"accounts");
 
@@ -85,7 +85,10 @@ sap.ui.define([
 			}
 			const materialRequestDetailModel = new JSONModel();
 			this.getView().setModel(materialRequestDetailModel,"materialRequestDetailModel");
-			materialRequestDetailModel.loadData(backendUrl+"materialRequest/getMaterialRequestById?code="+this.materialRequestCode, null, true, "GET",false,false,{
+			materialRequestDetailModel.loadData(backendUrl+"materialRequest/getMaterialRequestById?", {
+				code : this.materialRequestCode,
+				company : this.company
+			}, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
 			});
 			
@@ -123,18 +126,26 @@ sap.ui.define([
 
 				let budget = new JSONModel();
 				this.getView().setModel(budget,"budget");
-				budget.loadData(backendUrl+"budget/getBudgetById?code="+materialRequestDetailData.U_BudgetCode, null, true, "GET",false,false,{
+				budget.loadData(backendUrl+"budget/getBudgetById?", {
+					code : materialRequestDetailData.U_BudgetCode,
+					company : this.company
+				}, true, "GET",false,false,{
 					'Authorization': 'Bearer ' + this.oJWT
 				});
 
 				var oBudgetingModel = new JSONModel();
-				oBudgetingModel.loadData(backendUrl+"getBudget", null, true, "GET",false,false,{
+				oBudgetingModel.loadData(backendUrl+"getBudget", {
+					company : this.company
+				}, true, "GET",false,false,{
 					'Authorization': 'Bearer ' + this.oJWT
 				});
 				this.getView().setModel(oBudgetingModel,"budgeting");
 
 				var accountModel = this.getView().getModel("accounts");
-				accountModel.loadData(backendUrl+"coa/getCOAsByBudget?budgetCode="+materialRequestDetailData.U_BudgetCode, null, true, "GET",false,false,{
+				accountModel.loadData(backendUrl+"coa/getCOAsByBudget?", {
+					budgetCode : materialRequestDetailData.U_BudgetCode,
+					company : this.company
+				}, true, "GET",false,false,{
 					'Authorization': 'Bearer ' + this.oJWT
 				});
 				accountModel.refresh();
@@ -200,7 +211,10 @@ sap.ui.define([
 			var oJWT = this.oJWT;
 			$.ajax({
 				type: "POST",
-				data: JSON.stringify(oProperty),
+				data: JSON.stringify({
+					company : this.company,
+					oProperty : oProperty
+				}),
 				headers: {"Authorization": "Bearer "+ oJWT},
 				crossDomain: true,
 				url: backendUrl+'materialRequest/approveMR',
@@ -324,12 +338,14 @@ sap.ui.define([
 			var pageDOM = this.getView().byId("materialRequestPageID");
 			pageDOM.setBusy(true);
 			var oModel = this.getView().getModel("materialRequestDetailModel");
-			var jsonData = JSON.stringify(oModel.getData());
 			var oJWT = this.oJWT;
 
 			$.ajax({
 				type: "POST",
-				data: jsonData,
+				data:  JSON.stringify({
+					company : this.company,
+					data : oModel.getData()
+				}),
 				headers: {"Authorization": "Bearer "+ oJWT},
 				crossDomain: true,
 				url: backendUrl+'materialRequest/saveMR',
@@ -425,7 +441,10 @@ sap.ui.define([
 				this.getView().byId("materialRequestPageID").setBusy(true);
 
 				var accountModel = this.getView().getModel("accounts");
-				accountModel.loadData(backendUrl+"coa/getCOAsByBudget?budgetCode="+sSelectedKey, null, true, "GET",false,false,{
+				accountModel.loadData(backendUrl+"coa/getCOAsByBudget?", {
+					budgetCode : sSelectedKey,
+					company : this.company
+				}, true, "GET",false,false,{
 					'Authorization': 'Bearer ' + this.oJWT
 				});
 				accountModel.refresh();

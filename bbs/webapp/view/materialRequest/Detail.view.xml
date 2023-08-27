@@ -28,6 +28,23 @@ xmlns:core="sap.ui.core"
                         <Label id="_IDGenLabel1" text="Date" />
 						<Text id="_IDGenText1" text="{materialRequestDetailModel>/CreateDate}" />
 
+						<Label  text="Post Date" required="true"  />
+						<DatePicker
+							editable="{viewModel>/editable}"
+							id="DatePicker"
+							class="sapUiSmallMarginBottom"
+							value="{
+								'path': 'materialRequestDetailModel>/U_DocDate',
+								'type': 'sap.ui.model.type.Date',
+								'formatOptions': {
+									source:{
+										pattern:'yyyy-MM-ddTHH:mm:ss.SSSX'
+									},
+									'pattern': 'y-MM-dd'
+									
+								}
+							}"/>
+
                         <Label id="_IDGenLabel2" text="Material Request Name" />
 						<Input id="name" value="{materialRequestDetailModel>/Name}"
 						editable="{viewModel>/editable}"></Input>

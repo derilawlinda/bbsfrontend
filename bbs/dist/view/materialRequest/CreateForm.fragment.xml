@@ -23,6 +23,18 @@
                         <Label id="_IDGenLabel1" text="Date" />
 						<Text text="{createFragmentViewModel>/Date}" />
 
+						<Label  text="Post Date" required="true"  />
+						<DatePicker
+							id="DatePicker"
+							class="sapUiSmallMarginBottom"
+							value="{
+								'path': 'materialRequestHeader>/U_DocDate',
+								'type': 'sap.ui.model.type.Date',
+								'formatOptions': {
+									'pattern': 'y-MM-dd'
+								}
+							}"/>
+
                         <Label id="_IDGenLabel2" text=" MR Name" />
 						<Input id="name" 
 						value="{materialRequestHeader>/Name}"

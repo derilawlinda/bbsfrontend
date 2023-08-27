@@ -230,7 +230,10 @@ sap.ui.define([
 					'Authorization': 'Bearer ' + this.oJWT
 				});
 				var accountModel = new JSONModel();
-				await accountModel.loadData(backendUrl+"coa/getCOAsByBudget?budgetCode="+selectedID, null, true, "GET",false,false,{
+				await accountModel.loadData(backendUrl+"coa/getCOAsByBudget", {
+					budgetCode : selectedID,
+					company : this.company
+				}, true, "GET",false,false,{
 					'Authorization': 'Bearer ' + this.oJWT
 				});
 				this.getView().setModel(accountModel,"accounts");

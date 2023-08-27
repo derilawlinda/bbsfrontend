@@ -77,7 +77,9 @@ sap.ui.define([
 
 			var oAccountModel = new JSONModel();
 			oAccountModel.setSizeLimit(1000);
-			oAccountModel.loadData(backendUrl+"coa/getCOAs", null, true, "GET",false,false,{
+			oAccountModel.loadData(backendUrl+"coa/getCOAs", {
+				company : company
+			}, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
 			});
 			this.getView().setModel(oAccountModel,"accounts");

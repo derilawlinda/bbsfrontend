@@ -75,6 +75,22 @@ sap.ui.define([
 			var budgetCode = this.budgetCode;
 			var viewModel = this.getView().getModel("viewModel");
 
+			var oPillarConfigurationModel = new sap.ui.model.json.JSONModel(); 
+			oPillarConfigurationModel.loadData(backendUrl+"main/getPillar", {
+				company : this.company
+			}, true, "GET",false,false,{
+				'Authorization': 'Bearer ' + this.oJWT
+			});
+			var oCompanyModel = new sap.ui.model.json.JSONModel();
+
+			oPillarConfigurationModel.dataLoaded().then(function(){
+				var pillarJson = oPillarConfigurationModel.getData();
+				oCompanyModel.setData(pillarJson);
+				
+			});
+
+			this.getView().setModel(oCompanyModel, "companies");
+
 			var oAccountModel = new JSONModel();
 			oAccountModel.setSizeLimit(1000);
 			oAccountModel.loadData(backendUrl+"coa/getCOAs", {
@@ -139,10 +155,13 @@ sap.ui.define([
 					
 				};
 
+				this.getView().byId("company").setSelectedKey(this.company);
+				this.getView().byId("company").fireSelectionChange();
+
 				var companyPath = this.getView().byId("company").getSelectedItem().getBindingContext("companies").getPath();
-				console.log(companyPath);
+				console.log(this.getView().getModel('companies'));
 				this.getView().byId("CreatePillar").bindAggregation("items", {
-					path: "companies>"+ companyPath + "/nodes",
+					path: "companies>/0/nodes",
 					template: new sap.ui.core.Item({
 						key: "{companies>text}",
 						text: "{companies>text}"

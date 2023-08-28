@@ -33,7 +33,7 @@ sap.ui.define([
 			oPillarConfigurationModel.loadData(backendUrl+"main/getPillar", {
 				company : this.company
 			}, true, "GET",false,false,{
-				'Authorization': 'Bearer ' + oJWT
+				'Authorization': 'Bearer ' + this.oJWT
 			});
 			var oCompanyModel = new sap.ui.model.json.JSONModel();
 

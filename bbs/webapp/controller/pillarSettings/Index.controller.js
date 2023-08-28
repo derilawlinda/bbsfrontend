@@ -124,7 +124,6 @@ sap.ui.define([
 			var oViewModel = this.getView().getModel("viewConfig");
 			oViewModel.setProperty("/addButtonVisibility", false);
 			oViewModel.setProperty("/removeButtonVisibility", false);
-
 			var oModel = this.getView().getModel();
 
 			$.ajax({

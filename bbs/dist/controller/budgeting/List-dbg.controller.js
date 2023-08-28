@@ -51,6 +51,22 @@ sap.ui.define([
 		});
 		this.getView().setModel(searchModel,"searchModel");
 
+		var oPillarConfigurationModel = new sap.ui.model.json.JSONModel(); 
+			oPillarConfigurationModel.loadData(backendUrl+"main/getPillar", {
+				company : this.company
+			}, true, "GET",false,false,{
+				'Authorization': 'Bearer ' + this.oJWT
+			});
+			var oCompanyModel = new sap.ui.model.json.JSONModel();
+
+		oPillarConfigurationModel.dataLoaded().then(function(){
+			var pillarJson = oPillarConfigurationModel.getData();
+			oCompanyModel.setData(pillarJson);
+			
+		});
+
+		this.getView().setModel(oCompanyModel, "companies");
+
 		oModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
 			this.getView().byId("idBudgetTable").setBusy(false);
 		}.bind(this));

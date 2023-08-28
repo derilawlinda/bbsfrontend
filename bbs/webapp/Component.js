@@ -55,21 +55,7 @@ sap.ui.define([
                 var company = oStore.get("company");
                 var oJWT = oStore.get("jwt");
 
-                var oPillarConfigurationModel = new sap.ui.model.json.JSONModel(); 
-                oPillarConfigurationModel.loadData(backendUrl+"main/getPillar", {
-                    company : company
-                }, true, "GET",false,false,{
-                    'Authorization': 'Bearer ' + oJWT
-                });
-                var oCompanyModel = new sap.ui.model.json.JSONModel();
-
-                oPillarConfigurationModel.dataLoaded().then(function(){
-                    var pillarJson = oPillarConfigurationModel.getData();
-                    oCompanyModel.setData(pillarJson);
-                    
-                });
-
-                this.setModel(oCompanyModel, "companies");
+                
                 // this.setModel(models.createPillarModel(), "oPillarModel");
                 // this.setModel(models.createClassificationModel(), "oClassificationModel");
                 // this.setModel(models.createSubClassModel(), "oSubClassModel");

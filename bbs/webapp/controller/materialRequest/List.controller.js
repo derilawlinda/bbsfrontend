@@ -28,6 +28,24 @@ sap.ui.define([
 		this.oJWT = oStore.get("jwt");
 		this.company = oStore.get("company");
 		var oModel = new JSONModel();
+
+		var oPillarConfigurationModel = new sap.ui.model.json.JSONModel(); 
+			oPillarConfigurationModel.loadData(backendUrl+"main/getPillar", {
+				company : this.company
+			}, true, "GET",false,false,{
+				'Authorization': 'Bearer ' + oJWT
+			});
+			var oCompanyModel = new sap.ui.model.json.JSONModel();
+
+		oPillarConfigurationModel.dataLoaded().then(function(){
+			var pillarJson = oPillarConfigurationModel.getData();
+			oCompanyModel.setData(pillarJson);
+			
+		});
+
+		this.setModel(oCompanyModel, "companies");
+
+
 		oModel.loadData(backendUrl+"materialRequest/getMaterialRequests", {
 			company : this.company
 		}, true, "GET",false,false,{
@@ -41,8 +59,8 @@ sap.ui.define([
 
 		var oSalesOrderModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/sales_order.json"));
 		this.getView().setModel(oSalesOrderModel,"salesOrder");
-		var oCompaniesModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/companies.json"));
-		this.getView().setModel(oCompaniesModel,"companies");
+		// var oCompaniesModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/companies.json"));
+		// this.getView().setModel(oCompaniesModel,"companies");
 		var oItemsModel = new JSONModel();
 		this.getView().setModel(oItemsModel,"items");
 		var viewModel = new sap.ui.model.json.JSONModel({

@@ -17,7 +17,7 @@
     },
     "dataSources": {
       "default": {
-        "uri": "https://essapi.unitedcreative.co.id/api/",
+        "uri": "https://ess.unitedcreative.co.id/api/",
         "type": "OData",
         "settings": {
           "odataVersion": "4.0"
@@ -33,7 +33,7 @@
         }
       },
       "bbsbackend": {
-        "uri" : "https://essapi.unitedcreative.co.id/api/"
+        "uri" : "https://ess.unitedcreative.co.id/api/"
       },
       "navigationList": {
 				"uri": "model/navigation.json",

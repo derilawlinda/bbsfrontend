@@ -209,16 +209,14 @@ sap.ui.define([
 				aData.nodes = _oChildNodes;
 			}
 			var is_editable = true;
-			console.log(this.windowText);
-			
-
 
 			var newData = {
 				"text": this.getView().byId("nodeCombo").getValue(),
 				"subheader": this.windowText,
 				"is_editable": true,
-				"code": this.getView().byId("nodeCombo").getSelectedKey
+				"code": this.getView().byId("nodeCombo").getSelectedKey()
 			};
+			console.log(newData);
 			_oChildNodes.push(newData);
 			_oModel.setProperty(_sBindingPath, aData);
 			this.oDialog.close();

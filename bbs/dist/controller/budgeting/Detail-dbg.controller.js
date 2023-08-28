@@ -140,6 +140,7 @@ sap.ui.define([
 				};
 
 				var companyPath = this.getView().byId("company").getSelectedItem().getBindingContext("companies").getPath();
+				console.log(companyPath);
 				this.getView().byId("CreatePillar").bindAggregation("items", {
 					path: "companies>"+ companyPath + "/nodes",
 					template: new sap.ui.core.Item({

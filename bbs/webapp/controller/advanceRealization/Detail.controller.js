@@ -49,6 +49,7 @@ sap.ui.define([
 			this.getView().byId("advanceRequestPageId").setBusy(true);
 			var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 			this.oJWT = oStore.get("jwt");
+			this.company =  oStore.get("company");
 
 			var oUserModel = new JSONModel();
 			await oUserModel.loadData(backendUrl+"checkToken", null, true, "POST",false,false,{
@@ -67,7 +68,10 @@ sap.ui.define([
 			}
 
 			const advanceRequestDetailModel = new JSONModel();
-			advanceRequestDetailModel.loadData(backendUrl+"advanceRequest/getAdvanceRequestById?code="+advanceRequestCode, null, true, "GET",false,false,{
+			advanceRequestDetailModel.loadData(backendUrl+"advanceRequest/getAdvanceRequestById", {
+				code : advanceRequestCode,
+				company : this.company
+			}, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
 			});
 			
@@ -136,7 +140,10 @@ sap.ui.define([
 				};
 
 				const oBudgetModel = new JSONModel();
-				oBudgetModel.loadData(backendUrl+"budget/getBudgetById?code="+advanceRequestDetailData.U_BudgetCode, null, true, "GET",false,false,{
+				oBudgetModel.loadData(backendUrl+"budget/getBudgetById", {
+					code : advanceRequestDetailData.U_BudgetCode,
+					company : this.company
+				}, true, "GET",false,false,{
 					'Authorization': 'Bearer ' + this.oJWT
 				});
 				this.getOwnerComponent().setModel(oBudgetModel,"budget");
@@ -158,7 +165,10 @@ sap.ui.define([
 
 
 				var accountModel = new JSONModel();
-				accountModel.loadData(backendUrl+"coa/getCOAsByAR?ARCode="+advanceRequestDetailData.Code, null, true, "GET",false,false,{
+				accountModel.loadData(backendUrl+"coa/getCOAsByAR", {
+					ARCode : advanceRequestDetailData.Code,
+					company : this.company
+				}, true, "GET",false,false,{
 					'Authorization': 'Bearer ' + ojwt
 				});
 				this.getView().setModel(accountModel,"accounts");
@@ -177,7 +187,10 @@ sap.ui.define([
 
 
 						if(!(realizations[i].U_AccountCode in oItemsData)){
-							oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount?accountCode="+account, null, true, "GET",false,false,{
+							oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount", {
+								accountCode : account,
+								company : this.company
+							}, true, "GET",false,false,{
 								'Authorization': 'Bearer ' + ojwt
 							});
 							oItemByAccountModel.dataLoaded().then(function() {
@@ -270,11 +283,15 @@ sap.ui.define([
 			var view = this.getView();
 			var oProperty = oModel.getProperty("/");
 			var oJWT = this.oJWT;
+			var company = this.companyl
 			pageView.setBusy(true);
 
 			$.ajax({
 				type: "POST",
-				data: JSON.stringify(oProperty),
+				data: JSON.stringify({
+					oProperty : oProperty,
+					company : company
+				}),
 				crossDomain: true,
 				headers: { 'Authorization': 'Bearer ' + oJWT },
 				url: backendUrl+'advanceRequest/confirmAdvanceRealization',
@@ -303,11 +320,15 @@ sap.ui.define([
 			var dialogID = this.getView().byId("transferDialogID");
 			var oProperty = oModel.getProperty("/");
 			var oJWT = this.oJWT;
+			var company = this.company;
 			pageView.setBusy(true);
 
 			$.ajax({
 				type: "POST",
-				data: JSON.stringify(oProperty),
+				data: JSON.stringify({
+					oProperty : oProperty,
+					company : company
+				}),
 				crossDomain: true,
 				headers: { 'Authorization': 'Bearer ' + oJWT },
 				url: backendUrl+'advanceRequest/submitAdvanceRealization',
@@ -523,7 +544,9 @@ sap.ui.define([
 			var pageDOM = this.getView().byId("advanceRequestPageId");
 			pageDOM.setBusy(true);
 			var oModel = this.getView().getModel("advanceRequestDetailModel");
-			var jsonData = JSON.stringify(oModel.getData());
+			var jsonData = JSON.stringify({
+				company : this.company,
+				data : oModel.getData()});
 			var oJWT = this.oJWT;
 
 			$.ajax({
@@ -574,7 +597,8 @@ sap.ui.define([
 			$.ajax({
 				type: "POST",
 				data: {
-					"Code": code
+					"Code": code,
+					"company" : company
 				},
 				headers: {"Authorization": "Bearer "+ oJWT},
 				crossDomain: true,

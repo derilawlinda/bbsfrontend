@@ -59,8 +59,7 @@ sap.ui.define([
 
 		var oSalesOrderModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/sales_order.json"));
 		this.getView().setModel(oSalesOrderModel,"salesOrder");
-		// var oCompaniesModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/companies.json"));
-		// this.getView().setModel(oCompaniesModel,"companies");
+	
 		var oItemsModel = new JSONModel();
 		this.getView().setModel(oItemsModel,"items");
 		var viewModel = new sap.ui.model.json.JSONModel({

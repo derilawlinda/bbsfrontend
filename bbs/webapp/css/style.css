@@ -15,3 +15,11 @@
 .marginLeft{
     margin-left: 15px !important
 }
+
+tr[data-sap-ui-level="2"]>td>div>span.sapUiTableTreeIcon {
+    margin-left:50px !important;
+}
+
+tr[data-sap-ui-level="3"]>td>div>span.sapUiTableTreeIcon {
+    margin-left:100px !important;
+}

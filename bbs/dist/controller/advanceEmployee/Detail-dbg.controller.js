@@ -40,7 +40,8 @@ sap.ui.define([
 			this.getView().byId("advanceRequestPageId").setBusy(true);
 			var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 			this.oJWT = oStore.get("jwt");
-
+			this.company = oStore.get('company');
+			
 			var oUserModel = new JSONModel();
 			await oUserModel.loadData(backendUrl+"checkToken", null, true, "POST",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
@@ -57,14 +58,21 @@ sap.ui.define([
 				advanceRequestCode = urlArray[urlArray.length - 1];
 			}
 			const advanceRequestDetailModel = new JSONModel();
-			advanceRequestDetailModel.loadData(backendUrl+"advanceRequest/getAdvanceRequestById?code="+advanceRequestCode, null, true, "GET",false,false,{
+			console.log(advanceRequestCode);
+			console.log(this.company);
+			advanceRequestDetailModel.loadData(backendUrl+"advanceRequest/getAdvanceRequestById", {
+				code : advanceRequestCode,
+				company : this.company
+			}, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
 			});
 			
 			this.getView().setModel(advanceRequestDetailModel,"advanceRequestDetailModel");
 
 			var oBudgetingModel = new JSONModel();
-				oBudgetingModel.loadData(backendUrl+"budget/getApprovedBudget", null, true, "GET",false,false,{
+				oBudgetingModel.loadData(backendUrl+"budget/getApprovedBudget", {
+					company : this.company
+				}, true, "GET",false,false,{
 					'Authorization': 'Bearer ' + this.oJWT
 			});
 			this.getOwnerComponent().setModel(oBudgetingModel,"budgeting");
@@ -111,13 +119,19 @@ sap.ui.define([
 				};
 
 				var accountModel = new JSONModel();
-				accountModel.loadData(backendUrl+"coa/getCOAsByBudget?budgetCode="+advanceRequestDetailData.U_BudgetCode, null, true, "GET",false,false,{
+				accountModel.loadData(backendUrl+"coa/getCOAsByBudget?", {
+					budgetCode : advanceRequestDetailData.U_BudgetCode,
+					company : this.company
+				}, true, "GET",false,false,{
 					'Authorization': 'Bearer ' + this.oJWT
 				});
 				this.getView().setModel(accountModel,"accounts");
 
 				const oBudgetModel = new JSONModel();
-				oBudgetModel.loadData(backendUrl+"budget/getBudgetById?code="+advanceRequestDetailData.U_BudgetCode, null, true, "GET",false,false,{
+				oBudgetModel.loadData(backendUrl+"budget/getBudgetById", {
+					code : advanceRequestDetailData.U_BudgetCode,
+					company : this.company
+				}, true, "GET",false,false,{
 					'Authorization': 'Bearer ' + this.oJWT
 				});
 				this.getOwnerComponent().setModel(oBudgetModel,"budget");
@@ -201,7 +215,9 @@ sap.ui.define([
 			var oItemData = oItemModel.getData();
 			if(!(oSelectedItem.toString() in oItemData)){
 				var oItemByAccountModel = new JSONModel();
-				await oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount?accountCode="+oSelectedItem+"", null, true, "GET",false,false,{
+				await oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount", {
+					accountCode : oSelectedItem
+				}, true, "GET",false,false,{
 					'Authorization': 'Bearer ' + this.oJWT
 				});
 				var oItemByAccountData = oItemByAccountModel.getData();
@@ -250,13 +266,19 @@ sap.ui.define([
 			var selectedID = parseInt(oEvent.getParameters('selectedItem').value);
 			
 			var budgetModel = this.getView().getModel("budget");
-			await budgetModel.loadData(backendUrl+"budget/getBudgetById?code="+selectedID, null, true, "GET",false,false,{
+			await budgetModel.loadData(backendUrl+"budget/getBudgetById", {
+				code : selectedID,
+				company : this.company
+			}, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
 			});
 			budgetModel.refresh();
 
 			var accountModel = this.getView().getModel("accounts");
-			accountModel.loadData(backendUrl+"coa/getCOAsByBudget?budgetCode="+selectedID, null, true, "GET",false,false,{
+			accountModel.loadData(backendUrl+"coa/getCOAsByBudget", {
+				budgetCode : selectedID,
+				company : this.company
+			}, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
 			});
 			accountModel.refresh();
@@ -298,9 +320,13 @@ sap.ui.define([
 			var view = this.getView();
 			var oDialog = this.oDialog;
 			var oJWT = this.oJWT;
+			var company = this.company;
 			$.ajax({
 				type: "POST",
-				data: JSON.stringify(oProperty),
+				data: JSON.stringify({
+					oProperty : oProperty,
+					company : company
+				}),
 				headers: {"Authorization": "Bearer "+ oJWT},
 				crossDomain: true,
 				url: backendUrl+'advanceRequest/approveAR',
@@ -357,11 +383,15 @@ sap.ui.define([
 			var pageDOM = this.getView().byId("advanceRequestPageId");
 			var transferDialog = this.getView().byId("transferDialog");
 			var oProperty = oModel.getProperty("/");
+			var company = this.company;
 			transferDialog.close();
 			pageDOM.setBusy(true);
 			$.ajax({
 				type: "POST",
-				data: JSON.stringify(oProperty),
+				data: JSON.stringify({
+					company : company,
+					oProperty : oProperty
+				}),
 				headers: {"Authorization": "Bearer "+ oJWT},
 				crossDomain: true,
 				url: backendUrl+'advanceRequest/transferAR',
@@ -418,8 +448,12 @@ sap.ui.define([
 			var pageDOM = this.getView().byId("advanceRequestPageId");
 			pageDOM.setBusy(true);
 			var oModel = this.getView().getModel("advanceRequestDetailModel");
-			var jsonData = JSON.stringify(oModel.getData());
+			var jsonData = JSON.stringify({
+				data : oModel.getData(),
+				company : this.company
+			});
 			var oJWT = this.oJWT;
+			var company = this.company;
 
 			$.ajax({
 				type: "POST",
@@ -480,12 +514,14 @@ sap.ui.define([
 			var code = advanceRequestDetailData.Code;
 			var rejectionRemarks = this.getView().byId("RejectionRemarksID").getValue();
 			var viewModel = this.getView().getModel("viewModel");
+			var company = this.company;
 			
 			$.ajax({
 				type: "POST",
 				data: {
 					"Code": code,
-					"Remarks" : rejectionRemarks
+					"Remarks" : rejectionRemarks,
+					"company" : company
 				},
 				headers: {"Authorization": "Bearer "+ this.oJWT},
 				crossDomain: true,
@@ -523,7 +559,10 @@ sap.ui.define([
 			var pageDOM = this.getView().byId("advanceRequestPageId");
 			pageDOM.setBusy(true);
 			var oModel = this.getView().getModel("advanceRequestDetailModel");
-			var jsonData = JSON.stringify(oModel.getData());
+			var jsonData = JSON.stringify({
+				company : this.company,
+				data : oModel.getData()
+			});
 			var oJWT = this.oJWT;
 			var viewModel = this.getView().getModel("viewModel");
 

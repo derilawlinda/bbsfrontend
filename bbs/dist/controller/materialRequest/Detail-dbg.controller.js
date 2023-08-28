@@ -24,8 +24,7 @@ sap.ui.define([
 			var oOwnerComponent = this.getOwnerComponent();
 			this.oRouter = oOwnerComponent.getRouter();
 			this.oRouter.getRoute("materialRequestDetail").attachPatternMatched(this._onObjectMatched, this);
-			var oCompaniesModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/companies.json"));
-			this.getView().setModel(oCompaniesModel,"companies");
+		
 			
 			
 
@@ -47,6 +46,7 @@ sap.ui.define([
 			this.company = oStore.get("company");
 			var accountModel = new JSONModel();
 			this.getView().setModel(accountModel,"accounts");
+			
 
 			
 			this.materialRequestCode = oEvent.getParameter("arguments").materialRequestID;

@@ -43,7 +43,7 @@ sap.ui.define([
 			
 		});
 
-		this.setModel(oCompanyModel, "companies");
+		this.getView().setModel(oCompanyModel, "companies");
 
 
 		oModel.loadData(backendUrl+"materialRequest/getMaterialRequests", {

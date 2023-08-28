@@ -132,6 +132,11 @@ sap.ui.define([
 						viewModel.setProperty("/showFooter", true);
 						viewModel.setProperty("/editable", true);
 					}
+				}else if(parametersMap.roleId == 2){
+					viewModel.setProperty("/editable", true);
+					viewModel.setProperty("/showFooter", true);
+					viewModel.setProperty("/is_requestor", true);
+					
 				};
 
 				var companyPath = this.getView().byId("company").getSelectedItem().getBindingContext("companies").getPath();

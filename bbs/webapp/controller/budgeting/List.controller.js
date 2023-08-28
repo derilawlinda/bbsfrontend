@@ -27,7 +27,6 @@ sap.ui.define([
 		var currentRoute = this.getRouter().getHashChanger().getHash();
 		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 		var company = oStore.get("company");
-		console.log(company);
 		this.company = company;
 		this._mViewSettingsDialogs = {};
 		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
@@ -128,8 +127,8 @@ sap.ui.define([
 			});
 		}
 		this.createBudgetingDialog.then(function (oDialog) {
-			this.getView().byId("CreateCompany").setSelectedKey(this.company);
-			this.getView().byId("CreateCompany").fireSelectionChange();
+			// this.getView().byId("CreateCompany").setSelectedKey(this.company);
+			// this.getView().byId("CreateCompany").fireSelectionChange();
 			this.getView().byId("CreatePillar").setSelectedKey("");
 			this.getView().byId("CreateClassification").setSelectedKey("");
 			this.getView().byId("CreateSubClassification").setSelectedKey("");
@@ -139,12 +138,12 @@ sap.ui.define([
 			this.getView().byId("CreateSubClassification").setEnabled(false);
 			this.getView().byId("CreateSubClassification2").setEnabled(false);
 
-			var comboPath = this.getView().byId("CreateCompany").getSelectedItem().getBindingContext("companies").getPath();
-			this.companyPath = comboPath;
+			// var comboPath = this.getView().byId("CreateCompany").getSelectedItem().getBindingContext("companies").getPath();
+			// this.companyPath = comboPath;
 			var comboPillar = this.getView().byId("CreatePillar");
 			comboPillar.setEnabled(true);
 			comboPillar.bindAggregation("items", {
-				path: "companies>"+ comboPath + "/nodes",
+				path: "companies>/0/nodes",
 				template: new sap.ui.core.Item({
 					key: "{companies>code}",
 					text: "{companies>text}"

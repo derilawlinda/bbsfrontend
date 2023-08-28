@@ -22,9 +22,12 @@ sap.ui.define([
 		var currentRoute = this.getRouter().getHashChanger().getHash();
 		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 		this.oJWT = oStore.get("jwt");
+		this.company = oStore.get("company");
 		
 		var oModel = new JSONModel();
-		oModel.loadData(backendUrl+"materialIssue/getMaterialIssues", null, true, "GET",false,false,{
+		oModel.loadData(backendUrl+"materialIssue/getMaterialIssues", {
+			company : this.company
+		}, true, "GET",false,false,{
 			'Authorization': 'Bearer ' + this.oJWT
 		});
 		this.getView().setModel(oModel,"materialIssue");
@@ -47,7 +50,9 @@ sap.ui.define([
 		});
 		this.getView().setModel(budgetRequestHeader,"budgetHeader");
 		var oBudgetingModel = new JSONModel();
-		oBudgetingModel.loadData(backendUrl+"budget/getApprovedBudget", null, true, "GET",false,false,{
+		oBudgetingModel.loadData(backendUrl+"budget/getApprovedBudget", {
+			company : this.company
+		}, true, "GET",false,false,{
 			'Authorization': 'Bearer ' + this.oJWT
 		});
 		this.getView().setModel(oBudgetingModel,"budgeting");
@@ -134,11 +139,17 @@ sap.ui.define([
 				this.getView().byId("MIItemsTableID").setBusy(true);
 				var selectedID = parseInt(oEvent.getParameters('selectedItem').value);
 				var budgetingModel = new JSONModel();
-				await budgetingModel.loadData(backendUrl+"budget/getBudgetById?code="+selectedID, null, true, "GET",false,false,{
+				await budgetingModel.loadData(backendUrl+"budget/getBudgetById", {
+					code : selectedID,
+					company : this.company
+				}, true, "GET",false,false,{
 					'Authorization': 'Bearer ' + this.oJWT
 				});
 				var accountModel = new JSONModel();
-				await accountModel.loadData(backendUrl+"coa/getCOAsByBudget?budgetCode="+selectedID, null, true, "GET",false,false,{
+				await accountModel.loadData(backendUrl+"coa/getCOAsByBudget", {
+					budgetCode : selectedID,
+					company : this.company
+				}, true, "GET",false,false,{
 					'Authorization': 'Bearer ' + this.oJWT
 				});
 				this.getView().setModel(accountModel,"accounts");
@@ -171,7 +182,10 @@ sap.ui.define([
 			var oItemData = oItemModel.getData();
 			if(!(oSelectedItem in oItemData)){
 				var oItemByAccountModel = new JSONModel();
-				await oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount?accountCode="+oSelectedItem+"", null, true, "GET",false,false,{
+				await oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount", {
+					accountCode : oSelectedItem,
+					company : this.company
+				}, true, "GET",false,false,{
 					'Authorization': 'Bearer ' + this.oJWT
 				});
 				var oItemByAccountData = oItemByAccountModel.getData();
@@ -232,7 +246,8 @@ sap.ui.define([
 			var oNewObject = {
 				"U_AccountCode": "",
 				"U_ItemCode": "",
-				"U_Qty": ""
+				"U_Qty": "",
+				"U_Description" : ""
 			};
 			oModelData.MATERIALISSUELINESCollection.push(oNewObject);
 			var f = new sap.ui.model.json.JSONModel(oModelData);
@@ -251,10 +266,14 @@ sap.ui.define([
 			var view = this.getView();
 			
 			var oJWT = this.oJWT;
+			var company = this.company;
 
 			$.ajax({
 				type: "POST",
-				data: JSON.stringify(oProperty),
+				data: JSON.stringify({
+					company : this.company,
+					oProperty : oProperty
+				}),
 				crossDomain: true,
 				headers: { 'Authorization': 'Bearer ' + oJWT },
 				url: backendUrl+'materialIssue/createMaterialIssue',
@@ -263,7 +282,9 @@ sap.ui.define([
 					  //success code
 					oDialog.setBusy(false);
 					oDialog.close();
-					materialIssueModel.loadData(backendUrl+"materialIssue/getMaterialIssues", null, true, "GET",false,false,{
+					materialIssueModel.loadData(backendUrl+"materialIssue/getMaterialIssues", {
+						company : company
+					}, true, "GET",false,false,{
 						'Authorization': 'Bearer ' + oJWT
 					});
 					MessageToast.show("Material Issue created");

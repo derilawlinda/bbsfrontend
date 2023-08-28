@@ -23,6 +23,18 @@
                         <Label id="_IDGenLabel1" text="Date" />
 						<Text text="{createFragmentViewModel>/Date}" />
 
+						<Label  text="Post Date" required="true"  />
+						<DatePicker
+							id="DatePicker"
+							class="sapUiSmallMarginBottom"
+							value="{
+								'path': 'materialIssueHeader>/U_DocDate',
+								'type': 'sap.ui.model.type.Date',
+								'formatOptions': {
+									'pattern': 'y-MM-dd'
+								}
+							}"/>
+
                         <Label id="_IDGenLabel2" text="Material Issue Name" />
 						<Input id="name" value="{materialIssueHeader>/Name}" ></Input>
 
@@ -148,6 +160,18 @@
 								placeholder="Enter quantity"
 								value="{new_mi_items>U_Qty}"
 								ariaLabelledBy="InputNumberLabel"/>
+						</table:template>
+					</table:Column>
+
+					<table:Column >
+						<Text text="Description" />
+						<table:template>
+							<Input
+								id="inputDescription"
+								type="Text"
+								placeholder="Description"
+								value="{new_mi_items>U_Description}"
+								/>
 						</table:template>
 					</table:Column>
 

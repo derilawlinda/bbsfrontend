@@ -276,7 +276,8 @@ sap.ui.define([
 				type: "POST",
 				data: {
 					"Code": code,
-					"Remarks" : rejectionRemarks
+					"Remarks" : rejectionRemarks,
+					"company" : this.company
 				},
 				headers: {"Authorization": "Bearer "+ this.oJWT},
 				crossDomain: true,
@@ -384,7 +385,10 @@ sap.ui.define([
 			var pageDOM = this.getView().byId("materialRequestPageID");
 			pageDOM.setBusy(true);
 			var oModel = this.getView().getModel("materialRequestDetailModel");
-			var jsonData = JSON.stringify(oModel.getData());
+			var jsonData = JSON.stringify({
+				company : this.company,
+				data : oModel.getData()
+			});
 			var oJWT = this.oJWT;
 			var viewModel = this.getView().getModel("viewModel");
 

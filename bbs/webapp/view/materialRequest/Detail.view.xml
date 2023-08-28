@@ -13,6 +13,8 @@ xmlns:core="sap.ui.core"
     
     <content>
       <VBox class="sapUiSmallMargin" id="formContainer">
+		<Panel class="sapUiTinyMargin">
+
 				<form:SimpleForm id="SimpleFormChangeColumn_twoGroups234"
 						editable="true"
                         layout="ColumnLayout"
@@ -108,6 +110,39 @@ xmlns:core="sap.ui.core"
 					</form:content>
 				</form:SimpleForm>
 
+				<Table>
+							<columns>
+								<Column>
+									<Text text="Role" />
+								</Column>
+								<Column>
+									<Text text="Name" />
+								</Column>      
+								<Column>
+									<Text text="Approval Date" />
+								</Column>          
+							</columns>
+							<items>
+								<ColumnListItem>
+									<cells>
+										<Text text="Manager" />
+										<Text text="{materialRequestDetailModel>/U_ManagerApp}" />
+										<Text text="{materialRequestDetailModel>/U_ManagerAppAt}" />
+
+									</cells>
+								</ColumnListItem>
+								<ColumnListItem>
+									<cells>
+										<Text text="Director" />
+										<Text text="{materialRequestDetailModel>/U_DirectorApp}" />
+										<Text text="{materialRequestDetailModel>/U_DirectorAppAt}" />
+									</cells>
+								</ColumnListItem>
+							
+							</items>              
+						</Table>
+	</Panel>
+	<Panel class="sapUiTinyMargin">
 				<table:Table id="materialReqLineTableID" 
                         rows="{materialRequestDetailModel>/MATERIALREQLINESCollection}"
 						visibleRowCount="7"
@@ -192,6 +227,19 @@ xmlns:core="sap.ui.core"
 						</table:template>
 					</table:Column>
 
+					<table:Column >
+						<Text text="Description" />
+						<table:template>
+							<Input
+								id="inputDescription"
+								type="Text"
+								placeholder="Description"
+								editable="{viewModel>/editable}"
+								value="{materialRequestDetailModel>U_Description}"
+								/>
+						</table:template>
+					</table:Column>
+
 					
 
 				</table:columns>
@@ -207,7 +255,7 @@ xmlns:core="sap.ui.core"
 				
                 </table:Table>
 
-                
+    </Panel>
 			</VBox>
     </content>
 	<footer  >

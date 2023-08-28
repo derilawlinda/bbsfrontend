@@ -301,7 +301,8 @@ sap.ui.define([
 			var oNewObject = {
 				"U_AccountCode": "",
 				"U_ItemCode": "",
-				"U_Qty": ""
+				"U_Qty": "",
+				"U_Description" : ""
 			};
 			oModelData.MATERIALREQLINESCollection.push(oNewObject);
 			var f = new sap.ui.model.json.JSONModel(oModelData);

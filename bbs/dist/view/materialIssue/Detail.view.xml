@@ -12,7 +12,10 @@ xmlns:core="sap.ui.core"
 		showFooter="{viewModel>/showFooter}">
     
     <content>
+
       <VBox class="sapUiSmallMargin" id="formContainer">
+
+	  <Panel class="sapUiTinyMargin">
 				<form:SimpleForm id="SimpleFormChangeColumn_twoGroups234"
 						editable="true"
                         layout="ColumnLayout"
@@ -27,6 +30,23 @@ xmlns:core="sap.ui.core"
 
                         <Label id="_IDGenLabel1" text="Date" />
 						<Text id="_IDGenText1" text="{materialIssueDetailModel>/CreateDate}" />
+
+						<Label  text="Post Date" required="true"  />
+						<DatePicker
+							editable="{viewModel>/editable}"
+							id="DatePicker"
+							class="sapUiSmallMarginBottom"
+							value="{
+								'path': 'materialIssueDetailModel>/U_DocDate',
+								'type': 'sap.ui.model.type.Date',
+								'formatOptions': {
+									source:{
+										pattern:'yyyy-MM-ddTHH:mm:ss.SSSX'
+									},
+									'pattern': 'y-MM-dd'
+									
+								}
+							}"/>
 
                         <Label id="_IDGenLabel2" text="Material Issue Name" />
 						<Input id="name" value="{materialIssueDetailModel>/Name}"
@@ -89,7 +109,40 @@ xmlns:core="sap.ui.core"
 						<Text text="{materialIssueDetailModel>/U_RequestorName}" visible="{viewModel>/is_approver}" />
 					</form:content>
 				</form:SimpleForm>
+				<Table>
+					<columns>
+						<Column>
+							<Text text="Role" />
+						</Column>
+						<Column>
+							<Text text="Name" />
+						</Column>      
+						<Column>
+							<Text text="Approval Date" />
+						</Column>          
+					</columns>
+					<items>
+						<ColumnListItem>
+							<cells>
+								<Text text="Manager" />
+								<Text text="{materialIssueDetailModel>/U_ManagerApp}" />
+								<Text text="{materialIssueDetailModel>/U_ManagerAppAt}" />
 
+							</cells>
+						</ColumnListItem>
+						<ColumnListItem>
+							<cells>
+								<Text text="Director" />
+								<Text text="{materialIssueDetailModel>/U_DirectorApp}" />
+								<Text text="{materialIssueDetailModel>/U_DirectorAppAt}" />
+							</cells>
+						</ColumnListItem>
+					
+					</items>              
+				</Table>
+	</Panel>
+
+	<Panel class="sapUiTinyMargin">
 				<table:Table id="materialIssueLineTableID" 
                         rows="{materialIssueDetailModel>/MATERIALISSUELINESCollection}"
 						visibleRowCount="7"
@@ -146,8 +199,6 @@ xmlns:core="sap.ui.core"
 						</table:template>
 					</table:Column>
 
-					
-
 					<table:Column >
 						<Text text="Quantity" />
 						<table:template>
@@ -157,6 +208,19 @@ xmlns:core="sap.ui.core"
 								editable="{viewModel>/editable}"
 								value="{materialIssueDetailModel>U_Qty}"
 								ariaLabelledBy="InputNumberLabel"
+								/>
+						</table:template>
+					</table:Column>
+
+					<table:Column >
+						<Text text="Description" />
+						<table:template>
+							<Input
+								id="inputDescription"
+								type="Text"
+								placeholder="Description"
+								editable="{viewModel>/editable}"
+								value="{materialIssueDetailModel>U_Description}"
 								/>
 						</table:template>
 					</table:Column>
@@ -173,7 +237,7 @@ xmlns:core="sap.ui.core"
 
 				
                 </table:Table>
-
+	</Panel>
                 
 			</VBox>
     </content>

@@ -165,6 +165,18 @@
 						</table:template>
 					</table:Column>
 
+					<table:Column >
+						<Text text="Description" />
+						<table:template>
+							<Input
+								id="inputDescription"
+								type="Text"
+								placeholder="Description"
+								value="{new_mr_items>U_Description}"
+								/>
+						</table:template>
+					</table:Column>
+
 				</table:columns>
 
 				<table:rowActionTemplate>

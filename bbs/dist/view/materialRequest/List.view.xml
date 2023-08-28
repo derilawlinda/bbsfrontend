@@ -75,7 +75,10 @@ xmlns:table="sap.ui.table"
                     	<ObjectIdentifier id="_IDGenObjectIdentifier1"
 						    text="{materialRequest>Code}"/>
                         <Text id="_IDGenText1"
-						    text="{materialRequest>CreateDate}" />
+						    text="{
+                                path:'materialRequest>CreateDate',
+                                formatter:'.dateFormatter'
+			}" />
                         <Text id="_IDGenText2" text="{materialRequest>Name}" />
                         <ObjectNumber id="_IDGenObjectNumber1" 
                         	number="{

@@ -48,6 +48,7 @@ sap.ui.define([
 			this.getView().byId("materialIssuePageID").setBusy(true);
 			var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 			this.oJWT = oStore.get("jwt");
+			this.company = oStore.get("company");
 
 			var oUserModel = new JSONModel();
 			await oUserModel.loadData(backendUrl+"checkToken", null, true, "POST",false,false,{
@@ -65,14 +66,19 @@ sap.ui.define([
 				materialIssueCode = urlArray[urlArray.length - 1];
 			}
 			const materialIssueDetailModel = new JSONModel();
-			materialIssueDetailModel.loadData(backendUrl+"materialIssue/getMaterialIssueById?code="+materialIssueCode, null, true, "GET",false,false,{
+			materialIssueDetailModel.loadData(backendUrl+"materialIssue/getMaterialIssueById", {
+				code : materialIssueCode,
+				company : this.company
+			}, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
 			});
 			
 			this.getView().setModel(materialIssueDetailModel,"materialIssueDetailModel");
 
 			var oBudgetingModel = new JSONModel();
-				oBudgetingModel.loadData(backendUrl+"budget/getApprovedBudget", null, true, "GET",false,false,{
+				oBudgetingModel.loadData(backendUrl+"budget/getApprovedBudget", {
+					company : this.company
+				}, true, "GET",false,false,{
 					'Authorization': 'Bearer ' + this.oJWT
 			});
 			this.getView().setModel(oBudgetingModel,"budgeting");
@@ -110,12 +116,18 @@ sap.ui.define([
 				};
 
 				const oBudgetModel = new JSONModel();
-				oBudgetModel.loadData(backendUrl+"budget/getBudgetById?code="+materialIssueDetailData.U_BudgetCode, null, true, "GET",false,false,{
+				oBudgetModel.loadData(backendUrl+"budget/getBudgetById", {
+					code : materialIssueDetailData.U_BudgetCode,
+					company : this.company
+				}, true, "GET",false,false,{
 					'Authorization': 'Bearer ' + this.oJWT
 				});
 				this.getOwnerComponent().setModel(oBudgetModel,"budget");
 				
-				accountModel.loadData(backendUrl+"coa/getCOAsByBudget?budgetCode="+materialIssueDetailData.U_BudgetCode, null, true, "GET",false,false,{
+				accountModel.loadData(backendUrl+"coa/getCOAsByBudget", {
+					budgetCode : materialIssueDetailData.U_BudgetCode,
+					company : this.company
+				}, true, "GET",false,false,{
 					'Authorization': 'Bearer ' + this.oJWT
 				});
 				accountModel.refresh();
@@ -138,7 +150,10 @@ sap.ui.define([
 				for (let i = 0; i < uniqueAccounts.length; i++) {
 					this.getView().byId("materialIssuePageID").setBusy(true);
 
-					itemsByAccount.loadData(backendUrl+"items/getItemsByAccount?accountCode="+uniqueAccounts[i], null, true, "GET",false,false,{
+					itemsByAccount.loadData(backendUrl+"items/getItemsByAccount?accountCode=", {
+						company : this.company,
+						accountCode : uniqueAccounts[i]
+					}, true, "GET",false,false,{
 						'Authorization': 'Bearer ' + this.oJWT
 					});
 					itemsByAccount.dataLoaded().then(function(){
@@ -196,7 +211,10 @@ sap.ui.define([
 			var oJWT = this.oJWT;
 			$.ajax({
 				type: "POST",
-				data: JSON.stringify(oProperty),
+				data: JSON.stringify({
+					company : this.company,
+					oProperty : oProperty
+				}),
 				headers: {"Authorization": "Bearer "+ oJWT},
 				crossDomain: true,
 				url: backendUrl+'materialIssue/approveMI',
@@ -234,7 +252,10 @@ sap.ui.define([
 			var pageDOM = this.getView().byId("materialIssuePageID");
 			pageDOM.setBusy(true);
 			var oModel = this.getView().getModel("materialIssueDetailModel");
-			var jsonData = JSON.stringify(oModel.getData());
+			var jsonData = JSON.stringify({
+				company : this.company,
+				data : oModel.getData()
+			});
 			var oJWT = this.oJWT;
 
 			$.ajax({
@@ -298,7 +319,10 @@ sap.ui.define([
 				this.getView().byId("materialIssuePageID").setBusy(true);
 
 				var accountModel = this.getView().getModel("accounts");
-				accountModel.loadData(backendUrl+"coa/getCOAsByBudget?budgetCode="+sSelectedKey, null, true, "GET",false,false,{
+				accountModel.loadData(backendUrl+"coa/getCOAsByBudget?", {
+					company : this.company,
+					budgetCode : sSelectedKey
+				}, true, "GET",false,false,{
 					'Authorization': 'Bearer ' + this.oJWT
 				});
 				accountModel.refresh();
@@ -346,7 +370,8 @@ sap.ui.define([
 				type: "POST",
 				data: {
 					"Code": code,
-					"Remarks" : rejectionRemarks
+					"Remarks" : rejectionRemarks,
+					"company" : this.company
 				},
 				headers: {"Authorization": "Bearer "+ this.oJWT},
 				crossDomain: true,
@@ -384,7 +409,10 @@ sap.ui.define([
 			var pageDOM = this.getView().byId("materialIssuePageID");
 			pageDOM.setBusy(true);
 			var oModel = this.getView().getModel("materialIssueDetailModel");
-			var jsonData = JSON.stringify(oModel.getData());
+			var jsonData = JSON.stringify({
+				company : this.company,
+				data : oModel.getData()
+			});
 			var oJWT = this.oJWT;
 			var viewModel = this.getView().getModel("viewModel");
 
@@ -454,7 +482,10 @@ sap.ui.define([
 			var oItemData = oItemModel.getData();
 			if(!(oSelectedItem.toString() in oItemData)){
 				var oItemByAccountModel = new JSONModel();
-				await oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount?accountCode="+oSelectedItem+"", null, true, "GET",false,false,{
+				await oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount", {
+					company : this.company,
+					accountCode : oSelectedItem
+				}, true, "GET",false,false,{
 					'Authorization': 'Bearer ' + this.oJWT
 				});
 				var oItemByAccountData = oItemByAccountModel.getData();

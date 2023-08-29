@@ -26,7 +26,7 @@ xmlns:core="sap.ui.core"
                     <core:Title id="_IDGenTitle1" text="Information" />
 
                         <Label text="ID" />
-						<Text text="{advanceRequestDetailModel>/Code}" />
+						<Text id="advanceRequestId" text="{advanceRequestDetailModel>/Code}" />
 
                         <Label id="_IDGenLabel1" text="Date" />
 						<Text id="_IDGenText1" text="{advanceRequestDetailModel>/CreateDate}" />
@@ -34,19 +34,6 @@ xmlns:core="sap.ui.core"
                         <Label id="_IDGenLabel2" text="Advance Name" />
 						<Text id="_IDGenText12"  text="{advanceRequestDetailModel>/Name}"/>
 
-						<Label text="Advance Status" />
-						<ObjectStatus text="{path : 'advanceRequestDetailModel>/U_Status', formatter:'.textFormatter'}" state="{path:'advanceRequestDetailModel>/U_Status', formatter:'.objectFormatter'}" inverted="true"></ObjectStatus>
-
-						<Label text="Relization Status" />
-						<ObjectStatus text="{path : 'advanceRequestDetailModel>/U_RealiStatus', formatter:'.relizationTextFormatter'}" state="{path:'advanceRequestDetailModel>/U_RealiStatus', formatter:'.realizationObjectFormatter'}" inverted="true"></ObjectStatus>
-
-
-						<Label id="_IDGenLabel4" text="Advance Remarks" />
-						<Text id="_IDGenText4"  text="{advanceRequestDetailModel>/U_Remarks}"/>
-
-						<Label text="Transfer Remarks" />
-						<Text  text="{advanceRequestDetailModel>/U_TransferRemarks}"/>
-						
 						 <Label id="_IDGenLabelAmunt" text="Advance Amount" />
 						<ObjectNumber 
 						id="advanceAmount"
@@ -109,6 +96,49 @@ xmlns:core="sap.ui.core"
 			</content>
 			
 		</Panel>
+
+		<Panel expandable="true" expanded="true" headerText="Remarks" width="auto" class="sapUiTinyMargin">
+
+			<content>
+			<form:SimpleForm 
+						editable="true"
+                        layout="ColumnLayout"
+                        columnsM="2"
+                        columnsL="2"
+                        columnsXL="2">
+					<form:content>
+                    <core:Title text="Realization Information" />
+
+						<Label text="Relization Status" />
+						<ObjectStatus text="{path : 'advanceRequestDetailModel>/U_RealiStatus', formatter:'.relizationTextFormatter'}" state="{path:'advanceRequestDetailModel>/U_RealiStatus', formatter:'.realizationObjectFormatter'}" inverted="true"></ObjectStatus>
+
+						<Label text="Realization Transfer Remarks" />
+						<Text  text="{advanceRequestDetailModel>/U_TransferRemarks}" />
+						
+						<Label text="Realization Rejected Reason" />
+						<Text  text="{advanceRequestDetailModel>/U_RealizationRemarks}" />
+					
+					<core:Title text="Advance Information" />
+
+						<Label text="Advance Status" />
+						<ObjectStatus text="{path : 'advanceRequestDetailModel>/U_Status', formatter:'.textFormatter'}" state="{path:'advanceRequestDetailModel>/U_Status', formatter:'.objectFormatter'}" inverted="true"></ObjectStatus>
+
+						<Label text="Advance Transfer Remarks" />
+						<Text  text="{advanceRequestDetailModel>/U_TransferRemarks}"/>
+
+						<Label  text="Advance Remarks" />
+						<Text  text="{advanceRequestDetailModel>/U_Remarks}"/>
+
+						
+					</form:content>
+				</form:SimpleForm>
+			</content>
+			
+			
+		
+
+		</Panel>
+
 		<Panel expandable="true" expanded="true" headerText="Advance Request" width="auto" class="sapUiTinyMargin">
 				<table:Table id="advanceReqLineTableID" 
                         rows="{advanceRequestDetailModel>/ADVANCEREQLINESCollection}"
@@ -195,6 +225,8 @@ xmlns:core="sap.ui.core"
 				
                 </table:Table>
 		</Panel>
+
+		
 
 		<Panel expandable="true" expanded="true" headerText="Realizations" width="auto" class="sapUiTinyMargin">
 			<table:Table id="advanceRealLineTableID"
@@ -338,12 +370,7 @@ xmlns:core="sap.ui.core"
                 </table:Table>
 		</Panel>
 
-		<Panel expandable="true" expanded="true" headerText="Remarks" width="auto" class="sapUiTinyMargin">
-
-			<Text id="_IDGenText101" text="{advanceRequestDetailModel>/U_RealizationRemarks}" />
 		
-
-		</Panel>
 			</VBox>
     </content>
 	<footer  >
@@ -354,7 +381,7 @@ xmlns:core="sap.ui.core"
 					<Button id="approveButton" type="Accept" text="Approve" press="onApproveButtonClick" visible="{viewModel>/is_approver}" />
 					<Button id="rejectButton" type="Reject" text="Reject" press="onRejectButtonClick" visible="{viewModel>/is_approver}" />
 					<Button id="transferedButton" type="Emphasized" text="Confirm" press="onConfirmButtonClick" visible="{viewModel>/is_finance}" />
-					<Button id="resubmitButton" type="Critical" text="Resubmit" press="onResubmitButtonClick" visible="{viewModel>/resubmit}" />
+					<Button id="resubmitButton" type="Critical" text="Resubmit" press="onSubmitButtonClick" visible="{viewModel>/resubmit}" />
               
 				</Toolbar>
 		</footer>

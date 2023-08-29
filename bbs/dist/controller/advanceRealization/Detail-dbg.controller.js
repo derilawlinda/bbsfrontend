@@ -106,7 +106,6 @@ sap.ui.define([
 
 					viewModel.setProperty("/is_approver", false);
 					viewModel.setProperty("/is_requestor", true);
-					viewModel.setProperty("/resubmit", false);
 
 					if(advanceRequestDetailData.U_RealiStatus == 1){
 						viewModel.setProperty("/is_save", false);
@@ -122,9 +121,12 @@ sap.ui.define([
 
 					}
 					if((advanceRequestDetailData.U_RealiStatus == 5) ){
+					console.log(advanceRequestDetailData.U_RealiStatus);
+
 						viewModel.setProperty("/editable", true);
-						viewModel.setProperty("/is_save", true);
+						viewModel.setProperty("/is_save", false);
 						viewModel.setProperty("/resubmit", true);
+						viewModel.setProperty("/showFooter", true);
 					}
 					
 					
@@ -256,7 +258,9 @@ sap.ui.define([
 							text: "OK",
 							press: function () {
 								this.submitAdvanceRealization();
-								viewModel.setProperty("/showFooter", false);
+								viewModel.setProperty("/resubmit", false);
+								viewModel.setProperty("/is_submit", false);
+								viewModel.setProperty("/is_save", true);
 								this.oTransferConfirmationMessageDialog.close();
 							}.bind(this)
 						}),
@@ -283,7 +287,7 @@ sap.ui.define([
 			var view = this.getView();
 			var oProperty = oModel.getProperty("/");
 			var oJWT = this.oJWT;
-			var company = this.companyl
+			var company = this.company;
 			pageView.setBusy(true);
 
 			$.ajax({
@@ -321,6 +325,7 @@ sap.ui.define([
 			var oProperty = oModel.getProperty("/");
 			var oJWT = this.oJWT;
 			var company = this.company;
+			var viewModel = this.getView().getModel("viewModel");
 			pageView.setBusy(true);
 
 			$.ajax({
@@ -339,6 +344,10 @@ sap.ui.define([
 					MessageToast.show("Advance Realization Submitted");
 					$(".sapMMessageToast").css({"background-color": "#256f3a", "color": "white"});
 					view.getModel('advanceRequestDetailModel').refresh();
+					viewModel.setProperty("/resubmit", false);
+					viewModel.setProperty("/is_submit", false);
+					viewModel.setProperty("/is_save", true);
+					
 					dialogID.close();
 					
 				},
@@ -381,7 +390,8 @@ sap.ui.define([
 				type: "POST",
 				data: {
 					"Code": code,
-					"Remarks" : rejectionRemarks
+					"Remarks" : rejectionRemarks,
+					"company" : this.company
 				},
 				headers: {"Authorization": "Bearer "+ this.oJWT},
 				crossDomain: true,
@@ -413,52 +423,6 @@ sap.ui.define([
 				}
 			});
 		},
-
-		onResubmitButtonClick : function(oEvent) {
-		
-			var pageDOM = this.getView().byId("advanceRequestPageId");
-			pageDOM.setBusy(true);
-			var oModel = this.getView().getModel("advanceRequestDetailModel");
-			var jsonData = JSON.stringify(oModel.getData());
-			var oJWT = this.oJWT;
-			var viewModel = this.getView().getModel("viewModel");
-
-			$.ajax({
-				type: "POST",
-				data: jsonData,
-				headers: {"Authorization": "Bearer "+ oJWT},
-				crossDomain: true,
-				url: backendUrl+'advanceRequest/resubmitRealization',
-				contentType: "application/json",
-				success: function (res, status, xhr) {
-					//success code
-					pageDOM.setBusy(false);
-					
-					if (!this.oSuccessMessageDialog) {
-						this.oSuccessMessageDialog = new Dialog({
-							type: DialogType.Message,
-							title: "Success",
-							state: ValueState.Success,
-							content: new Text({ text: "Advance Realization resubmitted" }),
-							beginButton: new Button({
-								type: ButtonType.Emphasized,
-								text: "OK",
-								press: function () {
-									viewModel.setProperty("/showFooter", false);
-									viewModel.setProperty("/editable", false);
-									this.oSuccessMessageDialog.close();
-								}.bind(this)
-							})
-						});
-					}
-		
-					this.oSuccessMessageDialog.open();
-				},
-				error: function (jqXHR, textStatus, errorThrown) {
-					console.log("Got an error response: " + textStatus + errorThrown);
-				}
-			});
-	},
 
 	   onAccountCodeChange : async function(oEvent){
 			
@@ -524,7 +488,10 @@ sap.ui.define([
 			this.getView().byId("createARForm").setBusy(true);
 			var selectedID = parseInt(oEvent.getParameters('selectedItem').value);
 			var budgetingModel = new JSONModel();
-			await budgetingModel.loadData(backendUrl+"budget/getBudgetById?code="+selectedID, null, true, "GET",false,false,{
+			await budgetingModel.loadData(backendUrl+"budget/getBudgetById", {
+				code : selectedID,
+				company : this.company
+			}, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
 			});
 			var budgetingData = budgetingModel.getData();
@@ -589,7 +556,7 @@ sap.ui.define([
 			var pageDOM = this.getView().byId("advanceRequestPageId");
 			var viewModel = this.getView().getModel("viewModel");
 			pageDOM.setBusy(true);
-			var code = this.getView().byId("_IDGenText101").getText();
+			var code = this.getView().byId("advanceRequestId").getText();
 			const oModel = this.getView().getModel("advanceRequestDetailModel");
 			var oAdvanceRequestData = oModel.getData();
 			var code = oAdvanceRequestData.Code;
@@ -598,7 +565,7 @@ sap.ui.define([
 				type: "POST",
 				data: {
 					"Code": code,
-					"company" : company
+					"company" : this.company
 				},
 				headers: {"Authorization": "Bearer "+ oJWT},
 				crossDomain: true,

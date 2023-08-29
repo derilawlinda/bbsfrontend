@@ -85,7 +85,7 @@ sap.ui.define([
 			}
 			const materialRequestDetailModel = new JSONModel();
 			this.getView().setModel(materialRequestDetailModel,"materialRequestDetailModel");
-			materialRequestDetailModel.loadData(backendUrl+"materialRequest/getMaterialRequestById?", {
+			materialRequestDetailModel.loadData(backendUrl+"materialRequest/getMaterialRequestById", {
 				code : this.materialRequestCode,
 				company : this.company
 			}, true, "GET",false,false,{
@@ -158,6 +158,7 @@ sap.ui.define([
 				
 				for (let i = 0; i < materialRequestDetailData.MATERIALREQLINESCollection.length; i++) {
 					let account = (materialRequestDetailData.MATERIALREQLINESCollection[i].U_AccountCode).toString();
+					console.log(materialReqLineTable);
 					materialReqLineTable.getRows()[i].getCells()[1].setBusy(true);
 					if(!(account in oItemData)){
 						itemsByAccount.loadData(backendUrl+"items/getItemsByAccount?accountCode="+account, null, true, "GET",false,false,{

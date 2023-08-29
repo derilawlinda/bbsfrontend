@@ -26,12 +26,15 @@ sap.ui.define([
 		var currentRoute = this.getRouter().getHashChanger().getHash();
 		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 		this.oJWT = oStore.get("jwt");
+		this.company = oStore.get("company");
 		var oModel = new JSONModel();
 		var viewModel = new sap.ui.model.json.JSONModel({
 			is_approver : false
 		});
 		this.getView().setModel(viewModel,"viewModel");
-		oModel.loadData(backendUrl+"advanceRequest/getAdvanceRealizations", null, true, "GET",false,false,{
+		oModel.loadData(backendUrl+"advanceRequest/getAdvanceRealizations", {
+			company : this.company
+		}, true, "GET",false,false,{
 			'Authorization': 'Bearer ' + this.oJWT
 		});
 		this.getView().setModel(oModel,"advanceRealization");

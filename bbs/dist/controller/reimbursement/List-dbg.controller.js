@@ -24,8 +24,11 @@ sap.ui.define([
 		var currentRoute = this.getRouter().getHashChanger().getHash();
 		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 		this.oJWT = oStore.get("jwt");
+		this.company = oStore.get("company");
 		var oModel = new JSONModel();
-		oModel.loadData(backendUrl+"reimbursement/getReimbursements", null, true, "GET",false,false,{
+		oModel.loadData(backendUrl+"reimbursement/getReimbursements", {
+			company : this.company
+		}, true, "GET",false,false,{
 			'Authorization': 'Bearer ' + this.oJWT
 		});
 		this.getOwnerComponent().setModel(oModel,"reimbursements");
@@ -58,7 +61,9 @@ sap.ui.define([
 		});
 		this.getView().setModel(budgetRequestHeader,"budgetHeader");
 		var oBudgetingModel = new JSONModel();
-		oBudgetingModel.loadData(backendUrl+"budget/getApprovedBudget", null, true, "GET",false,false,{
+		oBudgetingModel.loadData(backendUrl+"budget/getApprovedBudget", {
+			company : this.company
+		}, true, "GET",false,false,{
 			'Authorization': 'Bearer ' + this.oJWT
 		});
 		this.getView().setModel(oBudgetingModel,"budgeting");
@@ -171,7 +176,10 @@ sap.ui.define([
 		var oItemData = oItemModel.getData();
 		if(!(oSelectedItem in oItemData)){
 			var oItemByAccountModel = new JSONModel();
-			await oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount?accountCode="+oSelectedItem+"", null, true, "GET",false,false,{
+			await oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount", {
+				company : this.company,
+				accountCode : oSelectedItem
+			}, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
 			});
 			var oItemByAccountData = oItemByAccountModel.getData();
@@ -209,20 +217,24 @@ sap.ui.define([
 			this.getView().byId("ReimbursementItemsTableID").setBusy(true);
 			this.getView().getModel("new_re_items").setProperty("/REIMBURSEMENTLINESCollection", []);
 			var selectedID = parseInt(oEvent.getParameters('selectedItem').value);
-			var budgetingModel = new JSONModel();
-			await budgetingModel.loadData(backendUrl+"budget/getBudgetById?code="+selectedID, null, true, "GET",false,false,{
-				'Authorization': 'Bearer ' + this.oJWT
-			});
+		
 			var accountModel = new JSONModel();
-			await accountModel.loadData(backendUrl+"coa/getCOAsByBudget?budgetCode="+selectedID, null, true, "GET",false,false,{
+			await accountModel.loadData(backendUrl+"coa/getCOAsByBudget", {
+				budgetCode : selectedID,
+				company : this.company
+			}, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
 			});
 			this.getView().setModel(accountModel,"accounts");
 			
 			var budgetingModel = new JSONModel();
-			await budgetingModel.loadData(backendUrl+"budget/getBudgetById?code="+selectedID, null, true, "GET",false,false,{
+			await budgetingModel.loadData(backendUrl+"budget/getBudgetById", {
+				code : selectedID,
+				company : this.company
+			}, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
 			});
+			
 			var budgetingData = budgetingModel.getData();
 			var approvedBudget = budgetingData.U_TotalAmount;
 			var usedBudget = budgetingData.BUDGETUSEDCollection;
@@ -250,7 +262,10 @@ sap.ui.define([
 
 			$.ajax({
 				type: "POST",
-				data: JSON.stringify(oProperty),
+				data: JSON.stringify({
+					oProperty : oProperty,
+					company : this.company
+				}),
 				crossDomain: true,
 				headers: { 'Authorization': 'Bearer ' + oJWT },
 				url: backendUrl+'reimbursement/createReimbursement',
@@ -297,8 +312,6 @@ sap.ui.define([
 			}
 		},
 		onPress: function (oEvent) {
-			
-			
 			var oRouter = this.getOwnerComponent().getRouter();
 			var oRow = oEvent.getSource();
 			var id = oRow.getCells()[0].getText();

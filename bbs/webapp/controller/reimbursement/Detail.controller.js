@@ -46,6 +46,7 @@ sap.ui.define([
 			this.getView().byId("reimbursementPageID").setBusy(true);
 			var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 			this.oJWT = oStore.get("jwt");
+			this.company = oStore.get('company');
 
 
 			var oUserModel = new JSONModel();
@@ -68,14 +69,19 @@ sap.ui.define([
 			const reimbursementDetailModel = new JSONModel();
 			this.getView().setModel(reimbursementDetailModel,"reimbursementDetailModel");
 
-			reimbursementDetailModel.loadData(backendUrl+"reimbursement/getReimbursementById?code="+reimbursementCode, null, true, "GET",false,false,{
+			reimbursementDetailModel.loadData(backendUrl+"reimbursement/getReimbursementById", {
+				code : reimbursementCode,
+				company : this.company
+			}, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
 			});
 			reimbursementDetailModel.refresh();
 			
 
 			var oBudgetingModel = new JSONModel();
-				oBudgetingModel.loadData(backendUrl+"budget/getApprovedBudget", null, true, "GET",false,false,{
+				oBudgetingModel.loadData(backendUrl+"budget/getApprovedBudget", {
+					company : this.company
+				}, true, "GET",false,false,{
 					'Authorization': 'Bearer ' + this.oJWT
 			});
 			this.getOwnerComponent().setModel(oBudgetingModel,"budgeting");
@@ -121,13 +127,19 @@ sap.ui.define([
 				};
 
 				var accountModel = new JSONModel();
-				accountModel.loadData(backendUrl+"coa/getCOAsByBudget?budgetCode="+reimbursementDetailData.U_BudgetCode, null, true, "GET",false,false,{
+				accountModel.loadData(backendUrl+"coa/getCOAsByBudget", {
+					budgetCode : reimbursementDetailData.U_BudgetCode,
+					company : this.company
+				}, true, "GET",false,false,{
 					'Authorization': 'Bearer ' + this.oJWT
 				});
 				this.getView().setModel(accountModel,"accounts");
 
 				const oBudgetModel = new JSONModel();
-				oBudgetModel.loadData(backendUrl+"budget/getBudgetById?code="+reimbursementDetailData.U_BudgetCode, null, true, "GET",false,false,{
+				oBudgetModel.loadData(backendUrl+"budget/getBudgetById?", {
+					code : reimbursementDetailData.U_BudgetCode,
+					company : this.company
+				}, true, "GET",false,false,{
 					'Authorization': 'Bearer ' + this.oJWT
 				});
 				this.getOwnerComponent().setModel(oBudgetModel,"budget");
@@ -162,7 +174,10 @@ sap.ui.define([
 
 
 						if(!(reimbursements[i].U_AccountCode in oItemsData)){
-							oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount?accountCode="+account, null, true, "GET",false,false,{
+							oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount", {
+								accountCode : account,
+								company : this.company
+							}, true, "GET",false,false,{
 								'Authorization': 'Bearer ' + oJWT
 							});
 							oItemByAccountModel.dataLoaded().then(function() {
@@ -211,7 +226,10 @@ sap.ui.define([
 			pageDOM.setBusy(true);
 			$.ajax({
 				type: "POST",
-				data: JSON.stringify(oProperty),
+				data: JSON.stringify({
+					oProperty : oProperty,
+					company : this.company
+				}),
 				headers: {"Authorization": "Bearer "+ oJWT},
 				crossDomain: true,
 				url: backendUrl+'reimbursement/transferReimbursement',
@@ -238,7 +256,10 @@ sap.ui.define([
 			var oJWT = this.oJWT;
 			$.ajax({
 				type: "POST",
-				data: JSON.stringify(oProperty),
+				data: JSON.stringify({
+					oProperty : oProperty,
+					company : this.company
+				}),
 				headers: {"Authorization": "Bearer "+ oJWT},
 				crossDomain: true,
 				url: backendUrl+'reimbursement/approveReimbursement',
@@ -275,7 +296,10 @@ sap.ui.define([
 			var pageDOM = this.getView().byId("reimbursementPageID");
 			pageDOM.setBusy(true);
 			var oModel = this.getView().getModel("reimbursementDetailModel");
-			var jsonData = JSON.stringify(oModel.getData());
+			var jsonData = JSON.stringify({
+				company : this.company,
+				data : oModel.getData()
+			});
 			var oJWT = this.oJWT;
 			console.log(jsonData);
 
@@ -398,7 +422,8 @@ sap.ui.define([
 				type: "POST",
 				data: {
 					"Code": code,
-					"Remarks" : rejectionRemarks
+					"Remarks" : rejectionRemarks,
+					"company" : this.company
 				},
 				headers: {"Authorization": "Bearer "+ this.oJWT},
 				crossDomain: true,

@@ -528,8 +528,11 @@ sap.ui.define([
 				oValidatedComboBox.setValueStateText("Please enter a valid Project");
 			} else {
 				oValidatedComboBox.setValueState(ValueState.None);
+				console.log(sValue);
 				oBudgetingDetailModel.setProperty("/U_Project",sValue);
 				oBudgetingDetailModel.setProperty("/U_ProjectCode",sSelectedKey);
+				console.log(oBudgetingDetailModel);
+				console.log(oBudgetingDetailModel.getData());
 			}
 		},
 

@@ -46,7 +46,7 @@ sap.ui.define([
 				is_requestor : false
 			});
 			this.getView().setModel(viewModel,"viewModel");
-			this.getView().byId("budgetingPageId").setBusy(true);
+			// this.getView().byId("budgetingPageId").setBusy(true);
 			this.budgetCode = oEvent.getParameter("arguments").budgetID;
 			var userModel = this.getOwnerComponent().getModel("userModel");
 			if(userModel === undefined){
@@ -106,7 +106,8 @@ sap.ui.define([
 				budgetCode = urlArray[urlArray.length - 1];
 			}
 			const budgetingDetailModel = new JSONModel();
-			budgetingDetailModel.loadData(backendUrl+"budget/getBudgetById?code="+budgetCode, {
+			budgetingDetailModel.loadData(backendUrl+"budget/getBudgetById?", {
+				code : budgetCode,
 				company : company
 			}, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
@@ -155,50 +156,49 @@ sap.ui.define([
 					
 				};
 
-				this.getView().byId("company").setSelectedKey(this.company);
-				this.getView().byId("company").fireSelectionChange();
+				// this.getView().byId("company").setSelectedKey(this.company);
+				// this.getView().byId("company").fireSelectionChange();
 
 				var companyPath = this.getView().byId("company").getSelectedItem().getBindingContext("companies").getPath();
-				console.log(this.getView().getModel('companies'));
 				this.getView().byId("CreatePillar").bindAggregation("items", {
 					path: "companies>/0/nodes",
 					template: new sap.ui.core.Item({
-						key: "{companies>text}",
+						key: "{companies>code}",
 						text: "{companies>text}"
 					})
 				});
-
-				this.getView().byId("CreatePillar").setSelectedKey(budgetingDetailData.U_Pillar);
+				this.getView().byId("CreatePillar").setSelectedKey(budgetingDetailData.U_PillarCode);
 				var pillarPath = this.getView().byId("CreatePillar").getSelectedItem().getBindingContext("companies").getPath();
 				
 				this.getView().byId("CreateClassification").bindAggregation("items", {
 					path: "companies>"+ pillarPath + "/nodes",
 					template: new sap.ui.core.Item({
-						key: "{companies>text}",
+						key: "{companies>code}",
 						text: "{companies>text}"
 					})
 				});
-				this.getView().byId("CreateClassification").setSelectedKey(budgetingDetailData.U_Classification);
+				
+				this.getView().byId("CreateClassification").setSelectedKey(budgetingDetailData.U_ClassificationCode);
 				var classificationPath = this.getView().byId("CreateClassification").getSelectedItem().getBindingContext("companies").getPath();
 
 				this.getView().byId("CreateSubClassification").bindAggregation("items", {
 					path: "companies>"+ classificationPath + "/nodes",
 					template: new sap.ui.core.Item({
-						key: "{companies>text}",
+						key: "{companies>code}",
 						text: "{companies>text}"
 					})
 				});
-				this.getView().byId("CreateSubClassification").setSelectedKey(budgetingDetailData.U_SubClass);
+				this.getView().byId("CreateSubClassification").setSelectedKey(budgetingDetailData.U_SubClassCode);
 				var subClassificationPath = this.getView().byId("CreateSubClassification").getSelectedItem().getBindingContext("companies").getPath();
 
 				this.getView().byId("CreateSubClassification2").bindAggregation("items", {
 					path: "companies>"+ subClassificationPath + "/nodes",
 					template: new sap.ui.core.Item({
-						key: "{companies>text}",
+						key: "{companies>code}",
 						text: "{companies>text}"
 					})
 				});
-				this.getView().byId("CreateSubClassification2").setSelectedKey(budgetingDetailData.U_SubClass2);
+				this.getView().byId("CreateSubClassification2").setSelectedKey(budgetingDetailData.U_SubClass2Code);
 				
 				this.getView().byId("budgetingPageId").setBusy(false);
 
@@ -216,7 +216,21 @@ sap.ui.define([
 			}.bind(this));
 		  },
 
-		
+		onProjectChange : function(oEvent){
+			var oBudgetingDetailModel = this.getView().getModel("budgetingDetailModel");
+			var oValidatedComboBox = oEvent.getSource(),
+				sSelectedKey = oValidatedComboBox.getSelectedKey(),
+				sValue = oValidatedComboBox.getValue();
+
+			if (!sSelectedKey && sValue) {
+				oValidatedComboBox.setValueState(ValueState.Error);
+				oValidatedComboBox.setValueStateText("Please enter a valid Project");
+			} else {
+				oValidatedComboBox.setValueState(ValueState.None);
+				oBudgetingDetailModel.setProperty("/U_Project",sValue);
+				oBudgetingDetailModel.setProperty("/U_ProjectCode",sSelectedKey);
+			}
+		},
 
         onNavBack: function () {
 			var oHistory = History.getInstance();
@@ -369,9 +383,6 @@ sap.ui.define([
 			this.getView().byId("CreateSubClassification").setEnabled(false);
 			this.getView().byId("CreateSubClassification2").setEnabled(false);
 
-			console.log(sSelectedKey);
-			console.log(sValue);
-
 			var oValidatedComboBox = oEvent.getSource(),
 				sSelectedKey = oValidatedComboBox.getSelectedKey(),
 				sValue = oValidatedComboBox.getValue();
@@ -390,7 +401,7 @@ sap.ui.define([
 				comboPillar.bindAggregation("items", {
 					path: "companies>"+ comboPath + "/nodes",
 					template: new sap.ui.core.Item({
-						key: "{companies>text}",
+						key: "{companies>code}",
 						text: "{companies>text}"
 					})
 				});
@@ -400,55 +411,124 @@ sap.ui.define([
 			
 		},
 		onPillarChange : function(oEvent){
+			var oBudgetingDetailModel = this.getView().getModel("budgetingDetailModel");
 			this.getView().byId("CreateClassification").setSelectedKey("");
 			this.getView().byId("CreateSubClassification").setSelectedKey("");
 			this.getView().byId("CreateSubClassification2").setSelectedKey("");
 
 			this.getView().byId("CreateSubClassification").setEnabled(false);
 			this.getView().byId("CreateSubClassification2").setEnabled(false);
-			var comboPath = oEvent.oSource.getSelectedItem().getBindingContext("companies").getPath();
-			var comboBox = this.getView().byId("CreateClassification");
-			comboBox.setEnabled(true);
-			comboBox.bindAggregation("items", {
-				path: "companies>"+ comboPath + "/nodes",
-				template: new sap.ui.core.Item({
-					key: "{companies>text}",
-					text: "{companies>text}"
-				})
-			});
+
+			var oValidatedComboBox = oEvent.getSource(),
+				sSelectedKey = oValidatedComboBox.getSelectedKey(),
+				sValue = oValidatedComboBox.getValue();
+
+			if (!sSelectedKey && sValue) {
+				this.getView().byId("CreateClassification").setEnabled(false);
+				oValidatedComboBox.setValueState(ValueState.Error);
+				oValidatedComboBox.setValueStateText("Please enter a valid Pillar");
+			} else {
+				oValidatedComboBox.setValueState(ValueState.None);
+
+				var comboPath = oEvent.oSource.getSelectedItem().getBindingContext("companies").getPath();
+				oBudgetingDetailModel.setProperty("/U_Pillar",sValue);
+				oBudgetingDetailModel.setProperty("/U_PillarCode",sSelectedKey);
+				var comboBox = this.getView().byId("CreateClassification");
+				comboBox.setEnabled(true);
+				comboBox.bindAggregation("items", {
+					path: "companies>"+ comboPath + "/nodes",
+					template: new sap.ui.core.Item({
+						key: "{companies>code}",
+						text: "{companies>text}"
+					})
+				});
+			}
+
+			
 		},
 
 		onClassificationChange : function(oEvent){
 
+			var oBudgetingDetailModel = this.getView().getModel("budgetingDetailModel");
 			this.getView().byId("CreateSubClassification").setSelectedKey("");
 			this.getView().byId("CreateSubClassification2").setSelectedKey("");
 
 			this.getView().byId("CreateSubClassification2").setEnabled(false);
-			var comboPath = oEvent.oSource.getSelectedItem().getBindingContext("companies").getPath();
-			var comboBox = this.getView().byId("CreateSubClassification");
-			comboBox.setEnabled(true);
-			comboBox.bindAggregation("items", {
-				path: "companies>"+ comboPath + "/nodes",
-				template: new sap.ui.core.Item({
-					key: "{companies>text}",
-					text: "{companies>text}"
-				})
-			});
+
+			var oValidatedComboBox = oEvent.getSource(),
+				sSelectedKey = oValidatedComboBox.getSelectedKey(),
+				sValue = oValidatedComboBox.getValue();
+
+			if (!sSelectedKey && sValue) {
+				this.getView().byId("CreateSubClassification").setEnabled(false);
+				oValidatedComboBox.setValueState(ValueState.Error);
+				oValidatedComboBox.setValueStateText("Please enter a valid Classification");
+			} else {
+				oValidatedComboBox.setValueState(ValueState.None);
+				oBudgetingDetailModel.setProperty("/U_Classification",sValue);
+				oBudgetingDetailModel.setProperty("/U_ClassificationCode",sSelectedKey);
+				var comboPath = oEvent.oSource.getSelectedItem().getBindingContext("companies").getPath();
+				var comboBox = this.getView().byId("CreateSubClassification");
+				comboBox.setEnabled(true);
+				comboBox.bindAggregation("items", {
+					path: "companies>"+ comboPath + "/nodes",
+					template: new sap.ui.core.Item({
+						key: "{companies>code}",
+						text: "{companies>text}"
+					})
+				});
+			}
+
+			
 		},
 		onSubClassificationChange : function(oEvent){
 
 			this.getView().byId("CreateSubClassification2").setSelectedKey("");
+			var oBudgetingDetailModel = this.getView().getModel("budgetingDetailModel");
 
-			var comboPath = oEvent.oSource.getSelectedItem().getBindingContext("companies").getPath();
-			var comboBox = this.getView().byId("CreateSubClassification2");
-			comboBox.setEnabled(true);
-			comboBox.bindAggregation("items", {
-				path: "companies>"+ comboPath + "/nodes",
-				template: new sap.ui.core.Item({
-					key: "{companies>text}",
-					text: "{companies>text}"
-				})
-			});
+			var oValidatedComboBox = oEvent.getSource(),
+				sSelectedKey = oValidatedComboBox.getSelectedKey(),
+				sValue = oValidatedComboBox.getValue();
+
+			if (!sSelectedKey && sValue) {
+				this.getView().byId("CreateSubClassification2").setEnabled(false);
+				oValidatedComboBox.setValueState(ValueState.Error);
+				oValidatedComboBox.setValueStateText("Please enter a valid SubClassification");
+			} else {
+				oValidatedComboBox.setValueState(ValueState.None);
+				oBudgetingDetailModel.setProperty("/U_SubClass",sValue);
+				oBudgetingDetailModel.setProperty("/U_SubClassCode",sSelectedKey);
+				var comboPath = oEvent.oSource.getSelectedItem().getBindingContext("companies").getPath();
+				var comboBox = this.getView().byId("CreateSubClassification2");
+				comboBox.setEnabled(true);
+				comboBox.bindAggregation("items", {
+					path: "companies>"+ comboPath + "/nodes",
+					template: new sap.ui.core.Item({
+						key: "{companies>code}",
+						text: "{companies>text}"
+					})
+				});
+			}
+
+			
+		},
+
+		onSubClassification2Change : function(oEvent){
+
+			var oBudgetingDetailModel = this.getView().getModel("budgetingDetailModel");
+
+			var oValidatedComboBox = oEvent.getSource(),
+				sSelectedKey = oValidatedComboBox.getSelectedKey(),
+				sValue = oValidatedComboBox.getValue();
+
+			if (!sSelectedKey && sValue) {
+				oValidatedComboBox.setValueState(ValueState.Error);
+				oValidatedComboBox.setValueStateText("Please enter a valid SubClassification2");
+			} else {
+				oValidatedComboBox.setValueState(ValueState.None);
+				oBudgetingDetailModel.setProperty("/U_SubClass2",sValue);
+				oBudgetingDetailModel.setProperty("/U_SubClass2Code",sSelectedKey);
+			}
 		},
 		onAddPress : function(oEvent){
 			

@@ -151,6 +151,7 @@ sap.ui.define([
 				accountModel.refresh();
 
 				var materialReqLineTable = this.getView().byId("materialReqLineTableID");
+				materialReqLineTable.setVisibleRowCount(materialRequestDetailData.MATERIALREQLINESCollection.length);
 				var oItemsModel = this.getView().getModel("items");
 				oItemsModel.setProperty("/data", []);
 				var oItemData = oItemsModel.getData();
@@ -158,10 +159,12 @@ sap.ui.define([
 				
 				for (let i = 0; i < materialRequestDetailData.MATERIALREQLINESCollection.length; i++) {
 					let account = (materialRequestDetailData.MATERIALREQLINESCollection[i].U_AccountCode).toString();
-					console.log(materialReqLineTable);
 					materialReqLineTable.getRows()[i].getCells()[1].setBusy(true);
 					if(!(account in oItemData)){
-						itemsByAccount.loadData(backendUrl+"items/getItemsByAccount?accountCode="+account, null, true, "GET",false,false,{
+						itemsByAccount.loadData(backendUrl+"items/getItemsByAccount", {
+							accountCode : account,
+							company : this.company
+						}, true, "GET",false,false,{
 							'Authorization': 'Bearer ' + this.oJWT
 						});
 						itemsByAccount.dataLoaded().then(function(){
@@ -478,7 +481,10 @@ sap.ui.define([
 			var oItemData = oItemModel.getData();
 			if(!(oSelectedItem in oItemData)){
 				var oItemByAccountModel = new JSONModel();
-				await oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount?accountCode="+oSelectedItem+"", null, true, "GET",false,false,{
+				await oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount", {
+					accountCode : oSelectedItem,
+					company : this.company
+				}, true, "GET",false,false,{
 					'Authorization': 'Bearer ' + this.oJWT
 				});
 				var oItemByAccountData = oItemByAccountModel.getData();

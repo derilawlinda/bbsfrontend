@@ -171,7 +171,10 @@ sap.ui.define([
 				for (let i = 0; i < uniqueAccounts.length; i++) {
 					this.getView().byId("advanceRequestPageId").setBusy(true);
 
-					itemsByAccount.loadData(backendUrl+"items/getItemsByAccount?accountCode="+uniqueAccounts[i], null, true, "GET",false,false,{
+					itemsByAccount.loadData(backendUrl+"items/getItemsByAccount", {
+						accountCode : uniqueAccounts[i],
+						company : this.company
+					}, true, "GET",false,false,{
 						'Authorization': 'Bearer ' + this.oJWT
 					});
 					itemsByAccount.dataLoaded().then(function(){
@@ -216,7 +219,8 @@ sap.ui.define([
 			if(!(oSelectedItem.toString() in oItemData)){
 				var oItemByAccountModel = new JSONModel();
 				await oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount", {
-					accountCode : oSelectedItem
+					accountCode : oSelectedItem,
+					company : this.company
 				}, true, "GET",false,false,{
 					'Authorization': 'Bearer ' + this.oJWT
 				});

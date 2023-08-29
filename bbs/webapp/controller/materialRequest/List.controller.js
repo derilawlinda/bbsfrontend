@@ -153,7 +153,10 @@ sap.ui.define([
 		var oItemData = oItemModel.getData();
 		if(!(oSelectedItem in oItemData)){
 			var oItemByAccountModel = new JSONModel();
-			await oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount?accountCode="+oSelectedItem+"", null, true, "GET",false,false,{
+			await oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount", {
+				accountCode : oSelectedItem,
+				company : this.company
+			}, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
 			});
 			var oItemByAccountData = oItemByAccountModel.getData();

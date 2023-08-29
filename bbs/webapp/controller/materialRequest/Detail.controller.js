@@ -158,33 +158,35 @@ sap.ui.define([
 				var itemsByAccount = new JSONModel();
 				
 				for (let i = 0; i < materialRequestDetailData.MATERIALREQLINESCollection.length; i++) {
-					let account = (materialRequestDetailData.MATERIALREQLINESCollection[i].U_AccountCode).toString();
-					materialReqLineTable.getRows()[i].getCells()[1].setBusy(true);
-					if(!(account in oItemData)){
-						itemsByAccount.loadData(backendUrl+"items/getItemsByAccount", {
-							accountCode : account,
-							company : this.company
-						}, true, "GET",false,false,{
-							'Authorization': 'Bearer ' + this.oJWT
+					if(materialRequestDetailData.MATERIALREQLINESCollection[i].U_AccountCode){
+						let account = (materialRequestDetailData.MATERIALREQLINESCollection[i].U_AccountCode).toString();
+						materialReqLineTable.getRows()[i].getCells()[1].setBusy(true);
+						if(!(account in oItemData)){
+							itemsByAccount.loadData(backendUrl+"items/getItemsByAccount", {
+								accountCode : account,
+								company : this.company
+							}, true, "GET",false,false,{
+								'Authorization': 'Bearer ' + this.oJWT
+							});
+							itemsByAccount.dataLoaded().then(function(){
+								var itemsByAccountData = itemsByAccount.getData();
+								oItemData.data[account] = itemsByAccountData;
+								var newItemModel = new sap.ui.model.json.JSONModel(oItemData);
+								this.getView().setModel(newItemModel, 'items');
+								newItemModel.refresh();
+								materialReqLineTable.getRows()[i].getCells()[1].setBusy(false);
+							}.bind(this))
+							
+						};
+					
+						materialReqLineTable.getRows()[i].getCells()[1].bindAggregation("items", {
+							path: 'items>/data/'+ account,
+							template: new sap.ui.core.Item({
+								key: "{items>ItemCode}",
+								text: "{items>ItemCode} - {items>ItemName}"
+							})
 						});
-						itemsByAccount.dataLoaded().then(function(){
-							var itemsByAccountData = itemsByAccount.getData();
-							oItemData.data[account] = itemsByAccountData;
-							var newItemModel = new sap.ui.model.json.JSONModel(oItemData);
-							this.getView().setModel(newItemModel, 'items');
-							newItemModel.refresh();
-							materialReqLineTable.getRows()[i].getCells()[1].setBusy(false);
-						}.bind(this))
-						
-					};
-				
-					materialReqLineTable.getRows()[i].getCells()[1].bindAggregation("items", {
-						path: 'items>/data/'+ account,
-						template: new sap.ui.core.Item({
-							key: "{items>ItemCode}",
-							text: "{items>ItemCode} - {items>ItemName}"
-						})
-					});
+					}
 				}
 
 				oItemsModel.dataLoaded().then(function() {

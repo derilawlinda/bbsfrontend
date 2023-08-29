@@ -14,6 +14,7 @@ xmlns:core="sap.ui.core"
     
     <content>
       <VBox class="sapUiSmallMargin" id="createReimbursementForm">
+	  <Panel>
 				<form:SimpleForm id="SimpleFormChangeColumn_twoGroups234"
 						editable="true"
                         layout="ColumnLayout"
@@ -120,10 +121,54 @@ xmlns:core="sap.ui.core"
 					</form:content>
 				</form:SimpleForm>
 
+				<Table>
+							<columns>
+								<Column>
+									<Text text="Role" />
+								</Column>
+								<Column>
+									<Text text="Name" />
+								</Column>      
+								<Column>
+									<Text text="Approval Date" />
+								</Column>          
+							</columns>
+							<items>
+								<ColumnListItem>
+									<cells>
+										<Text text="Manager" />
+										<Text text="{reimbursementDetailModel>/U_ManagerApp}" />
+										<Text text="{reimbursementDetailModel>/U_ManagerAppAt}" />
+
+									</cells>
+								</ColumnListItem>
+								<ColumnListItem>
+									<cells>
+										<Text text="Director" />
+										<Text text="{reimbursementDetailModel>/U_DirectorApp}" />
+										<Text text="{reimbursementDetailModel>/U_DirectorAppAt}" />
+									</cells>
+								</ColumnListItem>
+
+								<ColumnListItem>
+									<cells>
+										<Text text="Finance" />
+										<Text text="{reimbursementDetailModel>/U_TransferBy}" />
+										<Text text="{reimbursementDetailModel>/U_DisbursedAt}" />
+									</cells>
+								</ColumnListItem>
+							
+							</items>              
+						</Table>
+		</Panel>
+
+		<Panel>
+
 				<table:Table id="reimbursementLineTableID" 
                         rows="{reimbursementDetailModel>/REIMBURSEMENTLINESCollection}"
 						visibleRowCount="7"
 						rowActionCount="1"
+						selectionMode="None"
 				>
 
 				<table:extension>
@@ -247,6 +292,7 @@ xmlns:core="sap.ui.core"
 
 				
                 </table:Table>
+		</Panel>
 
                 
 			</VBox>
@@ -258,6 +304,7 @@ xmlns:core="sap.ui.core"
 					<Button id="acceptButton" type="Accept" text="Approve" press="onApproveButtonClick" visible="{viewModel>/is_approver}" />
 					<Button id="rejectButton" type="Reject" text="Reject" press="onRejectButtonClick" visible="{viewModel>/is_approver}" />
              		<Button id="transferButton" type="Emphasized" text="Transfer" press="onTransferButtonClick" visible="{viewModel>/is_finance}" />
+					<Button id="resubmitButton" type="Critical" text="Resubmit" press="onResubmitButtonClick" visible="{viewModel>/resubmit}" />
 				</Toolbar>
 		</footer>
   </Page>

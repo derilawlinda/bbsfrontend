@@ -234,7 +234,7 @@ sap.ui.define([
 			}, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
 			});
-			
+
 			var budgetingData = budgetingModel.getData();
 			var approvedBudget = budgetingData.U_TotalAmount;
 			var usedBudget = budgetingData.BUDGETUSEDCollection;
@@ -259,6 +259,7 @@ sap.ui.define([
 			var oProperty = oModel.getProperty("/");
 			var view = this.getView();
 			var oJWT = this.oJWT;
+			var company = this.company;
 
 			$.ajax({
 				type: "POST",
@@ -274,7 +275,9 @@ sap.ui.define([
 					  //success code
 					oDialog.setBusy(false);
 					oDialog.close();
-					advanceRequestModel.loadData(backendUrl+"reimbursement/getReimbursements", null, true, "GET",false,false,{
+					advanceRequestModel.loadData(backendUrl+"reimbursement/getReimbursements", {
+						company : company
+					}, true, "GET",false,false,{
 						'Authorization': 'Bearer ' + oJWT
 					});
 					MessageToast.show("Reimbursement Request created");

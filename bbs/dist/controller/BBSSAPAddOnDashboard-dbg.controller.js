@@ -33,6 +33,7 @@ sap.ui.define([
 			var oComponent = this.getOwnerComponent();
 			var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 			this.oJWT = oStore.get("jwt");
+			this.company = oStore.get('company');
 			oUserModel.attachRequestFailed(function(oEvent){
 				
 				bus.publish("username", "checktoken", 
@@ -56,6 +57,7 @@ sap.ui.define([
 			});
 			this.getOwnerComponent().setModel(oUserModel,"userModel");
 			this.getView().setModel(oUserModel,"userModel");
+			this.getView().getModel('userModel').setProperty("/company",this.company);
 			this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
 			var oModel = this.getOwnerComponent().getModel("navigationList");
 			this.getView().setModel(oModel);

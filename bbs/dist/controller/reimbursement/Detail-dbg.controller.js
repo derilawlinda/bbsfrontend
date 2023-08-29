@@ -301,7 +301,6 @@ sap.ui.define([
 				data : oModel.getData()
 			});
 			var oJWT = this.oJWT;
-			console.log(jsonData);
 
 			$.ajax({
 				type: "POST",
@@ -397,6 +396,54 @@ sap.ui.define([
 			}
 
 		},
+
+		onResubmitButtonClick : function(oEvent) {
+		
+			var pageDOM = this.getView().byId("reimbursementPageID");
+			pageDOM.setBusy(true);
+			var oModel = this.getView().getModel("reimbursementDetailModel");
+			var jsonData = JSON.stringify({
+				company : this.company,
+				data : oModel.getData()
+			});
+			var oJWT = this.oJWT;
+			var viewModel = this.getView().getModel("viewModel");
+
+			$.ajax({
+				type: "POST",
+				data: jsonData,
+				headers: {"Authorization": "Bearer "+ oJWT},
+				crossDomain: true,
+				url: backendUrl+'reimbursement/resubmitReimbursement',
+				contentType: "application/json",
+				success: function (res, status, xhr) {
+					  //success code
+					  pageDOM.setBusy(false);
+					  
+					  if (!this.oSuccessMessageDialog) {
+						this.oSuccessMessageDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Success",
+							state: ValueState.Success,
+							content: new Text({ text: "Reimbursement resubmitted" }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									viewModel.setProperty("/resubmit", false);
+									this.oSuccessMessageDialog.close();
+								}.bind(this)
+							})
+						});
+					}
+		
+					this.oSuccessMessageDialog.open();
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+				  	console.log("Got an error response: " + textStatus + errorThrown);
+				}
+			  });
+	   },
 		onRejectButtonClick : function(oEvent){
 			if (!this.rejectReimbursementDialog) {
 				this.rejectReimbursementDialog = this.loadFragment({

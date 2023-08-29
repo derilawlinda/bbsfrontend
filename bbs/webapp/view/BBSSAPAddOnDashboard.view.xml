@@ -25,7 +25,7 @@
 						<OverflowToolbarLayoutData id="_IDGenOverflowToolbarLayoutData10" priority="NeverOverflow" minWidth="20px" />
 					</layoutData>
 				</ToolbarSpacer>
-				<Button id="_IDGenButton9" text="{userModel>/user/name}" type="Transparent" press=".handleUserNamePress" ariaHasPopup="Menu">
+				<Button id="_IDGenButton9" text="{userModel>/user/name} ({userModel>/company})" type="Transparent" press=".handleUserNamePress" ariaHasPopup="Menu">
 					<layoutData>
 						<OverflowToolbarLayoutData id="_IDGenOverflowToolbarLayoutData11" priority="NeverOverflow" />
 					</layoutData>

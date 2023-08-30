@@ -145,7 +145,7 @@ xmlns:core="sap.ui.core"
 	<Panel class="sapUiTinyMargin">
 				<table:Table id="materialReqLineTableID" 
                         rows="{materialRequestDetailModel>/MATERIALREQLINESCollection}"
-						visibleRowCount="20"
+						visibleRowCount="50"
 						rowActionCount="1"
 						selectionMode="None"
 						 

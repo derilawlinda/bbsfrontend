@@ -70,7 +70,7 @@ sap.ui.define([
 			});
 
 			this.oSubClass2Model = new JSONModel();
-			this.oSubClass2Model.setSizeLimit(200);
+			this.oSubClass2Model.setSizeLimit(9999);
 			this.oSubClass2Model.loadData(backendUrl+"profitCenter/getSubClass2", {
 				company : company
 			}, true, "GET",false,false,{

@@ -156,7 +156,7 @@ sap.ui.define([
 				oItemsModel.setProperty("/data", []);
 				var oItemData = oItemsModel.getData();
 				var itemsByAccount = new JSONModel();
-				
+				console.log(materialReqLineTable.getRows().length)
 				for (let i = 0; i < materialRequestDetailData.MATERIALREQLINESCollection.length; i++) {
 					if(materialRequestDetailData.MATERIALREQLINESCollection[i].U_AccountCode){
 						let account = (materialRequestDetailData.MATERIALREQLINESCollection[i].U_AccountCode).toString();

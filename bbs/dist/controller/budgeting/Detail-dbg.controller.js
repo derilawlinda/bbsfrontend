@@ -46,7 +46,7 @@ sap.ui.define([
 				is_requestor : false
 			});
 			this.getView().setModel(viewModel,"viewModel");
-			// this.getView().byId("budgetingPageId").setBusy(true);
+			this.getView().byId("budgetingPageId").setBusy(true);
 			this.budgetCode = oEvent.getParameter("arguments").budgetID;
 			var userModel = this.getOwnerComponent().getModel("userModel");
 			if(userModel === undefined){

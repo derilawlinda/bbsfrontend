@@ -291,7 +291,11 @@ sap.ui.define([
 				return 'Approved by Manager'
 			}else if(sStatus == 3){
 				return 'Approved by Director'
-			}else{
+			}else if(sStatus== 5){
+				return 'Closed'
+			}else if(sStatus == 99){
+				return 'Cancelled'
+			}else {
 				return 'Rejected'
 			}
 		  

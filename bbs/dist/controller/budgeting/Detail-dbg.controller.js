@@ -8,8 +8,9 @@ sap.ui.define([
 	"sap/m/Text",
 	"sap/ui/core/library",
 	"sap/m/Input",
-	"sap/m/TextArea"
-], function (Controller, History, JSONModel,Dialog,Button,mobileLibrary,Text,coreLibrary,Input,TextArea) {
+	"sap/m/TextArea",
+	"sap/m/MessageBox"
+], function (Controller, History, JSONModel,Dialog,Button,mobileLibrary,Text,coreLibrary,Input,TextArea,MessageBox) {
 	"use strict";
 
 	var ButtonType = mobileLibrary.ButtonType;
@@ -43,7 +44,8 @@ sap.ui.define([
 				editable : false,
 				resubmit : false,
 				is_approver : false,
-				is_requestor : false
+				is_requestor : false,
+				is_finance : false
 			});
 			this.getView().setModel(viewModel,"viewModel");
 			this.getView().byId("budgetingPageId").setBusy(true);
@@ -153,6 +155,11 @@ sap.ui.define([
 					viewModel.setProperty("/editable", true);
 					viewModel.setProperty("/showFooter", true);
 					viewModel.setProperty("/is_requestor", true);
+					viewModel.setProperty("/is_finance", true);
+					if((budgetingDetailData.U_Status == 5 || budgetingDetailData.U_Status == 99) ){
+						viewModel.setProperty("/showFooter", false);
+						viewModel.setProperty("/editable", false);
+					}
 					
 				};
 
@@ -628,7 +635,120 @@ sap.ui.define([
 				  	console.log("Got an error response: " + textStatus + errorThrown);
 				}
 			  });
-	   },
+	  	},
+		onCancelButtonClick : function(oEvent) {
+			
+			var pageDOM = this.getView().byId("budgetingPageId");
+			var oModel = this.getView().getModel("budgetingDetailModel");
+			var oModelDetailData = oModel.getData();
+			var oJWT = this.oJWT;
+			var company = this.company;
+
+			MessageBox.warning("Cancel this Budget ?", {
+				actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+				emphasizedAction: MessageBox.Action.OK,
+				onClose: function (sAction) {
+					if(sAction == 'OK'){
+						pageDOM.setBusy(true);
+
+						$.ajax({
+							type: "POST",
+							data: {
+								"Code": oModelDetailData.Code,
+								"Company" : company
+							},
+							headers: {"Authorization": "Bearer "+ oJWT},
+							crossDomain: true,
+							url: backendUrl+'budget/cancelBudget',
+							success: function (res, status, xhr) {
+								//success code
+								pageDOM.setBusy(false);
+								
+								if (!this.oSuccessMessageDialog) {
+									this.oSuccessMessageDialog = new Dialog({
+										type: DialogType.Message,
+										title: "Info",
+										state: ValueState.Information,
+										content: new Text({ text: "Budget cancelled" }),
+										beginButton: new Button({
+											type: ButtonType.Emphasized,
+											text: "OK",
+											press: function () {
+												this.oSuccessMessageDialog.close();
+											}.bind(this)
+										})
+									});
+								}
+					
+								this.oSuccessMessageDialog.open();
+							},
+							error: function (jqXHR, textStatus, errorThrown) {
+								console.log("Got an error response: " + textStatus + errorThrown);
+							}
+						});
+
+
+					}
+				}
+			});
+					
+		},
+		onCloseButtonClick : function(oEvent) {
+				
+			var pageDOM = this.getView().byId("budgetingPageId");
+			var oModel = this.getView().getModel("budgetingDetailModel");
+			var oModelDetailData = oModel.getData();
+			var oJWT = this.oJWT;
+			var company = this.company;
+
+			MessageBox.warning("Close this Budget ?", {
+				actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+				emphasizedAction: MessageBox.Action.OK,
+				onClose: function (sAction) {
+					if(sAction == 'OK'){
+						pageDOM.setBusy(true);
+
+						$.ajax({
+							type: "POST",
+							data: {
+								"Code": oModelDetailData.Code,
+								"Company" : company
+							},
+							headers: {"Authorization": "Bearer "+ oJWT},
+							crossDomain: true,
+							url: backendUrl+'budget/closeBudget',
+							success: function (res, status, xhr) {
+								//success code
+								pageDOM.setBusy(false);
+								
+								if (!this.oSuccessMessageDialog) {
+									this.oSuccessMessageDialog = new Dialog({
+										type: DialogType.Message,
+										title: "Info",
+										state: ValueState.Information,
+										content: new Text({ text: "Budget closed" }),
+										beginButton: new Button({
+											type: ButtonType.Emphasized,
+											text: "OK",
+											press: function () {
+												this.oSuccessMessageDialog.close();
+											}.bind(this)
+										})
+									});
+								}
+					
+								this.oSuccessMessageDialog.open();
+							},
+							error: function (jqXHR, textStatus, errorThrown) {
+								console.log("Got an error response: " + textStatus + errorThrown);
+							}
+						});
+
+
+					}
+				}
+			});
+		},
 		onDelete: function(oEvent){
 
 			var row = oEvent.getParameters().row;
@@ -641,7 +761,13 @@ sap.ui.define([
 			this.onAmountChange();
 		},
 
-		
+		dateFormatter : function(date){
+			var unformattedDate = new Date(date);
+			var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({pattern : "YYYY-MM-dd" });   
+			var dateFormatted = dateFormat.format(unformattedDate);
+			return dateFormatted;
+		},
+
 		objectFormatter: function(sStatus) {
 			if(sStatus == 1 ){
 				return 'Warning';
@@ -662,7 +788,11 @@ sap.ui.define([
 				return 'Approved by Manager'
 			}else if(sStatus == 3){
 				return 'Approved by Director'
-			}else{
+			}else if(sStatus== 5){
+				return 'Closed'
+			}else if(sStatus == 99){
+				return 'Cancelled'
+			}else {
 				return 'Rejected'
 			}
 		  

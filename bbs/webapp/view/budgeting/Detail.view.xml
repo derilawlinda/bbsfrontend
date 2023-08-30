@@ -53,7 +53,8 @@ xmlns:core="sap.ui.core"
 
 						<Label text="Status" />
 						<ObjectStatus text="{path : 'budgetingDetailModel>/U_Status', formatter:'.textFormatter'}" state="{path:'budgetingDetailModel>/U_Status', formatter:'.objectFormatter'}" inverted="true"></ObjectStatus>
-
+						<Text text="Cancelled by {budgetingDetailModel>/U_CancelledBy} at {budgetingDetailModel>/U_CancelledAt}" visible="{= ${budgetingDetailModel>/U_Status} === 99}" />
+						<Text text="Closed by {budgetingDetailModel>/U_ClosedBy} at {budgetingDetailModel>/U_ClosedAt}" visible="{= ${budgetingDetailModel>/U_Status} === 5}" />
 
 						<Label id="_IDGenLabel4" text="Remarks" />
 						<Text text="{budgetingDetailModel>/U_Remarks}" />
@@ -348,6 +349,8 @@ xmlns:core="sap.ui.core"
 					<Button type="Accept" text="Approve" press="onApproveButtonClick" visible="{viewModel>/is_approver}" />
 					<Button type="Reject" text="Reject" press="onRejectButtonClick" visible="{viewModel>/is_approver}" />
 					<Button type="Critical" text="Resubmit" press="onResubmitButtonClick" visible="{viewModel>/resubmit}" />
+					<Button type="Reject" text="Cancel" press="onCancelButtonClick" visible="{viewModel>/is_finance}" />
+					<Button type="Critical" text="CLOSE" press="onCloseButtonClick" visible="{viewModel>/is_finance}" />
 				</Toolbar>
 		</footer>
   </Page>

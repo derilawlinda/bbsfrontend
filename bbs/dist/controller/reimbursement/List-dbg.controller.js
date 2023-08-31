@@ -26,11 +26,13 @@ sap.ui.define([
 		this.oJWT = oStore.get("jwt");
 		this.company = oStore.get("company");
 		var oModel = new JSONModel();
+		oModel.setSizeLimit(500);
 		oModel.loadData(backendUrl+"reimbursement/getReimbursements", {
 			company : this.company
 		}, true, "GET",false,false,{
 			'Authorization': 'Bearer ' + this.oJWT
 		});
+		
 		this.getOwnerComponent().setModel(oModel,"reimbursements");
 		oModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
 			this.getView().byId("reimbursementTableID").setBusy(false);
@@ -88,7 +90,6 @@ sap.ui.define([
 		}
        },
 	   toggleCreateButton : function(channelId, eventId, parametersMap){
-		console.log(parametersMap.roleId);
 			if(parametersMap.roleId == 4 || parametersMap.roleId == 5 || parametersMap.roleId == 2){
 				this.getView().getModel("viewModel").setProperty("/showCreateButton",false)
 				this.getView().getModel("viewModel").setProperty("/is_approver",true)
@@ -252,7 +253,7 @@ sap.ui.define([
 	   onSaveButtonClick : function(oEvent) {
 		var oDialog = this.oDialog;
 			oDialog.setBusy(true);
-			var advanceRequestModel = this.getView().getModel("reimbursements");
+			var reimbursementModel = this.getView().getModel("reimbursements");
 			const oModel = this.getView().getModel("reimbursementHeader");
 			const oModelItems = this.getView().getModel("new_re_items");
 			oModel.setProperty("/REIMBURSEMENTLINESCollection", oModelItems.getData().REIMBURSEMENTLINESCollection);
@@ -275,7 +276,7 @@ sap.ui.define([
 					  //success code
 					oDialog.setBusy(false);
 					oDialog.close();
-					advanceRequestModel.loadData(backendUrl+"reimbursement/getReimbursements", {
+					reimbursementModel.loadData(backendUrl+"reimbursement/getReimbursements", {
 						company : company
 					}, true, "GET",false,false,{
 						'Authorization': 'Bearer ' + oJWT

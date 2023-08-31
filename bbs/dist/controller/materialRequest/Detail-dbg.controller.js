@@ -151,6 +151,7 @@ sap.ui.define([
 				accountModel.refresh();
 
 				var materialReqLineTable = this.getView().byId("materialReqLineTableID");
+				console.log(materialRequestDetailData.MATERIALREQLINESCollection.length);
 				materialReqLineTable.setVisibleRowCount(materialRequestDetailData.MATERIALREQLINESCollection.length);
 				var oItemsModel = this.getView().getModel("items");
 				oItemsModel.setProperty("/data", []);

@@ -560,57 +560,57 @@ sap.ui.define([
 			var oModel = this.getView().getModel("budgetingDetailModel");
 			var jsonData = JSON.stringify(oModel.getData());
 			var oJWT = this.oJWT;
-			console.log(jsonData);
+			// console.log(jsonData);
 
-			// $.ajax({
-			// 	type: "POST",
-			// 	data: jsonData,
-			// 	headers: {"Authorization": "Bearer "+ oJWT},
-			// 	crossDomain: true,
-			// 	url: backendUrl+'budget/saveBudget',
-			// 	contentType: "application/json",
-			// 	success: function (res, status, xhr) {
-			// 		  //success code
-			// 		  pageDOM.setBusy(false);
+			$.ajax({
+				type: "POST",
+				data: jsonData,
+				headers: {"Authorization": "Bearer "+ oJWT},
+				crossDomain: true,
+				url: backendUrl+'budget/saveBudget',
+				contentType: "application/json",
+				success: function (res, status, xhr) {
+					  //success code
+					  pageDOM.setBusy(false);
 					  
-			// 		  if (!this.oSuccessMessageDialog) {
-			// 			this.oSuccessMessageDialog = new Dialog({
-			// 				type: DialogType.Message,
-			// 				title: "Success",
-			// 				state: ValueState.Success,
-			// 				content: new Text({ text: "Budget saved" }),
-			// 				beginButton: new Button({
-			// 					type: ButtonType.Emphasized,
-			// 					text: "OK",
-			// 					press: function () {
-			// 						this.oSuccessMessageDialog.close();
-			// 					}.bind(this)
-			// 				})
-			// 			});
-			// 			}
+					  if (!this.oSuccessMessageDialog) {
+						this.oSuccessMessageDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Success",
+							state: ValueState.Success,
+							content: new Text({ text: "Budget saved" }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									this.oSuccessMessageDialog.close();
+								}.bind(this)
+							})
+						});
+						}
 		
-			// 		this.oSuccessMessageDialog.open();
-			// 	},
-			// 	error: function (jqXHR, textStatus, errorThrown) {
-			// 		pageDOM.setBusy(false);
-			// 		if (!this.oSuccessMessageDialog) {
-			// 			this.oSuccessMessageDialog = new Dialog({
-			// 				type: DialogType.Message,
-			// 				title: "Error",
-			// 				state: ValueState.Error,
-			// 				content: new Text({ text: "Can not create budget." + errorThrown }),
-			// 				beginButton: new Button({
-			// 					type: ButtonType.Emphasized,
-			// 					text: "OK",
-			// 					press: function () {
-			// 						this.oSuccessMessageDialog.close();
-			// 					}.bind(this)
-			// 				})
-			// 			});
-			// 		}
-			// 	  	console.log("Got an error response: " + textStatus + errorThrown);
-			// 	}
-			//   });
+					this.oSuccessMessageDialog.open();
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+					pageDOM.setBusy(false);
+					if (!this.oSuccessMessageDialog) {
+						this.oSuccessMessageDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Error",
+							state: ValueState.Error,
+							content: new Text({ text: "Can not create budget." + errorThrown }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									this.oSuccessMessageDialog.close();
+								}.bind(this)
+							})
+						});
+					}
+				  	console.log("Got an error response: " + textStatus + errorThrown);
+				}
+			  });
 
 		},
 		onResubmitButtonClick : function(oEvent) {

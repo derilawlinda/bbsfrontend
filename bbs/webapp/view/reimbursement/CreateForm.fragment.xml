@@ -31,6 +31,7 @@
 								change="onBudgetChange"
 								value="{reimbursementHeader>/U_BudgetCode}"
 								showSecondaryValues="true"
+								filterSecondaryValues="true"
 								items="{
 								path: 'budgeting>/value',
 								templateShareable: false

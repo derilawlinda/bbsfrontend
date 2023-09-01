@@ -33,6 +33,7 @@
 								value="{advanceRequestHeader>/U_BudgetCode}"
 								selectionChange="onSelectionChange"
 								showSecondaryValues="true"
+								filterSecondaryValues="true"
 								items="{
 								path: 'budgeting>/value',
 								templateShareable: false

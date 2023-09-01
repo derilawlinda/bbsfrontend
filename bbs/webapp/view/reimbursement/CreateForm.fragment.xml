@@ -134,7 +134,7 @@
 						</table:template>
 					</table:Column>
 
-					<table:Column >
+					<!-- <table:Column >
 						<Text text="Item Name" />
 						<table:template>
 							<ComboBox width="100%"
@@ -153,7 +153,7 @@
 
 							</ComboBox>
 						</table:template>
-					</table:Column>
+					</table:Column> -->
 
 					<table:Column >
 						<Text text="Description" />

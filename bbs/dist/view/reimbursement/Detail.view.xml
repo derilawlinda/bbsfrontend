@@ -207,7 +207,7 @@ xmlns:core="sap.ui.core"
 						</table:template>
 					</table:Column>
 
-					<table:Column >
+					<!-- <table:Column >
 						<Text text="Item Name" />
 						<table:template>
 							<ComboBox width="100%"
@@ -227,7 +227,7 @@ xmlns:core="sap.ui.core"
 							</ComboBox>
 							
 						</table:template>
-					</table:Column>
+					</table:Column> -->
 
 					
 

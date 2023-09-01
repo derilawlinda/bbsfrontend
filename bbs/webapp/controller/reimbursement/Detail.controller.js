@@ -159,54 +159,54 @@ sap.ui.define([
 				}.bind(this));
 
 				accountModel.dataLoaded().then(function() {
-					var reimbursementLineTableID = this.getView().byId("reimbursementLineTableID");
-					var oItemsModel = this.getView().getModel("items");
-					oItemsModel.setProperty("/data/",[]);
-					oItemsModel.refresh();
-					var oItemByAccountModel = new JSONModel();
-					var reimbursements = reimbursementDetailData.REIMBURSEMENTLINESCollection;
-					var oJWT = this.oJWT;
+					// var reimbursementLineTableID = this.getView().byId("reimbursementLineTableID");
+					// var oItemsModel = this.getView().getModel("items");
+					// oItemsModel.setProperty("/data/",[]);
+					// oItemsModel.refresh();
+					// var oItemByAccountModel = new JSONModel();
+					// var reimbursements = reimbursementDetailData.REIMBURSEMENTLINESCollection;
+					// var oJWT = this.oJWT;
 
-					for (let i = 0; i < reimbursements.length; i++) {
-						reimbursementLineTableID.getRows()[i].getCells()[1].setBusy(true);
-						var oItemsData = oItemsModel.getData();
-						let account = (reimbursements[i].U_AccountCode).toString();
+					// for (let i = 0; i < reimbursements.length; i++) {
+					// 	reimbursementLineTableID.getRows()[i].getCells()[1].setBusy(true);
+					// 	var oItemsData = oItemsModel.getData();
+					// 	let account = (reimbursements[i].U_AccountCode).toString();
 
 
-						if(!(reimbursements[i].U_AccountCode in oItemsData)){
-							oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount", {
-								accountCode : account,
-								company : this.company
-							}, true, "GET",false,false,{
-								'Authorization': 'Bearer ' + oJWT
-							});
-							oItemByAccountModel.dataLoaded().then(function() {
-								var oItemByAccountData = oItemByAccountModel.getData();
-								var oItemsModel = this.getView().getModel("items");
-								oItemsModel.setProperty("/data/"+account,oItemByAccountData);
-								oItemsModel.refresh();
-								reimbursementLineTableID.getRows()[i].getCells()[1].bindAggregation("items", {
-									path: 'items>/data/'+ account,
-									template: new sap.ui.core.Item({
-										key: "{items>ItemCode}",
-										text: "{items>ItemCode} - {items>ItemName}"
-									})
-								});
-								reimbursementLineTableID.getRows()[i].getCells()[1].setBusy(false);
+					// 	if(!(reimbursements[i].U_AccountCode in oItemsData)){
+					// 		oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount", {
+					// 			accountCode : account,
+					// 			company : this.company
+					// 		}, true, "GET",false,false,{
+					// 			'Authorization': 'Bearer ' + oJWT
+					// 		});
+					// 		oItemByAccountModel.dataLoaded().then(function() {
+					// 			var oItemByAccountData = oItemByAccountModel.getData();
+					// 			var oItemsModel = this.getView().getModel("items");
+					// 			oItemsModel.setProperty("/data/"+account,oItemByAccountData);
+					// 			oItemsModel.refresh();
+					// 			reimbursementLineTableID.getRows()[i].getCells()[1].bindAggregation("items", {
+					// 				path: 'items>/data/'+ account,
+					// 				template: new sap.ui.core.Item({
+					// 					key: "{items>ItemCode}",
+					// 					text: "{items>ItemCode} - {items>ItemName}"
+					// 				})
+					// 			});
+					// 			reimbursementLineTableID.getRows()[i].getCells()[1].setBusy(false);
 
 								
-							}.bind(this))
-						}else{
-							reimbursementLineTableID.getRows()[i].getCells()[1].bindAggregation("items", {
-								path: 'items>/data/'+ account,
-								template: new sap.ui.core.Item({
-									key: "{items>ItemCode}",
-									text: "{items>ItemCode} - {items>ItemName}"
-								})
-							});
-							reimbursementLineTableID.getRows()[i].getCells()[1].setBusy(false);
-						}
-					}
+					// 		}.bind(this))
+					// 	}else{
+					// 		reimbursementLineTableID.getRows()[i].getCells()[1].bindAggregation("items", {
+					// 			path: 'items>/data/'+ account,
+					// 			template: new sap.ui.core.Item({
+					// 				key: "{items>ItemCode}",
+					// 				text: "{items>ItemCode} - {items>ItemName}"
+					// 			})
+					// 		});
+					// 		reimbursementLineTableID.getRows()[i].getCells()[1].setBusy(false);
+					// 	}
+					// }
 					
 				}.bind(this))
 				

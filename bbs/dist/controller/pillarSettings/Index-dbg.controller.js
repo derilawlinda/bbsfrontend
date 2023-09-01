@@ -54,7 +54,7 @@ sap.ui.define([
 			});
 
 			this.oClassificationModel = new JSONModel();
-			this.oClassificationModel.setSizeLimit(200);
+			this.oClassificationModel.setSizeLimit(10000);
 			this.oClassificationModel.loadData(backendUrl+"profitCenter/getClassifications", {
 				company : company
 			}, true, "GET",false,false,{
@@ -62,7 +62,7 @@ sap.ui.define([
 			});
 
 			this.oSubClassModel = new JSONModel();
-			this.oSubClassModel.setSizeLimit(200);
+			this.oSubClassModel.setSizeLimit(9999);
 			this.oSubClassModel.loadData(backendUrl+"profitCenter/getSubClass", {
 				company : company
 			}, true, "GET",false,false,{

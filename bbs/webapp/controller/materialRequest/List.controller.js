@@ -387,13 +387,20 @@ sap.ui.define([
 		},
 
 		onSearch : function(oEvent){
+			var mParamas = oEvent.getParameters();
+			if(mParamas.filterKeys){
+				var statusFilter = Object.keys(mParamas.filterKeys).toString();
+			}else{
+				var statusFilter = "";
+			}
 			this.getView().byId("materialRequestTableID").setBusy(true);
 			var search = this.getView().byId("searchField").getValue();
 			var oJWT = this.oJWT;
 			var oModel = new JSONModel();
 			oModel.loadData(backendUrl+"materialRequest/getMaterialRequests", {
 				"search" : search,
-				company : this.company
+				"status" : statusFilter,
+				"company" : this.company
 			}, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + oJWT
 			});

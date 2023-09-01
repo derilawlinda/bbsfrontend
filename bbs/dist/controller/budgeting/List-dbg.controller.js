@@ -194,6 +194,7 @@ sap.ui.define([
 			const oModelAccounts = this.getView().getModel("new_budgeting_accounts");
 			const oModelAccountData = oModelAccounts.getData();
 			var budgetingModel = this.getView().getModel("budgeting");
+			budgetingModel.setSizeLimit(1000);
 			oModel.setProperty("/BUDGETREQLINESCollection", oModelAccounts.getData().BUDGETREQLINESCollection);
 			var oProperty = oModel.getProperty("/");
 			var view = this.getView();

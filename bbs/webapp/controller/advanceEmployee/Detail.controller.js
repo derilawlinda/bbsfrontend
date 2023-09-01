@@ -70,6 +70,7 @@ sap.ui.define([
 			this.getView().setModel(advanceRequestDetailModel,"advanceRequestDetailModel");
 
 			var oBudgetingModel = new JSONModel();
+			oBudgetingModel.setSizeLimit(500);
 				oBudgetingModel.loadData(backendUrl+"budget/getApprovedBudget", {
 					company : this.company
 				}, true, "GET",false,false,{

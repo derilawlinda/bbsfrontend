@@ -38,7 +38,7 @@ sap.ui.define([
 			});
 			this.getView().setModel(viewModel,"viewModel");
 			var oItemsModel = new JSONModel();
-			oItemsModel.setSizeLimit(5000);
+			oItemsModel.setSizeLimit(999999);
 			this.getView().setModel(oItemsModel,"items");
 			this.getView().byId("materialRequestPageID").setBusy(true);
 			var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
@@ -153,11 +153,10 @@ sap.ui.define([
 				var materialReqLineTable = this.getView().byId("materialReqLineTableID");
 				materialReqLineTable.setVisibleRowCount(materialRequestDetailData.MATERIALREQLINESCollection.length);
 				var oItemsModel = this.getView().getModel("items");
-				oItemsModel.setSizeLimit(5000);
+				oItemsModel.setSizeLimit(999999);
 				oItemsModel.setProperty("/data", []);
 				var oItemData = oItemsModel.getData();
 				var itemsByAccount = new JSONModel();
-				console.log(materialReqLineTable.getRows().length)
 				for (let i = 0; i < materialRequestDetailData.MATERIALREQLINESCollection.length; i++) {
 					if(materialRequestDetailData.MATERIALREQLINESCollection[i].U_AccountCode){
 						let account = (materialRequestDetailData.MATERIALREQLINESCollection[i].U_AccountCode).toString();

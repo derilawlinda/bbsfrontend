@@ -157,6 +157,7 @@ sap.ui.define([
 				oItemsModel.setProperty("/data", []);
 				var oItemData = oItemsModel.getData();
 				var itemsByAccount = new JSONModel();
+				itemsByAccount.setSizeLimit(999999);
 				for (let i = 0; i < materialRequestDetailData.MATERIALREQLINESCollection.length; i++) {
 					if(materialRequestDetailData.MATERIALREQLINESCollection[i].U_AccountCode){
 						let account = (materialRequestDetailData.MATERIALREQLINESCollection[i].U_AccountCode).toString();
@@ -172,6 +173,7 @@ sap.ui.define([
 								var itemsByAccountData = itemsByAccount.getData();
 								oItemData.data[account] = itemsByAccountData;
 								var newItemModel = new sap.ui.model.json.JSONModel(oItemData);
+								newItemModel.setSizeLimit(2000);
 								this.getView().setModel(newItemModel, 'items');
 								newItemModel.refresh();
 								materialReqLineTable.getRows()[i].getCells()[1].setBusy(false);

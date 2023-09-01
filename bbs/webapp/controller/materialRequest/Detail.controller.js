@@ -151,7 +151,6 @@ sap.ui.define([
 				accountModel.refresh();
 
 				var materialReqLineTable = this.getView().byId("materialReqLineTableID");
-				console.log(materialRequestDetailData.MATERIALREQLINESCollection.length);
 				materialReqLineTable.setVisibleRowCount(materialRequestDetailData.MATERIALREQLINESCollection.length);
 				var oItemsModel = this.getView().getModel("items");
 				oItemsModel.setProperty("/data", []);
@@ -481,6 +480,7 @@ sap.ui.define([
 		
 	
 			var oItemModel = this.getView().getModel("items");
+			oItemModel.setSizeLimit(1000);
 			var oItemData = oItemModel.getData();
 			if(!(oSelectedItem in oItemData)){
 				var oItemByAccountModel = new JSONModel();

@@ -40,7 +40,7 @@ sap.ui.define([
 			var oItemsModel = new JSONModel();
 			oItemsModel.setSizeLimit(999999);
 			this.getView().setModel(oItemsModel,"items");
-			this.getView().byId("materialRequestPageID").setBusy(true);
+			// this.getView().byId("materialRequestPageID").setBusy(true);
 			var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 			this.oJWT = oStore.get("jwt");
 			this.company = oStore.get("company");

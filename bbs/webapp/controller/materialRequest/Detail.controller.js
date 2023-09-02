@@ -185,7 +185,7 @@ sap.ui.define([
 							var newItemModel = new sap.ui.model.json.JSONModel(oItemData);
 							this.getView().setModel(newItemModel, 'items');
 							newItemModel.refresh();
-							this.getView().byId("materialRequestPageID").setBusy(false);
+							
 						}.bind(this))
 					};
 	
@@ -204,6 +204,8 @@ sap.ui.define([
 						materialReqLineTable.getRows()[i].getCells()[1].setBusy(false);
 					}
 				}
+				this.getView().byId("materialRequestPageID").setBusy(false);
+
 				
 
 			}.bind(this));

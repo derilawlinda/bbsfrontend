@@ -559,6 +559,10 @@ sap.ui.define([
 		onSaveButtonClick : function(oEvent){
 			var pageDOM = this.getView().byId("budgetingPageId");
 			var oModel = this.getView().getModel("budgetingDetailModel");
+			oModel.setProperty("/U_Pillar",this.getView().byId("CreatePillar").getValue());
+			oModel.setProperty("/U_Classification",this.getView().byId("CreateClassification").getValue());
+			oModel.setProperty("/U_SubClass",this.getView().byId("CreateSubClassification").getValue());
+			oModel.setProperty("/U_SubClass2",this.getView().byId("CreateSubClassification2").getValue());
 			var jsonData = JSON.stringify(oModel.getData());
 			var oJWT = this.oJWT;
 			// console.log(jsonData);

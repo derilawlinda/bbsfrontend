@@ -95,7 +95,8 @@ sap.ui.define([
 			materialRequestDetailModel.dataLoaded().then(function(){
 				
 				var materialRequestDetailData = this.getView().getModel("materialRequestDetailModel").getData();
-				
+				var materialReqLineTable = this.getView().byId("materialReqLineTableID");
+				materialReqLineTable.setVisibleRowCount(materialRequestDetailData.MATERIALREQLINESCollection.length);
 				if(parametersMap.roleId == 4){
 					viewModel.setProperty("/is_approver", true);
 					viewModel.setProperty("/is_requestor", false);
@@ -150,37 +151,48 @@ sap.ui.define([
 				});
 				accountModel.refresh();
 
-				var materialReqLineTable = this.getView().byId("materialReqLineTableID");
-				materialReqLineTable.setVisibleRowCount(materialRequestDetailData.MATERIALREQLINESCollection.length);
+				
 				var oItemsModel = this.getView().getModel("items");
 				oItemsModel.setSizeLimit(999999);
 				oItemsModel.setProperty("/data", []);
 				var oItemData = oItemsModel.getData();
 				var itemsByAccount = new JSONModel();
 				itemsByAccount.setSizeLimit(999999);
-				for (let i = 0; i < materialRequestDetailData.MATERIALREQLINESCollection.length; i++) {
-					if(materialRequestDetailData.MATERIALREQLINESCollection[i].U_AccountCode){
-						let account = (materialRequestDetailData.MATERIALREQLINESCollection[i].U_AccountCode).toString();
-						materialReqLineTable.getRows()[i].getCells()[1].setBusy(true);
-						if(!(account in oItemData)){
-							itemsByAccount.loadData(backendUrl+"items/getItemsByAccount", {
-								accountCode : account,
-								company : this.company
-							}, true, "GET",false,false,{
-								'Authorization': 'Bearer ' + this.oJWT
-							});
-							itemsByAccount.dataLoaded().then(function(){
-								var itemsByAccountData = itemsByAccount.getData();
-								oItemData.data[account] = itemsByAccountData;
-								var newItemModel = new sap.ui.model.json.JSONModel(oItemData);
-								newItemModel.setSizeLimit(2000);
-								this.getView().setModel(newItemModel, 'items');
-								newItemModel.refresh();
-								materialReqLineTable.getRows()[i].getCells()[1].setBusy(false);
-							}.bind(this))
-							
-						};
+
+				var accounts = [];
+				if(materialRequestDetailData.MATERIALREQLINESCollection.length > 0){
+					for (let i = 0; i < materialRequestDetailData.MATERIALREQLINESCollection.length; i++) {
+						if(materialRequestDetailData.MATERIALREQLINESCollection[i].U_AccountCode){
+							if(!(materialRequestDetailData.MATERIALREQLINESCollection[i].U_AccountCode.toString() in accounts)){
+								accounts.push(materialRequestDetailData.MATERIALREQLINESCollection[i].U_AccountCode);
+							};
+						}
+					}
+					var uniqueAccounts = [... new Set(accounts)];
 					
+					for (let i = 0; i < uniqueAccounts.length; i++) {
+						this.getView().byId("materialRequestPageID").setBusy(true);
+	
+						itemsByAccount.loadData(backendUrl+"items/getItemsByAccount", {
+							company : this.company,
+							accountCode : uniqueAccounts[i]
+						}, true, "GET",false,false,{
+							'Authorization': 'Bearer ' + this.oJWT
+						});
+						itemsByAccount.dataLoaded().then(function(){
+							var itemsByAccountData = itemsByAccount.getData();
+							oItemData.data[uniqueAccounts[i]] = itemsByAccountData;
+							var newItemModel = new sap.ui.model.json.JSONModel(oItemData);
+							this.getView().setModel(newItemModel, 'items');
+							newItemModel.refresh();
+							this.getView().byId("materialRequestPageID").setBusy(false);
+						}.bind(this))
+					};
+	
+					for (let i = 0; i < materialRequestDetailData.MATERIALREQLINESCollection.length; i++) {
+						materialReqLineTable.getRows()[i].getCells()[1].setBusy(true);
+						if(materialRequestDetailData.MATERIALREQLINESCollection[i].U_AccountCode){
+							let account = (materialRequestDetailData.MATERIALREQLINESCollection[i].U_AccountCode).toString();
 						materialReqLineTable.getRows()[i].getCells()[1].bindAggregation("items", {
 							path: 'items>/data/'+ account,
 							template: new sap.ui.core.Item({
@@ -188,13 +200,11 @@ sap.ui.define([
 								text: "{items>ItemCode} - {items>ItemName}"
 							})
 						});
+						}
+						materialReqLineTable.getRows()[i].getCells()[1].setBusy(false);
 					}
 				}
-
-				oItemsModel.dataLoaded().then(function() {
-					this.getView().byId("materialRequestPageID").setBusy(false);
-
-				}.bind(this));
+				
 
 			}.bind(this));
 		  },

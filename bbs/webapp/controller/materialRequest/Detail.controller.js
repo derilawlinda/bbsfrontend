@@ -171,7 +171,7 @@ sap.ui.define([
 					var uniqueAccounts = [... new Set(accounts)];
 					
 					for (let i = 0; i < uniqueAccounts.length; i++) {
-						this.getView().byId("materialRequestPageID").setBusy(true);
+						// this.getView().byId("materialRequestPageID").setBusy(true);
 	
 						itemsByAccount.loadData(backendUrl+"items/getItemsByAccount", {
 							company : this.company,
@@ -190,7 +190,7 @@ sap.ui.define([
 					};
 	
 					for (let i = 0; i < materialRequestDetailData.MATERIALREQLINESCollection.length; i++) {
-						materialReqLineTable.getRows()[i].getCells()[1].setBusy(true);
+						// materialReqLineTable.getRows()[i].getCells()[1].setBusy(true);
 						if(materialRequestDetailData.MATERIALREQLINESCollection[i].U_AccountCode){
 							let account = (materialRequestDetailData.MATERIALREQLINESCollection[i].U_AccountCode).toString();
 						materialReqLineTable.getRows()[i].getCells()[1].bindAggregation("items", {
@@ -201,10 +201,10 @@ sap.ui.define([
 							})
 						});
 						}
-						materialReqLineTable.getRows()[i].getCells()[1].setBusy(false);
+						// materialReqLineTable.getRows()[i].getCells()[1].setBusy(false);
 					}
 				}
-				this.getView().byId("materialRequestPageID").setBusy(false);
+				// this.getView().byId("materialRequestPageID").setBusy(false);
 
 				
 

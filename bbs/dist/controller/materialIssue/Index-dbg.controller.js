@@ -5,9 +5,11 @@ sap.ui.define([
 	"frontend/bbs/model/PagingJSONModel",
 	"sap/m/MessageToast",
 	"sap/ui/core/library",
+	'sap/ui/core/Fragment',
+	'sap/ui/Device',
 	'frontend/bbs/libs/lodash'
 	
- ], function (Controller,History,mobileLibrary, JSONModel,MessageToast,coreLibrary) {
+ ], function (Controller,History,mobileLibrary, JSONModel,MessageToast,coreLibrary,Fragment,Device) {
     "use strict";
 
 	// shortcut for sap.m.ButtonType
@@ -23,6 +25,7 @@ sap.ui.define([
 		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 		this.oJWT = oStore.get("jwt");
 		this.company = oStore.get("company");
+		this._mViewSettingsDialogs = {};
 		
 		var oModel = new JSONModel();
 		oModel.loadData(backendUrl+"materialIssue/getMaterialIssues", {
@@ -336,6 +339,55 @@ sap.ui.define([
 			oModelLineData.splice(iIdx, 1);
 			oModel.setProperty("/MATERIALISSUELINESCollection",oModelLineData);
 			oModel.refresh();
+		},
+		handleFilterButtonPressed: function () {
+			this.getViewSettingsDialog("frontend.bbs.view.materialIssue.FilterForm")
+				.then(function (oViewSettingsDialog) {
+					oViewSettingsDialog.open();
+				});
+		},
+		getViewSettingsDialog: function (sDialogFragmentName) {
+			var pDialog = this._mViewSettingsDialogs[sDialogFragmentName];
+
+			if (!pDialog) {
+				pDialog = Fragment.load({
+					id: this.getView().getId(),
+					name: sDialogFragmentName,
+					controller: this
+				}).then(function (oDialog) {
+					if (Device.system.desktop) {
+						oDialog.addStyleClass("sapUiSizeCompact");
+					}
+					return oDialog;
+				});
+				this._mViewSettingsDialogs[sDialogFragmentName] = pDialog;
+			}
+			return pDialog;
+		},
+
+		onSearch : function(oEvent){
+			var mParamas = oEvent.getParameters();
+			if(mParamas.filterKeys){
+				var statusFilter = Object.keys(mParamas.filterKeys).toString();
+			}else{
+				var statusFilter = "";
+			}
+			this.getView().byId("materialIssueTableID").setBusy(true);
+			var search = this.getView().byId("searchField").getValue();
+			var oJWT = this.oJWT;
+			var oModel = new JSONModel();
+			oModel.loadData(backendUrl+"materialIssue/getMaterialIssues", {
+				"search" : search,
+				"status" : statusFilter,
+				"company" : this.company
+			}, true, "GET",false,false,{
+				'Authorization': 'Bearer ' + oJWT
+			});
+			oModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
+				this.getView().byId("materialIssueTableID").setBusy(false);
+			}.bind(this));
+			this.getView().setModel(oModel,"materialIssue");
+
 		}
     });
  });

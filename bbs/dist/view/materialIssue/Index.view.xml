@@ -23,6 +23,17 @@ xmlns:table="sap.ui.table"
 			<OverflowToolbar id="_IDGenOverflowToolbar1">
                 <Title id="title" text="Material Issue"/>
                 <ToolbarSpacer id="_IDGenToolbarSpacer1" ></ToolbarSpacer>
+               	<Button
+                        tooltip="Filter"
+                        icon="sap-icon://filter"
+                        press="handleFilterButtonPressed"/>
+
+                  <ToolbarSeparator />
+                <SearchField
+                        id="searchField"
+                        width="20%"
+                        placeholder="Search here..."
+                        search=".onSearch"/>
                 <Button id="_IDGenButton2" text=" + Create Material Issue" press="onCreateButtonClick" type="Emphasized" visible="{viewModel>/showCreateButton}"/>
             </OverflowToolbar>
             </headerToolbar>

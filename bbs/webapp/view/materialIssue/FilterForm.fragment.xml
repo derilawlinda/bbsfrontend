@@ -1,0 +1,20 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	<ViewSettingsDialog
+		confirm="onSearch">
+		<filterItems>
+			<ViewSettingsFilterItem
+				text="Status"
+				key="U_Status"
+				multiSelect="true">
+				<items>
+					<ViewSettingsItem text="Pending" key="1" />
+					<ViewSettingsItem text="Approved by Manager" key="2" />
+					<ViewSettingsItem text="Approved by Director" key="3" />
+                    <ViewSettingsItem text="Rejected" key="4" />
+				</items>
+			</ViewSettingsFilterItem>
+		</filterItems>
+	</ViewSettingsDialog>
+</core:FragmentDefinition>

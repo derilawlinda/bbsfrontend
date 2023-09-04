@@ -151,18 +151,21 @@ sap.ui.define([
 		
 
 		var oItemModel = this.getView().getModel("items");
+		oItemModel.setSizeLimit(10000);
 		var oItemData = oItemModel.getData();
 		if(!(oSelectedItem in oItemData)){
 			var oItemByAccountModel = new JSONModel();
+			oItemByAccountModel.setSizeLimit(10000);
 			await oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount", {
 				accountCode : oSelectedItem,
 				company : this.company
-			}, true, "GET",false,false,{
+ 			}, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
 			});
 			var oItemByAccountData = oItemByAccountModel.getData();
 			oItemData[oSelectedItem] = oItemByAccountData;
 			var i = new sap.ui.model.json.JSONModel(oItemData);
+			i.setSizeLimit(10000);
 			this.getView().setModel(i, 'items');
 			i.refresh();
 		}

@@ -183,6 +183,7 @@ sap.ui.define([
 							var itemsByAccountData = itemsByAccount.getData();
 							oItemData.data[uniqueAccounts[i]] = itemsByAccountData;
 							var newItemModel = new sap.ui.model.json.JSONModel(oItemData);
+							newItemModel.setSizeLimit(5000);
 							this.getView().setModel(newItemModel, 'items');
 							newItemModel.refresh();
 							
@@ -494,10 +495,11 @@ sap.ui.define([
 		
 	
 			var oItemModel = this.getView().getModel("items");
-			oItemModel.setSizeLimit(1000);
+			oItemModel.setSizeLimit(5000);
 			var oItemData = oItemModel.getData();
 			if(!(oSelectedItem in oItemData)){
 				var oItemByAccountModel = new JSONModel();
+				oItemByAccountModel.setSizeLimit(5000);
 				await oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount", {
 					accountCode : oSelectedItem,
 					company : this.company
@@ -508,6 +510,7 @@ sap.ui.define([
 				oItemData[oSelectedItem] = oItemByAccountData;
 				var i = new sap.ui.model.json.JSONModel(oItemData);
 				this.getView().setModel(i, 'items');
+				i.setSizeLimit(10000);
 				i.refresh();
 			}
 	

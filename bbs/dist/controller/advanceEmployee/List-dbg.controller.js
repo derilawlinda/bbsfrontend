@@ -22,6 +22,7 @@ sap.ui.define([
 		this.oJWT = oStore.get("jwt");
 		this.company = oStore.get("company");
 		var oModel = new JSONModel();
+		oModel.setSizeLimit(1000);
 		oModel.loadData(backendUrl+"advanceRequest/getAdvanceRequests", {
 			company : this.company
 		}, true, "GET",false,false,{

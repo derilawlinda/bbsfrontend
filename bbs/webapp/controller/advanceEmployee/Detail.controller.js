@@ -58,8 +58,7 @@ sap.ui.define([
 				advanceRequestCode = urlArray[urlArray.length - 1];
 			}
 			const advanceRequestDetailModel = new JSONModel();
-			console.log(advanceRequestCode);
-			console.log(this.company);
+		
 			advanceRequestDetailModel.loadData(backendUrl+"advanceRequest/getAdvanceRequestById", {
 				code : advanceRequestCode,
 				company : this.company

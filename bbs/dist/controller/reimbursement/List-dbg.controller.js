@@ -8,7 +8,9 @@ sap.ui.define([
 	"sap/m/Text",
 	"sap/ui/core/library",
 	"sap/m/MessageToast",
- ], function (Controller, History, JSONModel,Dialog,Button,mobileLibrary,Text,coreLibrary,MessageToast) {
+	'sap/ui/core/Fragment',
+	'sap/ui/Device'
+ ], function (Controller, History, JSONModel,Dialog,Button,mobileLibrary,Text,coreLibrary,MessageToast,Fragment,Device) {
     "use strict";
 	var ButtonType = mobileLibrary.ButtonType;
 
@@ -26,6 +28,7 @@ sap.ui.define([
 		this.oJWT = oStore.get("jwt");
 		this.company = oStore.get("company");
 		var oModel = new JSONModel();
+		this._mViewSettingsDialogs = {};
 		oModel.setSizeLimit(500);
 		oModel.loadData(backendUrl+"reimbursement/getReimbursements", {
 			company : this.company
@@ -341,6 +344,55 @@ sap.ui.define([
 			this.getView().setModel(f, 'new_re_items');
 			f.refresh();
 		
+		},
+		onSearch : function(oEvent){
+			var mParamas = oEvent.getParameters();
+			console.log(mParamas);
+			if(mParamas.filterKeys){
+				var statusFilter = Object.keys(mParamas.filterKeys).toString();
+			}else{
+				var statusFilter = "";
+			}
+			this.getView().byId("reimbursementTable").setBusy(true);
+			var search = this.getView().byId("searchField").getValue();
+			var oJWT = this.oJWT;
+			var oModel = new JSONModel();
+			oModel.loadData(backendUrl+"reimbursement/getReimbursements", {
+				"search" : search,
+				"status" : statusFilter,
+				"company" : this.company
+			}, true, "GET",false,false,{
+				'Authorization': 'Bearer ' + oJWT
+			});
+			oModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
+				this.getView().byId("reimbursementTable").setBusy(false);
+			}.bind(this));
+			this.getView().setModel(oModel,"reimbursements");
+
+		},
+		handleFilterButtonPressed: function () {
+			this.getViewSettingsDialog("frontend.bbs.view.reimbursement.FilterForm")
+				.then(function (oViewSettingsDialog) {
+					oViewSettingsDialog.open();
+				});
+		},
+		getViewSettingsDialog: function (sDialogFragmentName) {
+			var pDialog = this._mViewSettingsDialogs[sDialogFragmentName];
+
+			if (!pDialog) {
+				pDialog = Fragment.load({
+					id: this.getView().getId(),
+					name: sDialogFragmentName,
+					controller: this
+				}).then(function (oDialog) {
+					if (Device.system.desktop) {
+						oDialog.addStyleClass("sapUiSizeCompact");
+					}
+					return oDialog;
+				});
+				this._mViewSettingsDialogs[sDialogFragmentName] = pDialog;
+			}
+			return pDialog;
 		},
 		onDelete: function(oEvent){
 			var row = oEvent.getParameters().row;

@@ -792,6 +792,43 @@ sap.ui.define([
 			return dateFormatted;
 		},
 
+		handlePrintButtonPressed : function(oEvent){
+
+			var oModel = this.getView().getModel("budgetingDetailModel");
+			var oModelData = oModel.getData();
+			oModel.setProperty("/U_Pillar",this.getView().byId("CreatePillar").getValue());
+			oModel.setProperty("/U_Classification",this.getView().byId("CreateClassification").getValue());
+			oModel.setProperty("/U_SubClass",this.getView().byId("CreateSubClassification").getValue());
+			oModel.setProperty("/U_SubClass2",this.getView().byId("CreateSubClassification2").getValue());
+			var jsonData = JSON.stringify(oModel.getData());
+			var oJWT = this.oJWT;
+			$.ajax({
+				type: "POST",
+				data: jsonData,
+				headers: {"Authorization": "Bearer "+ oJWT},
+				crossDomain: true,
+				url: backendUrl+'budget/printBudget',
+				contentType: "application/json",
+				success: function (res, status, xhr) {
+					var blob = new Blob([res], {type: 'arraybuffer'});
+
+					if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+						window.navigator.msSaveOrOpenBlob(blob); // for IE
+					}
+					else {
+						var fileURL = URL.createObjectURL(blob);
+						var newWin = window.open(fileURL);
+						newWin.focus();
+						newWin.reload();
+					}
+					
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+				  	console.log("Got an error response: " + textStatus + errorThrown);
+				}
+			  });
+		},
+
 		objectFormatter: function(sStatus) {
 			if(sStatus == 1 ){
 				return 'Warning';

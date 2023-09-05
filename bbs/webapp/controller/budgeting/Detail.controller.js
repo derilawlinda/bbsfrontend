@@ -809,26 +809,24 @@ sap.ui.define([
 				crossDomain: true,
 				url: backendUrl+'budget/printBudget',
 				contentType: "application/json",
-				responseType: "arraybuffer",
 				success: function (res, status, xhr) {
-					var binaryString = window.atob(res);
-					var binaryLen = binaryString.length;
-					var bytes = new Uint8Array(binaryLen);
-					for (var i = 0; i < binaryLen; i++) {
-						var ascii = binaryString.charCodeAt(i);
-						bytes[i] = ascii;
-					}
-					let blob = new Blob([bytes], { type: 'application/pdf;base64' } );
+					
+					// var pdfWin= window.open("data:application/pdf;base64, " + res, '', 'height=650,width=840');
+					let blob = new Blob([res]);
 
-					if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-						window.navigator.msSaveOrOpenBlob(blob); // for IE
-					}
-					else {
+					// if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+					// 	window.navigator.msSaveOrOpenBlob(blob); // for IE
+					// }
+					// else {
 						var fileURL = URL.createObjectURL(blob);
+					// 	// var link = document.createElement('a');
+					// 	// link.href = window.URL.createObjectURL(blob);
+					// 	// link.download = "techsolutionstuff.pdf";
+					// 	// link.click();
 						var newWin = window.open(fileURL);
 						newWin.focus();
-						newWin.reload();
-					}
+					// 	// newWin.reload();
+					// }
 					
 				},
 				error: function (jqXHR, textStatus, errorThrown) {

@@ -5,7 +5,9 @@ sap.ui.define([
 	"sap/m/MessageToast",
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/core/library",
- ], function (Controller,History,mobileLibrary, MessageToast, JSONModel,coreLibrary) {
+	'sap/ui/core/Fragment',
+	'sap/ui/Device',
+ ], function (Controller,History,mobileLibrary, MessageToast, JSONModel,coreLibrary,Fragment,Device) {
     "use strict";
 
 	// shortcut for sap.m.ButtonType
@@ -21,6 +23,8 @@ sap.ui.define([
 		var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 		this.oJWT = oStore.get("jwt");
 		this.company = oStore.get("company");
+		this._mViewSettingsDialogs = {};
+
 		var oModel = new JSONModel();
 		oModel.setSizeLimit(1000);
 		oModel.loadData(backendUrl+"advanceRequest/getAdvanceRequests", {
@@ -360,6 +364,55 @@ sap.ui.define([
 				viewModel.setProperty("/amountExceeded","");
 
 			}
+
+		},
+		handleFilterButtonPressed: function () {
+			this.getViewSettingsDialog("frontend.bbs.view.advanceEmployee.FilterForm")
+				.then(function (oViewSettingsDialog) {
+					oViewSettingsDialog.open();
+				});
+		},
+		getViewSettingsDialog: function (sDialogFragmentName) {
+			var pDialog = this._mViewSettingsDialogs[sDialogFragmentName];
+
+			if (!pDialog) {
+				pDialog = Fragment.load({
+					id: this.getView().getId(),
+					name: sDialogFragmentName,
+					controller: this
+				}).then(function (oDialog) {
+					if (Device.system.desktop) {
+						oDialog.addStyleClass("sapUiSizeCompact");
+					}
+					return oDialog;
+				});
+				this._mViewSettingsDialogs[sDialogFragmentName] = pDialog;
+			}
+			return pDialog;
+		},
+
+		onSearch : function(oEvent){
+			var mParamas = oEvent.getParameters();
+			if(mParamas.filterKeys){
+				var statusFilter = Object.keys(mParamas.filterKeys).toString();
+			}else{
+				var statusFilter = "";
+			}
+			this.getView().byId("advanceEmployeeTable").setBusy(true);
+			var search = this.getView().byId("searchField").getValue();
+			var oJWT = this.oJWT;
+			var oModel = new JSONModel();
+			oModel.loadData(backendUrl+"advanceRequest/getAdvanceRequests", {
+				"search" : search,
+				"status" : statusFilter,
+				"company" : this.company
+			}, true, "GET",false,false,{
+				'Authorization': 'Bearer ' + oJWT
+			});
+			oModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
+				this.getView().byId("advanceEmployeeTable").setBusy(false);
+			}.bind(this));
+			this.getView().setModel(oModel,"advanceRequests");
 
 		}
     });

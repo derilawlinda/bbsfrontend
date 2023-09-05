@@ -23,6 +23,17 @@ xmlns:table="sap.ui.table"
 			<OverflowToolbar id="_IDGenOverflowToolbar1">
                 <Title id="title" text="Advance Realization"/>
                 <ToolbarSpacer id="_IDGenToolbarSpacer1" ></ToolbarSpacer>
+                <Button
+                        tooltip="Filter"
+                        icon="sap-icon://filter"
+                        press="handleFilterButtonPressed"/>
+
+                  <ToolbarSeparator />
+                <SearchField
+                        id="searchField"
+                        width="20%"
+                        placeholder="Search here..."
+                        search=".onSearch"/>
             </OverflowToolbar>
             </headerToolbar>
             <columns>

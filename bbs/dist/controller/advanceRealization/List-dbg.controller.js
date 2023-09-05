@@ -95,6 +95,56 @@ sap.ui.define([
 		_closeDialog: function () {
 			this.oDialog.close();
 		},
+
+		handleFilterButtonPressed: function () {
+			this.getViewSettingsDialog("frontend.bbs.view.advanceRealization.FilterForm")
+				.then(function (oViewSettingsDialog) {
+					oViewSettingsDialog.open();
+				});
+		},
+		getViewSettingsDialog: function (sDialogFragmentName) {
+			var pDialog = this._mViewSettingsDialogs[sDialogFragmentName];
+
+			if (!pDialog) {
+				pDialog = Fragment.load({
+					id: this.getView().getId(),
+					name: sDialogFragmentName,
+					controller: this
+				}).then(function (oDialog) {
+					if (Device.system.desktop) {
+						oDialog.addStyleClass("sapUiSizeCompact");
+					}
+					return oDialog;
+				});
+				this._mViewSettingsDialogs[sDialogFragmentName] = pDialog;
+			}
+			return pDialog;
+		},
+
+		onSearch : function(oEvent){
+			var mParamas = oEvent.getParameters();
+			if(mParamas.filterKeys){
+				var statusFilter = Object.keys(mParamas.filterKeys).toString();
+			}else{
+				var statusFilter = "";
+			}
+			this.getView().byId("advanceRealizationTableID").setBusy(true);
+			var search = this.getView().byId("searchField").getValue();
+			var oJWT = this.oJWT;
+			var oModel = new JSONModel();
+			oModel.loadData(backendUrl+"advanceRequest/getAdvanceRealizations", {
+				"search" : search,
+				"status" : statusFilter,
+				"company" : this.company
+			}, true, "GET",false,false,{
+				'Authorization': 'Bearer ' + oJWT
+			});
+			oModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
+				this.getView().byId("advanceRealizationTableID").setBusy(false);
+			}.bind(this));
+			this.getView().setModel(oModel,"advanceRealization");
+
+		},
 		buttonFormatter: function(sStatus) {
 			if(sStatus == 2 || sStatus == 3){
 				return 'Accept'

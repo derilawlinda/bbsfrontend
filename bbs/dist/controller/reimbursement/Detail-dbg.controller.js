@@ -551,6 +551,9 @@ sap.ui.define([
 				return 'Rejected'
 			}
 		  
+		},
+		_closeDialog: function () {
+			this.oDialog.close();
 		}
 		});
 });

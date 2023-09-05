@@ -21,7 +21,6 @@
 
                   		<Label  text="Transfer At" required="true"  />
 						<DatePicker
-							id="DatePicker"
 							class="sapUiSmallMarginBottom"
 							value="{
 								'path': 'reimbursementDetailModel>/U_DisbursedAt',
@@ -37,20 +36,24 @@
 								selectedKey="reimbursementDetailModel>/U_TransferFrom"
 								items="{
 									path: 'transferAccounts>/value',
-									sorter: { path: 'transferAccounts>Name' }
+									sorter: { path: 'Name' }
 								}">
 							<core:Item key="{transferAccounts>Code}" text="{transferAccounts>Name}" />
 						</Select>
 
 						<Label id="_IDGenLabe20" text="Bank Administration" />
-						<ObjectNumber number="{
-									parts: [
-										{path:'reimbursementDetailModel>/U_BankAdm'}, 
-											'IDR',
-											'TwoWay'], 
-									type:'sap.ui.model.type.Currency',
-									formatOptions: {showMeasure: true}
-						}" unit="IDR" />
+						<Input
+							id="inputBankAdm"
+							placeholder="Bank Administration amount"
+							value="{
+								parts: [
+									{path:'reimbursementDetailModel>/U_BankAdm'}, 
+									'IDR',
+									'TwoWay'], 
+								type:'sap.ui.model.type.Currency',
+								formatOptions: {showMeasure: true}
+							}"
+						/>
 
 						<Label  text="Transfer Detail" />
 						<Text text="{reimbursementDetailModel>/U_TransferRemarks}" />

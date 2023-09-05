@@ -272,8 +272,8 @@ sap.ui.define([
 							}.bind(this)
 						})
 					});
+					this.oTransferConfirmationMessageDialog.open();
 				}
-				this.oTransferConfirmationMessageDialog.open();
 			}
 
 			

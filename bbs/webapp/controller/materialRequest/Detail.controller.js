@@ -476,7 +476,10 @@ sap.ui.define([
 
 				var selectedID = parseInt(oEvent.getParameters('selectedItem').value);
 				var budget = this.getView().getModel("budget");
-				await budget.loadData(backendUrl+"budget/getBudgetById?code="+selectedID, null, true, "GET",false,false,{
+				await budget.loadData(backendUrl+"budget/getBudgetById", {
+					code : selectedID,
+					company : this.company
+				}, true, "GET",false,false,{
 					'Authorization': 'Bearer ' + this.oJWT
 				});
 				budget.refresh();

@@ -34,6 +34,23 @@ xmlns:core="sap.ui.core"
                         <Label id="_IDGenLabel2" text="Advance Name" />
 						<Text id="_IDGenText12"  text="{advanceRequestDetailModel>/Name}"/>
 
+						<Label  text="Post Date" required="true"  />
+						<DatePicker
+							editable="{viewModel>/editable}"
+							id="DatePicker"
+							class="sapUiSmallMarginBottom"
+							value="{
+								'path': 'advanceRequestDetailModel>/U_RealizationDate',
+								'type': 'sap.ui.model.type.Date',
+								'formatOptions': {
+									source:{
+										pattern:'yyyy-MM-ddTHH:mm:ss.SSSX'
+									},
+									'pattern': 'y-MM-dd'
+									
+								}
+							}"/>
+
 						 <Label id="_IDGenLabelAmunt" text="Advance Amount" />
 						<ObjectNumber 
 						id="advanceAmount"

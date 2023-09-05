@@ -183,6 +183,7 @@ sap.ui.define([
 			
 
 			var oItemModel = this.getView().getModel("items");
+			oItemModel.setSizeLimit(5000);
 			var oItemData = oItemModel.getData();
 			if(!(oSelectedItem in oItemData)){
 				var oItemByAccountModel = new JSONModel();
@@ -196,6 +197,7 @@ sap.ui.define([
 				oItemData[oSelectedItem] = oItemByAccountData;
 				var i = new sap.ui.model.json.JSONModel(oItemData);
 				this.getView().setModel(i, 'items');
+				i.setSizeLimit(5000);
 				i.refresh();
 			}
 

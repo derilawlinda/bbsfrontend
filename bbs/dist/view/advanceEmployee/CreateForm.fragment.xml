@@ -48,6 +48,22 @@
 
 						</ComboBox>
 
+							<Label  text="Post Date" required="true"  />
+						<DatePicker
+							id="DatePicker"
+							class="sapUiSmallMarginBottom"
+							value="{
+								'path': 'advanceRequestHeader>/U_RequestDate',
+								'type': 'sap.ui.model.type.Date',
+								'formatOptions': {
+									source:{
+										pattern:'yyyy-MM-ddTHH:mm:ss.SSSX'
+									},
+									'pattern': 'y-MM-dd'
+									
+								}
+							}"/>
+
 						<Label text="Transfer Remarks" />
 						<Input value="{advanceRequestHeader>/U_TransferRemarks}" placeholder="ct: BCA 0123456789 an Bali United" ></Input>
 

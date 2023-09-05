@@ -30,6 +30,17 @@
 									'pattern': 'y-MM-dd'
 								}
 							}"/>
+						
+						<Label  text="Transfer From" required="true"  />
+						<Select
+								forceSelection="false"
+								selectedKey="reimbursementDetailModel>/U_TransferFrom"
+								items="{
+									path: 'transferAccounts>/value',
+									sorter: { path: 'transferAccounts>Name' }
+								}">
+							<core:Item key="{transferAccounts>Code}" text="{transferAccounts>Name}" />
+						</Select>
 
 						<Label  text="Transfer Detail" />
 						<Text text="{reimbursementDetailModel>/U_TransferRemarks}" />

@@ -65,6 +65,15 @@ sap.ui.define([
 			}, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
 			});
+
+			var oTransferAccounts = new JSONModel();
+			oTransferAccounts.setSizeLimit(100);
+			oTransferAccounts.loadData(backendUrl+"coa/getCOAsForTransfer", {
+				company : this.company
+			}, true, "GET",false,false,{
+				'Authorization': 'Bearer ' + this.oJWT
+			});
+			this.getView().setModel(oTransferAccounts,"transferAccounts");
 			
 			this.getView().setModel(advanceRequestDetailModel,"advanceRequestDetailModel");
 

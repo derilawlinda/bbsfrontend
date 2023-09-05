@@ -63,6 +63,8 @@ sap.ui.define([
 		});
 		this.getView().setModel(oBudgetingModel,"budgeting");
 
+		
+
 		//NEW AR ITEM MODEL
 		var oNewAdvanceRequestItems = new sap.ui.model.json.JSONModel();
 		this.getView().setModel(oNewAdvanceRequestItems,"new_ar_items");

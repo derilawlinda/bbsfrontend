@@ -77,6 +77,14 @@ sap.ui.define([
 			});
 			reimbursementDetailModel.refresh();
 			
+			var oTransferAccounts = new JSONModel();
+			oTransferAccounts.setSizeLimit(100);
+			oTransferAccounts.loadData(backendUrl+"coa/getCOAsForTransfer", {
+				company : this.company
+			}, true, "GET",false,false,{
+				'Authorization': 'Bearer ' + this.oJWT
+			});
+			this.getView().setModel(oTransferAccounts,"transferAccounts");
 
 			var oBudgetingModel = new JSONModel();
 			oBudgetingModel.setSizeLimit(500);

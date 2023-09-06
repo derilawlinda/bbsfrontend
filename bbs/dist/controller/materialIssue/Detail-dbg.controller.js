@@ -157,10 +157,12 @@ sap.ui.define([
 					}, true, "GET",false,false,{
 						'Authorization': 'Bearer ' + this.oJWT
 					});
+					itemsByAccount.setSizeLimit(5000);
 					itemsByAccount.dataLoaded().then(function(){
 						var itemsByAccountData = itemsByAccount.getData();
 						oItemData.data[uniqueAccounts[i]] = itemsByAccountData;
 						var newItemModel = new sap.ui.model.json.JSONModel(oItemData);
+						newItemModel.setSizeLimit(5000);
 						this.getView().setModel(newItemModel, 'items');
 						newItemModel.refresh();
 						this.getView().byId("materialIssuePageID").setBusy(false);

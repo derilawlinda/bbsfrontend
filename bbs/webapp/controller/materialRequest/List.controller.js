@@ -257,6 +257,7 @@ sap.ui.define([
 					'Authorization': 'Bearer ' + this.oJWT
 				});
 				var accountModel = new JSONModel();
+				accountModel.setSizeLimit(500);
 				await accountModel.loadData(backendUrl+"coa/getCOAsByBudget", {
 					budgetCode : selectedID,
 					company : this.company

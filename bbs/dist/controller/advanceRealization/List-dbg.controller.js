@@ -28,6 +28,8 @@ sap.ui.define([
 		this.oJWT = oStore.get("jwt");
 		this.company = oStore.get("company");
 		var oModel = new JSONModel();
+		this._mViewSettingsDialogs = {};
+		
 		var viewModel = new sap.ui.model.json.JSONModel({
 			is_approver : false
 		});

@@ -34,7 +34,8 @@ sap.ui.define([
 			var viewModel = new JSONModel({
 				showFooter : false,
 				editable : false,
-				resubmit : false
+				resubmit : false,
+				is_finance : false
 			});
 			this.getView().setModel(viewModel,"viewModel");
 			var oItemsModel = new JSONModel();
@@ -123,6 +124,9 @@ sap.ui.define([
 						viewModel.setProperty("/showFooter", true);
 						viewModel.setProperty("/editable", true);
 					}
+				}else if(parametersMap.roleId == 2){
+					viewModel.setProperty("/showFooter", true);
+					viewModel.setProperty("/is_finance", true);
 				};
 
 				let budget = new JSONModel();
@@ -226,7 +230,7 @@ sap.ui.define([
 		onApproveButtonClick : function (){
 			var pageDOM = this.getView().byId("materialRequestPageID");
 			var viewModel = this.getView().getModel("viewModel");
-			pageDOM.setBusy(true);
+			// pageDOM.setBusy(true);
 			const oModel = this.getView().getModel("materialRequestDetailModel");
 			var oProperty = oModel.getProperty("/");
 			var oJWT = this.oJWT;
@@ -236,13 +240,14 @@ sap.ui.define([
 					company : this.company,
 					oProperty : oProperty
 				}),
-				headers: {"Authorization": "Bearer "+ oJWT},
+				headers: {"Authorization": "Bearer "+ oJWT,
+						  "Accept": "application/json; charset=utf-8"},
 				crossDomain: true,
 				url: backendUrl+'materialRequest/approveMR',
 				contentType: "application/json",
 				success: function (res, status, xhr) {
 					  //success code
-					  pageDOM.setBusy(false);
+					//   pageDOM.setBusy(false);
 					  
 					  if (!this.oSuccessMessageDialog) {
 						this.oSuccessMessageDialog = new Dialog({

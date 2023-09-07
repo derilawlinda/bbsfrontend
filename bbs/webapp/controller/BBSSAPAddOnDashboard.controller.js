@@ -66,6 +66,26 @@ sap.ui.define([
 			Device.media.attachHandler(this._handleWindowResize, this);
 			this.getRouter().attachRouteMatched(this.onRouteChange.bind(this));
 			this.getOwnerComponent().getModel("navigationList").setProperty('/selectedKey', currentRoute);
+			var oNavigationModel = this.getOwnerComponent().getModel("navigationList");
+			var oNavigationData = oNavigationModel.getData();
+			oNavigationData.navigation.forEach(function(item, index, arr){
+				item.is_visible = true;
+				if(item.title == 'Pillar Settings'){
+					if(userData.user.role_id != 2){
+						console.log("sampe sini?");
+						item.is_visible = false;
+					}
+				}
+
+				if(item.title == 'User Administration'){
+					if(userData.user.role_id != 1){
+						item.is_visible = false;
+					}
+				}
+			});
+			console.log(oNavigationData);
+			oNavigationModel.setData(oNavigationData);
+			oNavigationModel.refresh();
 		},
 
 		onRouteChange: function (oEvent) {

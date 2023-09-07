@@ -809,10 +809,33 @@ sap.ui.define([
 				crossDomain: true,
 				url: backendUrl+'budget/printBudget',
 				contentType: "application/json",
-				responseType: 'application/pdf',
+				responseType : "blob",
 				success: function (res, status, xhr) {
+
+					// const newBlob = new Blob([res], { type: 'application/pdf;base64' });
+					// const downloadUrl = window.URL.createObjectURL(newBlob);
+					// window.open(downloadUrl);
+
+					var a = document.createElement('a');
+					a.href= "data:application/octet-stream;base64,"+res;
+					a.target = '_blank';
+					a.download = 'filename.pdf';
+					a.click();
+
+					// var blob = res;
+					// let newUrl = null
+					// const binaryData = [];
+					// binaryData.push(blob);
+					// newUrl = window.URL.createObjectURL(new Blob (binaryData, {type: 'application/pdf; chartset=UTF-8'}));
+
+					// var link=document.createElement('a');
+					// link.href=newUrl
+					// link.target = '_blank';
+					// link.download="Dossier_" + new Date() + ".pdf";
+					// link.click();
+
 					
-					var pdfWin= window.open("data:application/pdf;base64, " + res, '', 'height=650,width=840');
+					// var pdfWin= window.open("data:application/pdf;base64, " + res);
 					// let blob = new Blob([res]);
 
 					// if (window.navigator && window.navigator.msSaveOrOpenBlob) {
@@ -825,7 +848,7 @@ sap.ui.define([
 					// 	// link.download = "techsolutionstuff.pdf";
 					// 	// link.click();
 						// var newWin = window.open(res);
-						pdfWin.focus();
+						// pdfWin.focus();
 					// 	// newWin.reload();
 					// }
 					

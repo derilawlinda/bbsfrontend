@@ -47,6 +47,7 @@
 						icon="{icon}"
 						enabled="{enabled}"
 						expanded="{expanded}"
+						visible="{is_visible}"
 						items="{
 							path: 'items',
 							templateShareable: false

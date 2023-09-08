@@ -125,6 +125,8 @@ sap.ui.define([
 						viewModel.setProperty("/editable", true);
 					}
 				}else if(parametersMap.roleId == 2){
+					viewModel.setProperty("/is_approver", false);
+					viewModel.setProperty("/is_requestor", false);
 					viewModel.setProperty("/showFooter", true);
 					viewModel.setProperty("/is_finance", true);
 				};

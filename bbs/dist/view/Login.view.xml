@@ -35,7 +35,7 @@
                                         <items>
                                             <core:Item text="BBS" key="BBS" />
                                             <core:Item text="KKB" key="KKB" />
-                                             <core:Item text="KKB TESTING" key="TEST_KKB" />
+                                             <core:Item text="KKB TESTING" key="TEST_DERIL" />
                                         </items>
                                     </Select> 
                             

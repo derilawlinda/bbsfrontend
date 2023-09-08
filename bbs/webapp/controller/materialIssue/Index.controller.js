@@ -98,12 +98,15 @@ sap.ui.define([
 			}
 		},
 		objectFormatter: function(sStatus) {
-			if(sStatus == 2 || sStatus == 3){
-				return 'Success'
-			}else if(sStatus == 1){
-				return 'Warning'
+			if(sStatus == 1 ){
+				return 'Warning';
+			}else if(sStatus == 2){
+				return 'Information';
+			}
+			else if(sStatus == 3){
+				return 'Success';
 			}else{
-				return 'Error'
+				return 'Error';
 			}
 		  },
 		onPress: function (oEvent) {

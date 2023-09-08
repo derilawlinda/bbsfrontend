@@ -230,7 +230,7 @@ sap.ui.define([
 		onApproveButtonClick : function (){
 			var pageDOM = this.getView().byId("materialRequestPageID");
 			var viewModel = this.getView().getModel("viewModel");
-			// pageDOM.setBusy(true);
+			pageDOM.setBusy(true);
 			const oModel = this.getView().getModel("materialRequestDetailModel");
 			var oProperty = oModel.getProperty("/");
 			var oJWT = this.oJWT;
@@ -247,9 +247,9 @@ sap.ui.define([
 				contentType: "application/json",
 				success: function (res, status, xhr) {
 					  //success code
-					//   pageDOM.setBusy(false);
+					  pageDOM.setBusy(false);
 					  
-					  if (!this.oSuccessMessageDialog) {
+					if (!this.oSuccessMessageDialog) {
 						this.oSuccessMessageDialog = new Dialog({
 							type: DialogType.Message,
 							title: "Success",
@@ -269,7 +269,24 @@ sap.ui.define([
 					this.oSuccessMessageDialog.open();
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
-				  	console.log("Got an error response: " + textStatus + errorThrown);
+					pageDOM.setBusy(false);
+					if (!this.oErrorDialog) {
+						this.oErrorDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Error",
+							state: ValueState.Error,
+							content: new Text({ text: jqXHR.responseJSON.msg }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									this.oErrorDialog.close();
+								}.bind(this)
+							})
+						});
+					};
+					this.oErrorDialog.open();
+		
 				}
 			  });
 		},
@@ -332,7 +349,23 @@ sap.ui.define([
 					this.oSuccessMessageDialog.open();
 				}.bind(this),
 				error: function (jqXHR, textStatus, errorThrown) {
-				  	console.log("Got an error response: " + textStatus + errorThrown);
+					pageDOM.setBusy(false);
+					if (!this.oErrorDialog) {
+						this.oErrorDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Error",
+							state: ValueState.Error,
+							content: new Text({ text: jqXHR.responseJSON.msg }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									this.oErrorDialog.close();
+								}.bind(this)
+							})
+						});
+					};
+					this.oErrorDialog.open();
 				}
 			  });
 		},
@@ -400,7 +433,23 @@ sap.ui.define([
 					this.oSuccessMessageDialog.open();
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
-				  	console.log("Got an error response: " + textStatus + errorThrown);
+					pageDOM.setBusy(false);
+					if (!this.oErrorDialog) {
+						this.oErrorDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Error",
+							state: ValueState.Error,
+							content: new Text({ text: jqXHR.responseJSON.msg }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									this.oErrorDialog.close();
+								}.bind(this)
+							})
+						});
+					};
+					this.oErrorDialog.open();
 				}
 			  });
 
@@ -450,7 +499,23 @@ sap.ui.define([
 					this.oSuccessMessageDialog.open();
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
-				  	console.log("Got an error response: " + textStatus + errorThrown);
+					pageDOM.setBusy(false);
+					if (!this.oErrorDialog) {
+						this.oErrorDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Error",
+							state: ValueState.Error,
+							content: new Text({ text: jqXHR.responseJSON.msg }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									this.oErrorDialog.close();
+								}.bind(this)
+							})
+						});
+					};
+					this.oErrorDialog.open();
 				}
 			  });
 	   },

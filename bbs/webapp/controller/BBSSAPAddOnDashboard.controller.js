@@ -70,13 +70,12 @@ sap.ui.define([
 			var oNavigationData = oNavigationModel.getData();
 			oNavigationData.navigation.forEach(function(item, index, arr){
 				item.is_visible = true;
+				console.log(userData.user.role_id);
 				if(item.title == 'Pillar Settings'){
 					if(userData.user.role_id != 2){
-						console.log("sampe sini?");
 						item.is_visible = false;
 					}
 				}
-
 				if(item.title == 'User Administration'){
 					if(userData.user.role_id != 1){
 						item.is_visible = false;

@@ -24,13 +24,17 @@ sap.ui.define([
 			var oOwnerComponent = this.getOwnerComponent();
 			this.oRouter = oOwnerComponent.getRouter();
 			this.oRouter.getRoute("materialRequestDetail").attachPatternMatched(this._onObjectMatched, this);
-		
-			
-			
-
+			const bus = this.getOwnerComponent().getEventBus();
 		},
 		_onObjectMatched: function (oEvent) {
-			
+			const bus = this.getOwnerComponent().getEventBus();
+			var globalData = this.getOwnerComponent().getModel("globalModel").getData();
+			console.log(globalData["MRpath"]);
+			this.path = '';
+			if(globalData["MRpath"] != null || globalData["MRpath"] != ''){
+				this.path = globalData["MRpath"];
+			};
+			console.log(this.path);
 			var viewModel = new JSONModel({
 				showFooter : false,
 				editable : false,
@@ -48,12 +52,9 @@ sap.ui.define([
 			var accountModel = new JSONModel();
 			this.getView().setModel(accountModel,"accounts");
 			
-
-			
 			this.materialRequestCode = oEvent.getParameter("arguments").materialRequestID;
 			var userModel = this.getOwnerComponent().getModel("userModel");
 			if(userModel === undefined){
-				const bus = this.getOwnerComponent().getEventBus();
 				bus.subscribe("username", "checktoken", this.buildForm, this);
 			}else{
 				var userData = userModel.getData();
@@ -71,6 +72,7 @@ sap.ui.define([
 		},
 
 		buildForm: function(channelId, eventId, parametersMap) {
+			console.log(parametersMap);
 			if(parametersMap.status == "error"){
 				alert("Error");
 				this.getView().byId("materialRequestPageID").setBusy(false);
@@ -234,6 +236,9 @@ sap.ui.define([
 			var viewModel = this.getView().getModel("viewModel");
 			pageDOM.setBusy(true);
 			const oModel = this.getView().getModel("materialRequestDetailModel");
+			const materialReqListModel = this.getOwnerComponent().getModel("materialRequest");
+			var path = this.path;
+			console.log(path);
 			var oProperty = oModel.getProperty("/");
 			var oJWT = this.oJWT;
 			$.ajax({
@@ -250,6 +255,13 @@ sap.ui.define([
 				success: function (res, status, xhr) {
 					  //success code
 					  pageDOM.setBusy(false);
+					  console.log(res["U_Status"]);
+					  console.log(path + "/U_Status");
+					  materialReqListModel.setProperty(path + "/U_Status",res["U_Status"]);
+					  oModel.setData(res);
+					  oModel.refresh();
+
+					
 					  
 					if (!this.oSuccessMessageDialog) {
 						this.oSuccessMessageDialog = new Dialog({

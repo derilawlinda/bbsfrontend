@@ -18,6 +18,7 @@ sap.ui.define([
 	// shortcut for sap.m.DialogType
 	var DialogType = mobileLibrary.DialogType;
 
+
 	var ValueState = coreLibrary.ValueState;
     return Controller.extend("frontend.bbs.controller.materialRequest.List", {
        onInit: async function () {
@@ -51,15 +52,11 @@ sap.ui.define([
 		}, true, "GET",false,false,{
 			'Authorization': 'Bearer ' + this.oJWT
 		});
-		this.getView().setModel(oModel,"materialRequest");
+		this.getOwnerComponent().setModel(oModel,"materialRequest");
 		oModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
 			this.getView().byId("materialRequestTableID").setBusy(false);
-			console.log(oModel.oData["@odata.count"]);
 		}.bind(this));
 
-		var oSalesOrderModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/sales_order.json"));
-		this.getView().setModel(oSalesOrderModel,"salesOrder");
-	
 		var oItemsModel = new JSONModel();
 		this.getView().setModel(oItemsModel,"items");
 		var viewModel = new sap.ui.model.json.JSONModel({
@@ -98,8 +95,6 @@ sap.ui.define([
 			};
 			this.toggleCreateButton("username","checkToken",a);
 		}
-		
-		
 
        },
 	   onGrowingStarted: function () {
@@ -203,7 +198,12 @@ sap.ui.define([
 		onPress: function (oEvent) {
 			var oRouter = this.getOwnerComponent().getRouter();
 			var oRow = oEvent.getSource();
+			var path = oRow.getBindingContext("materialRequest").getPath();
+			console.log(path);
 			var id = oRow.getCells()[0].getText();
+			this.getOwnerComponent().getModel("globalModel").setData({
+				MRpath : path
+			});
 			oRouter.navTo("materialRequestDetail",{
 				materialRequestID : id
 			});

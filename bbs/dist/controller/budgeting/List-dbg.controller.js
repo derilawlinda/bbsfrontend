@@ -154,8 +154,6 @@ sap.ui.define([
 			this.getView().byId("CreateSubClassification").setEnabled(false);
 			this.getView().byId("CreateSubClassification2").setEnabled(false);
 
-			// var comboPath = this.getView().byId("CreateCompany").getSelectedItem().getBindingContext("companies").getPath();
-			// this.companyPath = comboPath;
 			var comboPillar = this.getView().byId("CreatePillar");
 			comboPillar.setEnabled(true);
 			comboPillar.bindAggregation("items", {

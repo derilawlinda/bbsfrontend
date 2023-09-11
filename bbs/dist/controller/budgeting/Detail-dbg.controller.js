@@ -802,6 +802,8 @@ sap.ui.define([
 			oModel.setProperty("/U_SubClass2",this.getView().byId("CreateSubClassification2").getValue());
 			var jsonData = JSON.stringify(oModel.getData());
 			var oJWT = this.oJWT;
+			// var pageDOM = this.getView().byId("budgetingPageId");
+			// pageDOM.setBusy(true);
 			$.ajax({
 				type: "POST",
 				data: jsonData,
@@ -809,52 +811,39 @@ sap.ui.define([
 				crossDomain: true,
 				url: backendUrl+'budget/printBudget',
 				contentType: "application/json",
-				responseType : "blob",
+				responseType: 'arraybuffer',
 				success: function (res, status, xhr) {
 
-					// const newBlob = new Blob([res], { type: 'application/pdf;base64' });
-					// const downloadUrl = window.URL.createObjectURL(newBlob);
-					// window.open(downloadUrl);
+					var atobData = atob(res);
+                    var num = new Array(atobData.length);
+                    for (var i = 0; i < atobData.length; i++) {
+                        num[i] = atobData.charCodeAt(i);
+                    }
+                    var pdfData = new Uint8Array(num);
 
-					var a = document.createElement('a');
-					a.href= "data:application/octet-stream;base64,"+res;
-					a.target = '_blank';
-					a.download = 'filename.pdf';
-					a.click();
-
-					// var blob = res;
-					// let newUrl = null
-					// const binaryData = [];
-					// binaryData.push(blob);
-					// newUrl = window.URL.createObjectURL(new Blob (binaryData, {type: 'application/pdf; chartset=UTF-8'}));
-
-					// var link=document.createElement('a');
-					// link.href=newUrl
-					// link.target = '_blank';
-					// link.download="Dossier_" + new Date() + ".pdf";
-					// link.click();
-
-					
-					// var pdfWin= window.open("data:application/pdf;base64, " + res);
-					// let blob = new Blob([res]);
-
-					// if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-					// 	window.navigator.msSaveOrOpenBlob(blob); // for IE
-					// }
-					// else {
-						// var fileURL = URL.createObjectURL(blob);
-					// 	// var link = document.createElement('a');
-					// 	// link.href = window.URL.createObjectURL(blob);
-					// 	// link.download = "techsolutionstuff.pdf";
-					// 	// link.click();
-						// var newWin = window.open(res);
-						// pdfWin.focus();
-					// 	// newWin.reload();
-					// }
-					
+					var blob = new Blob([pdfData], { type: 'application/pdf;base64' });
+                    var url = URL.createObjectURL(blob);
+					window.open(url);
+									
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
-				  	console.log("Got an error response: " + textStatus + errorThrown);
+					// pageDOM.setBusy(false);
+					if (!this.oErrorDialog) {
+						this.oErrorDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Error",
+							state: ValueState.Error,
+							content: new Text({ text: jqXHR.responseJSON.msg }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									this.oErrorDialog.close();
+								}.bind(this)
+							})
+						});
+					};
+					this.oErrorDialog.open();
 				}
 			  });
 		},

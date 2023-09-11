@@ -238,7 +238,6 @@ sap.ui.define([
 			const oModel = this.getView().getModel("materialRequestDetailModel");
 			const materialReqListModel = this.getOwnerComponent().getModel("materialRequest");
 			var path = this.path;
-			console.log(path);
 			var oProperty = oModel.getProperty("/");
 			var oJWT = this.oJWT;
 			$.ajax({
@@ -611,6 +610,58 @@ sap.ui.define([
 			oSelectedRow.getCells()[1].setBusy(false);
 	
 			
+		},
+
+		handlePrintButtonPressed : function(oEvent){
+
+			var pageDOM = this.getView().byId("materialRequestPageID");
+			pageDOM.setBusy(true);
+			var oJWT = this.oJWT;
+			$.ajax({
+				type: "POST",
+				data: JSON.stringify({
+					company : this.company,
+					code : this.materialRequestCode
+				}),
+				headers: {"Authorization": "Bearer "+ oJWT},
+				crossDomain: true,
+				url: backendUrl+'materialRequest/printMR',
+				contentType: "application/json",
+				responseType: 'arraybuffer',
+				success: function (res, status, xhr) {
+					pageDOM.setBusy(false);
+					var atobData = atob(res);
+                    var num = new Array(atobData.length);
+                    for (var i = 0; i < atobData.length; i++) {
+                        num[i] = atobData.charCodeAt(i);
+                    }
+                    var pdfData = new Uint8Array(num);
+
+					var blob = new Blob([pdfData], { type: 'application/pdf;base64' });
+                    var url = URL.createObjectURL(blob);
+					window.open(url);
+									
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+					pageDOM.setBusy(false);
+					if (!this.oErrorDialog) {
+						this.oErrorDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Error",
+							state: ValueState.Error,
+							content: new Text({ text: jqXHR.responseJSON.msg }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									this.oErrorDialog.close();
+								}.bind(this)
+							})
+						});
+					};
+					this.oErrorDialog.open();
+				}
+			  });
 		},
 		objectFormatter: function(sStatus) {
 			if(sStatus == 1 ){

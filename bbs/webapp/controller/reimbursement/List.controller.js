@@ -423,9 +423,14 @@ sap.ui.define([
 			this.onAmountChange();
 		},
 		dateFormatter : function(date){
-			var unformattedDate = new Date(date);
-			var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({pattern : "YYYY-MM-dd" });   
-			var dateFormatted = dateFormat.format(unformattedDate);
+			if(date){
+				var unformattedDate = new Date(date);
+				var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({pattern : "YYYY-MM-dd" });   
+				var dateFormatted = dateFormat.format(unformattedDate);
+			}else{
+				var dateFormatted = '-';
+			}
+			
 			return dateFormatted;
 		},
 		objectFormatter: function(sStatus) {

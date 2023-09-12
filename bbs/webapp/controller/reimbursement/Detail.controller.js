@@ -64,19 +64,18 @@ sap.ui.define([
 				path: "/value/" + window.decodeURIComponent(oEvent.getParameter("arguments").ID),
 				model: "reimbursements"
 			});
-			var reimbursementCode = oEvent.getParameter("arguments").ID;
-			if(reimbursementCode === undefined){
+			this.reimbursementCode = oEvent.getParameter("arguments").ID;
+			if(this.reimbursementCode === undefined){
 				var url = window.location.href;
 				var urlArray = url.split("/");
-				reimbursementCode = urlArray[urlArray.length - 1];
+				this.reimbursementCode = urlArray[urlArray.length - 1];
 			}
-
 			
 			const reimbursementDetailModel = new JSONModel();
 			this.getView().setModel(reimbursementDetailModel,"reimbursementDetailModel");
 
 			reimbursementDetailModel.loadData(backendUrl+"reimbursement/getReimbursementById", {
-				code : reimbursementCode,
+				code : this.reimbursementCode,
 				company : this.company
 			}, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
@@ -640,6 +639,58 @@ sap.ui.define([
 				this.oDialog.open();
 			}.bind(this));
 		
+		},
+
+		handlePrintButtonPressed : function(oEvent){
+
+			var pageDOM = this.getView().byId("reimbursementPageID");
+			pageDOM.setBusy(true);
+			var oJWT = this.oJWT;
+			$.ajax({
+				type: "POST",
+				data: JSON.stringify({
+					company : this.company,
+					code : this.reimbursementCode
+				}),
+				headers: {"Authorization": "Bearer "+ oJWT},
+				crossDomain: true,
+				url: backendUrl+'reimbursement/printReimbursement',
+				contentType: "application/json",
+				responseType: 'arraybuffer',
+				success: function (res, status, xhr) {
+					pageDOM.setBusy(false);
+					var atobData = atob(res);
+                    var num = new Array(atobData.length);
+                    for (var i = 0; i < atobData.length; i++) {
+                        num[i] = atobData.charCodeAt(i);
+                    }
+                    var pdfData = new Uint8Array(num);
+
+					var blob = new Blob([pdfData], { type: 'application/pdf;base64' });
+                    var url = URL.createObjectURL(blob);
+					window.open(url);
+									
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+					pageDOM.setBusy(false);
+					if (!this.oErrorDialog) {
+						this.oErrorDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Error",
+							state: ValueState.Error,
+							content: new Text({ text: jqXHR.responseJSON.msg }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									this.oErrorDialog.close();
+								}.bind(this)
+							})
+						});
+					};
+					this.oErrorDialog.open();
+				}
+			  });
 		},
 		objectFormatter: function(sStatus) {
 			if(sStatus == 1 ){

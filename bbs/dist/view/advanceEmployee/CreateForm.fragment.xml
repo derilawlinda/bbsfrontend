@@ -59,7 +59,8 @@
 									source:{
 										pattern:'yyyy-MM-ddTHH:mm:ss.SSSX'
 									},
-									'pattern': 'y-MM-dd'
+									'pattern': 'y-MM-dd',
+									UTC: false
 									
 								}
 							}"/>

@@ -26,6 +26,24 @@ xmlns:core="sap.ui.core"
                         <Label id="_IDGenLabel101" text="ID" />
 						<Text id="_IDGenText101" text="{advanceRequestDetailModel>/Code}" />
 
+						<Label  text="Post Date" required="true"  />
+						<DatePicker
+							editable="{viewModel>/editable}"
+							id="DatePicker"
+							class="sapUiSmallMarginBottom"
+							value="{
+								'path': 'advanceRequestDetailModel>/U_RequestDate',
+								'type': 'sap.ui.model.type.Date',
+								'formatOptions': {
+									source:{
+										pattern:'yyyy-MM-ddTHH:mm:ss.SSSX'
+									},
+									'pattern': 'y-MM-dd',
+									UTC: false
+									
+								}
+							}"/>
+
                         <Label id="_IDGenLabel1" text="Date" />
 						<Text id="_IDGenText1" text="{advanceRequestDetailModel>/CreateDate}" />
 

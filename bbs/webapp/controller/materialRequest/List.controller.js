@@ -198,9 +198,8 @@ sap.ui.define([
 		onPress: function (oEvent) {
 			var oRouter = this.getOwnerComponent().getRouter();
 			var oRow = oEvent.getSource();
-			var path = oRow.getBindingContext("materialRequest").getPath();
-			console.log(path);
 			var id = oRow.getCells()[0].getText();
+			var path = oRow.getBindingContext("materialRequest").getPath();
 			this.getOwnerComponent().getModel("globalModel").setData({
 				MRpath : path
 			});

@@ -74,7 +74,7 @@ xmlns:table="sap.ui.table"
                         <Text id="_IDGenText1"
 						    text="{path : 'reimbursements>CreateDate', formatter:'.dateFormatter'}" />
                           <Text id="_IDGenText3"
-						    text="{reimbursements>U_DisbursedAt}" />
+						    text="{path : 'reimbursements>U_DisbursedAt', formatter:'.dateFormatter'}" />
                         <Text id="_IDGenText2" text="{reimbursements>Name}" />
 
                         <Text id="_IDGenText4" text="{reimbursements>U_RequestorName}" />

@@ -43,6 +43,11 @@ sap.ui.define([
 					{"Name" : 3}
 				]
 			});
+			var globalData = this.getOwnerComponent().getModel("globalModel").getData();
+			this.path = '';
+			if(globalData["ReimbursementPath"] != null || globalData["ReimbursementPath"] != ''){
+				this.path = globalData["ReimbursementPath"];
+			};
 			this.getView().setModel(viewModel,"viewModel");
 			this.getView().byId("reimbursementPageID").setBusy(true);
 			var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
@@ -230,12 +235,14 @@ sap.ui.define([
 			var TransferFrom = this.getView().byId("transferFrom").getSelectedKey();
 			oModel.setProperty("/DisbursedDate", DisbursedDate);
 			oModel.setProperty("/U_TransferFrom",TransferFrom);
-			var code = oModel.getData().Code;
 			var pageDOM = this.getView().byId("reimbursementPageID");
 			var transferDialog = this.getView().byId("transferDialog");
 			var oProperty = oModel.getProperty("/");
 			transferDialog.close();
 			pageDOM.setBusy(true);
+			var viewModel = this.getView().getModel("viewModel");
+			var reimbursementModel = this.getOwnerComponent().getModel("reimbursements");
+			var path = this.path;
 			$.ajax({
 				type: "POST",
 				data: JSON.stringify({
@@ -251,6 +258,11 @@ sap.ui.define([
 					MessageToast.show("Reimbursement Transfered");
 					$(".sapMMessageToast").css({"background-color": "#256f3a", "color": "white"});
 					oModel.setData(res);
+					oModel.refresh();
+					if(reimbursementModel){
+						reimbursementModel.setProperty(path + "/U_Status",res["U_Status"]);
+					};
+					viewModel.setProperty("/showFooter", false);
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					  pageDOM.setBusy(false);
@@ -282,6 +294,8 @@ sap.ui.define([
 			const oModel = this.getView().getModel("reimbursementDetailModel");
 			var oProperty = oModel.getProperty("/");
 			var oJWT = this.oJWT;
+			var reimbursementModel = this.getOwnerComponent().getModel("reimbursements");
+			var path = this.path;
 			$.ajax({
 				type: "POST",
 				data: JSON.stringify({
@@ -307,6 +321,11 @@ sap.ui.define([
 								text: "OK",
 								press: function () {
 									this.oSuccessMessageDialog.close();
+									oModel.setData(res);
+									oModel.refresh();
+									if(reimbursementModel){
+										reimbursementModel.setProperty(path + "/U_Status",res["U_Status"]);
+									};
 								}.bind(this)
 							})
 						});
@@ -316,7 +335,23 @@ sap.ui.define([
 					this.oSuccessMessageDialog.open();
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
-				  	console.log("Got an error response: " + textStatus + errorThrown);
+					pageDOM.setBusy(false);
+					if (!this.oErrorDialog) {
+						this.oErrorDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Error",
+							state: ValueState.Error,
+							content: new Text({ text: jqXHR.responseJSON.msg }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									this.oErrorDialog.close();
+								}.bind(this)
+							})
+						});
+					};
+					this.oErrorDialog.open();
 				}
 			  });
 		},
@@ -360,7 +395,23 @@ sap.ui.define([
 					this.oSuccessMessageDialog.open();
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
-				  	console.log("Got an error response: " + textStatus + errorThrown);
+					pageDOM.setBusy(false);
+					if (!this.oErrorDialog) {
+						this.oErrorDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Error",
+							state: ValueState.Error,
+							content: new Text({ text: jqXHR.responseJSON.msg }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									this.oErrorDialog.close();
+								}.bind(this)
+							})
+						});
+					};
+					this.oErrorDialog.open();
 				}
 			  });
 
@@ -436,6 +487,8 @@ sap.ui.define([
 			});
 			var oJWT = this.oJWT;
 			var viewModel = this.getView().getModel("viewModel");
+			var reimbursementModel = this.getOwnerComponent().getModel("reimbursements");
+			var path = this.path;
 
 			$.ajax({
 				type: "POST",
@@ -459,6 +512,11 @@ sap.ui.define([
 								text: "OK",
 								press: function () {
 									viewModel.setProperty("/resubmit", false);
+									if(reimbursementModel){
+										reimbursementModel.setProperty(path + "/U_Status",res["U_Status"]);
+									};
+									oModel.setData(res);
+									oModel.refresh();
 									this.oSuccessMessageDialog.close();
 								}.bind(this)
 							})
@@ -468,7 +526,23 @@ sap.ui.define([
 					this.oSuccessMessageDialog.open();
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
-				  	console.log("Got an error response: " + textStatus + errorThrown);
+					pageDOM.setBusy(false);
+					if (!this.oErrorDialog) {
+						this.oErrorDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Error",
+							state: ValueState.Error,
+							content: new Text({ text: jqXHR.responseJSON.msg }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									this.oErrorDialog.close();
+								}.bind(this)
+							})
+						});
+					};
+					this.oErrorDialog.open();
 				}
 			  });
 	   },
@@ -486,12 +560,15 @@ sap.ui.define([
 
 		onConfirmRejectClick : function(){
 			var pageDOM = this.getView().byId("reimbursementPageID");
-			var reimbursementDetailData = this.getView().getModel("reimbursementDetailModel").getData();
+			var reimbursementDetailModel = this.getView().getModel("reimbursementDetailModel");
+			var reimbursementDetailData = reimbursementDetailModel.getData();
 			pageDOM.setBusy(true);
 			var oDialog = this.getView().byId("rejectDialog");
 			var code = reimbursementDetailData.Code;
 			var rejectionRemarks = this.getView().byId("RejectionRemarksID").getValue();
 			var viewModel = this.getView().getModel("viewModel");
+			var reimbursementModel = this.getOwnerComponent().getModel("reimbursements");
+			var path = this.path;
 			
 			$.ajax({
 				type: "POST",
@@ -519,14 +596,36 @@ sap.ui.define([
 								press: function () {
 									viewModel.setProperty("/showFooter", false);
 									this.oSuccessMessageDialog.close();
+									if(reimbursementModel){
+										reimbursementModel.setProperty(path + "/U_Status",res["U_Status"]);
+									};
+									reimbursementDetailModel.setData(res);
+									reimbursementDetailModel.refresh();
 								}.bind(this)
 							})
 						});
 					}
+					viewModel.setProperty("/showFooter", false);
 					this.oSuccessMessageDialog.open();
-				}.bind(this),
+				},
 				error: function (jqXHR, textStatus, errorThrown) {
-				  	console.log("Got an error response: " + textStatus + errorThrown);
+					pageDOM.setBusy(false);
+					if (!this.oErrorDialog) {
+						this.oErrorDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Error",
+							state: ValueState.Error,
+							content: new Text({ text: jqXHR.responseJSON.msg }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									this.oErrorDialog.close();
+								}.bind(this)
+							})
+						});
+					};
+					this.oErrorDialog.open();
 				}
 			  });
 		},

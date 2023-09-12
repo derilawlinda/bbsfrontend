@@ -46,7 +46,6 @@ sap.ui.define([
 		var oItemModel = new JSONModel();
 		this.getView().setModel(oItemModel,"items");
 		this.getView().getModel("items").setProperty("/data", []);
-		var oAdvanceRequestHeader = new sap.ui.model.json.JSONModel();
 		var viewModel = new sap.ui.model.json.JSONModel({
 			showCreateButton : true,
 			is_approver : false,
@@ -60,7 +59,6 @@ sap.ui.define([
 		// var dynamicProperties = [];
 		// oBudgetingDetailModel.setData(dynamicProperties);
 		
-		this.getView().setModel(oAdvanceRequestHeader,"advanceRequestHeader");
 		var budgetRequestHeader = new sap.ui.model.json.JSONModel({
 			U_RemainingBudget : 0
 		});
@@ -75,8 +73,8 @@ sap.ui.define([
 		this.getView().setModel(oBudgetingModel,"budgeting");
 
 		//NEW REIMBURSEMENT MODEL
-		var oNewAdvanceRequestItems = new sap.ui.model.json.JSONModel();
-		this.getView().setModel(oNewAdvanceRequestItems,"new_re_items");
+		var oNewReimbursementItems = new sap.ui.model.json.JSONModel();
+		this.getView().setModel(oNewReimbursementItems,"new_re_items");
 		this.getView().getModel("new_re_items").setProperty("/REIMBURSEMENTLINESCollection", []);
 
 		var userModel = this.getOwnerComponent().getModel("userModel");
@@ -290,7 +288,23 @@ sap.ui.define([
 					view.getModel('reimbursements').refresh();
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
-				  	console.log("Got an error response: " + textStatus + errorThrown);
+					oDialog.setBusy(false);
+					if (!this.oErrorDialog) {
+						this.oErrorDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Error",
+							state: ValueState.Error,
+							content: new Text({ text: jqXHR.responseJSON.msg }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									this.oErrorDialog.close();
+								}.bind(this)
+							})
+						});
+					};
+					this.oErrorDialog.open();
 				}
 			  });
 	   },
@@ -323,6 +337,10 @@ sap.ui.define([
 			var oRouter = this.getOwnerComponent().getRouter();
 			var oRow = oEvent.getSource();
 			var id = oRow.getCells()[0].getText();
+			var path = oRow.getBindingContext("reimbursements").getPath();
+			this.getOwnerComponent().getModel("globalModel").setData({
+				ReimbursementPath : path
+			});
 			oRouter.navTo("reimbursementDetail",{
 				ID : id
 			});

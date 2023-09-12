@@ -29,12 +29,10 @@ sap.ui.define([
 		_onObjectMatched: function (oEvent) {
 			const bus = this.getOwnerComponent().getEventBus();
 			var globalData = this.getOwnerComponent().getModel("globalModel").getData();
-			console.log(globalData["MRpath"]);
 			this.path = '';
 			if(globalData["MRpath"] != null || globalData["MRpath"] != ''){
 				this.path = globalData["MRpath"];
 			};
-			console.log(this.path);
 			var viewModel = new JSONModel({
 				showFooter : false,
 				editable : false,
@@ -254,9 +252,9 @@ sap.ui.define([
 				success: function (res, status, xhr) {
 					  //success code
 					  pageDOM.setBusy(false);
-					  console.log(res["U_Status"]);
-					  console.log(path + "/U_Status");
-					  materialReqListModel.setProperty(path + "/U_Status",res["U_Status"]);
+					  if(materialReqListModel){	
+						materialReqListModel.setProperty(path + "/U_Status",res["U_Status"]);
+					  }
 					  oModel.setData(res);
 					  oModel.refresh();
 
@@ -321,12 +319,16 @@ sap.ui.define([
 
 		onConfirmRejectClick : function(){
 			var pageDOM = this.getView().byId("materialRequestPageID");
-			var materialRequestDetailData = this.getView().getModel("materialRequestDetailModel").getData();
 			pageDOM.setBusy(true);
+
+			var materialRequestModel = this.getView().getModel("materialRequestDetailModel");
+			var materialRequestDetailData = materialRequestModel.getData();
 			var oDialog = this.getView().byId("rejectDialog");
 			var code = materialRequestDetailData.Code;
 			var rejectionRemarks = this.getView().byId("RejectionRemarksID").getValue();
 			var viewModel = this.getView().getModel("viewModel");
+			const materialReqListModel = this.getOwnerComponent().getModel("materialRequest");
+			var path = this.path;
 			
 			$.ajax({
 				type: "POST",
@@ -353,6 +355,11 @@ sap.ui.define([
 								text: "OK",
 								press: function () {
 									viewModel.setProperty("/showFooter", false);
+									if(materialReqListModel){	
+										materialReqListModel.setProperty(path + "/U_Status",res["U_Status"]);
+									}
+									materialRequestModel.setData(res);
+									materialRequestModel.refresh();
 									this.oSuccessMessageDialog.close();
 								}.bind(this)
 							})
@@ -479,6 +486,8 @@ sap.ui.define([
 			});
 			var oJWT = this.oJWT;
 			var viewModel = this.getView().getModel("viewModel");
+			const materialReqListModel = this.getOwnerComponent().getModel("materialRequest");
+			var path = this.path;
 
 			$.ajax({
 				type: "POST",
@@ -503,6 +512,11 @@ sap.ui.define([
 								press: function () {
 									viewModel.setProperty("/showFooter", false);
 									viewModel.setProperty("/editable", false);
+									if(materialReqListModel){	
+										materialReqListModel.setProperty(path + "/U_Status",res["U_Status"]);
+									}
+									oModel.setData(res);
+									oModel.refresh();
 									this.oSuccessMessageDialog.close();
 								}.bind(this)
 							})

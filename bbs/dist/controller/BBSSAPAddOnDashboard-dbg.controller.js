@@ -70,7 +70,6 @@ sap.ui.define([
 			var oNavigationData = oNavigationModel.getData();
 			oNavigationData.navigation.forEach(function(item, index, arr){
 				item.is_visible = true;
-				console.log(userData.user.role_id);
 				if(item.title == 'Pillar Settings'){
 					if(userData.user.role_id != 2){
 						item.is_visible = false;
@@ -82,7 +81,6 @@ sap.ui.define([
 					}
 				}
 			});
-			console.log(oNavigationData);
 			oNavigationModel.setData(oNavigationData);
 			oNavigationModel.refresh();
 		},
@@ -98,7 +96,6 @@ sap.ui.define([
 		onLogoutItemSelect: function(event){
 			var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 			var oJWT = oStore.get("jwt");
-			console.log(oJWT);
 			var oRouter = this.getRouter();
 			$.ajax({url : backendUrl+"logout",
                 type: 'POST',

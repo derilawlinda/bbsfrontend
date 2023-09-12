@@ -29,7 +29,8 @@
 								'type': 'sap.ui.model.type.Date',
 								 
 								'formatOptions': {
-									'pattern': 'y-MM-dd'
+									'pattern': 'y-MM-dd',
+									UTC : false
 								}
 							}"/>
 

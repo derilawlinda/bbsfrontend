@@ -33,6 +33,7 @@
 						<Label  text="Transfer From" required="true"  />
 						<Select
 								forceSelection="false"
+								id="transferFrom"
 								selectedKey="reimbursementDetailModel>/U_TransferFrom"
 								items="{
 									path: 'transferAccounts>/value',

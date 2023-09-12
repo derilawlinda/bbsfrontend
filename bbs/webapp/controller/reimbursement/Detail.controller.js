@@ -6,8 +6,9 @@ sap.ui.define([
 	"sap/m/Button",
 	"sap/m/library",
 	"sap/m/Text",
+	"sap/m/MessageToast",
 	"sap/ui/core/library"
-], function (Controller, History, JSONModel,Dialog,Button,mobileLibrary,Text,coreLibrary) {
+], function (Controller, History, JSONModel,Dialog,Button,mobileLibrary,Text,MessageToast,coreLibrary) {
 	"use strict";
 
 	
@@ -226,7 +227,9 @@ sap.ui.define([
 			const oModel = this.getView().getModel("reimbursementDetailModel");
 			var oJWT = this.oJWT;
 			var DisbursedDate = this.getView().byId("DatePicker").getValue();
-			oModel.setProperty("/DisbursedDate", DisbursedDate)
+			var TransferFrom = this.getView().byId("transferFrom").getSelectedKey();
+			oModel.setProperty("/DisbursedDate", DisbursedDate);
+			oModel.setProperty("/U_TransferFrom",TransferFrom);
 			var code = oModel.getData().Code;
 			var pageDOM = this.getView().byId("reimbursementPageID");
 			var transferDialog = this.getView().byId("transferDialog");
@@ -247,10 +250,26 @@ sap.ui.define([
 					pageDOM.setBusy(false);
 					MessageToast.show("Reimbursement Transfered");
 					$(".sapMMessageToast").css({"background-color": "#256f3a", "color": "white"});
+					oModel.setData(res);
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					  pageDOM.setBusy(false);
-					  console.log("Got an error response: " + textStatus + errorThrown);
+						if (!this.oErrorDialog) {
+							this.oErrorDialog = new Dialog({
+								type: DialogType.Message,
+								title: "Error",
+								state: ValueState.Error,
+								content: new Text({ text: jqXHR.responseJSON.msg }),
+								beginButton: new Button({
+									type: ButtonType.Emphasized,
+									text: "OK",
+									press: function () {
+										this.oErrorDialog.close();
+									}.bind(this)
+								})
+							});
+						};
+						this.oErrorDialog.open();
 				}
 			});
 

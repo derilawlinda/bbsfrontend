@@ -66,11 +66,12 @@ sap.ui.define([
 		});
 
 		this.getView().setModel(oCompanyModel, "companies");
+		
 
 		oModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
 			this.getView().byId("idBudgetTable").setBusy(false);
 		}.bind(this));
-		this.getView().setModel(oModel,"budgeting");
+		this.getOwnerComponent().setModel(oModel,"budgeting");
 
 		var oProjectModel = new JSONModel();
 		oProjectModel.loadData(backendUrl+"project/getProjects", {
@@ -336,6 +337,10 @@ sap.ui.define([
 			var oRouter = this.getOwnerComponent().getRouter();
 			var oRow = oEvent.getSource();
 			var id = oRow.getCells()[0].getText();
+			var path = oRow.getBindingContext("budgeting").getPath();
+			this.getOwnerComponent().getModel("globalModel").setData({
+				BudgetPath : path
+			});
 			oRouter.navTo("budgetingDetail",{
 				budgetID : id
 			});

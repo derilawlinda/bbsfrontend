@@ -30,8 +30,7 @@ sap.ui.define([
 			this.oJWT = this.oStore.get("jwt");
 			this.company = this.oStore.get("company");
 			var oOwnerComponent = this.getOwnerComponent();
-			var oSalesOrderModel = new JSONModel(sap.ui.require.toUrl("frontend/bbs/model/sales_order.json"));
-			this.getView().setModel(oSalesOrderModel,"salesOrder");
+			
 			this.oRouter = oOwnerComponent.getRouter();
 			this.userModel = oOwnerComponent.getModel("userModel");
 			this.getView().setModel(this.userModel,"userModel");
@@ -63,6 +62,12 @@ sap.ui.define([
 				};
 				this.buildForm("username","checkToken",a);
 			}
+
+			var globalData = this.getOwnerComponent().getModel("globalModel").getData();
+			this.path = '';
+			if(globalData["BudgetPath"] != null || globalData["BudgetPath"] != ''){
+				this.path = globalData["BudgetPath"];
+			};
 		
 			
 
@@ -240,7 +245,6 @@ sap.ui.define([
 				oBudgetingDetailModel.setProperty("/U_Project",sValue);
 				oBudgetingDetailModel.setProperty("/U_ProjectCode",sSelectedKey);
 			}
-			console.log(oBudgetingDetailModel.getData());
 		},
 
         onNavBack: function () {
@@ -261,6 +265,9 @@ sap.ui.define([
 			var viewModel = this.getView().getModel("viewModel");
 			pageDOM.setBusy(true);
 			var code = this.getView().byId("_IDGenText101").getText();
+			const oModel = this.getView().getModel("budgetingDetailModel");
+			const budgetingListModel = this.getOwnerComponent().getModel("budgeting");
+			var path = this.path;
 			$.ajax({
 				type: "POST",
 				data: {
@@ -273,6 +280,11 @@ sap.ui.define([
 				success: function (res, status, xhr) {
 					  //success code
 					  pageDOM.setBusy(false);
+					  if(budgetingListModel){	
+						budgetingListModel.setProperty(path + "/U_Status",res["U_Status"]);
+					  };
+					  oModel.setData(res);
+					  oModel.refresh();
 					  
 					  if (!this.oSuccessMessageDialog) {
 						this.oSuccessMessageDialog = new Dialog({
@@ -294,7 +306,23 @@ sap.ui.define([
 					this.oSuccessMessageDialog.open();
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
-				  	console.log("Got an error response: " + textStatus + errorThrown);
+					pageDOM.setBusy(false);
+					if (!this.oErrorDialog) {
+						this.oErrorDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Error",
+							state: ValueState.Error,
+							content: new Text({ text: jqXHR.responseJSON.msg }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									this.oErrorDialog.close();
+								}.bind(this)
+							})
+						});
+					};
+					this.oErrorDialog.open();
 				}
 			  });
 		},
@@ -316,6 +344,7 @@ sap.ui.define([
 
 		onConfirmRejectClick : function(){
 			var pageDOM = this.getView().byId("budgetingPageId");
+			
 			var budgetingDetailData = this.getView().getModel("budgetingDetailModel").getData();
 			pageDOM.setBusy(true);
 			var code = budgetingDetailData.Code;
@@ -323,6 +352,10 @@ sap.ui.define([
 			var rejectionRemarks = this.getView().byId("RejectionRemarksID").getValue();
 			var oDialog = this.getView().byId("rejectDialog");
 			var viewModel = this.getView().getModel("viewModel");
+			const oModel = this.getView().getModel("budgetingDetailModel");
+			const budgetingListModel = this.getOwnerComponent().getModel("budgeting");
+			var path = this.path;
+			
 			$.ajax({
 				type: "POST",
 				data: {
@@ -337,6 +370,11 @@ sap.ui.define([
 					  //success code
 					  oDialog.close();
 					  pageDOM.setBusy(false);
+					  if(budgetingListModel){	
+						budgetingListModel.setProperty(path + "/U_Status",res["U_Status"]);
+					  };
+					  oModel.setData(res);
+					  oModel.refresh();
 					  if (!this.oSuccessMessageDialog) {
 						this.oSuccessMessageDialog = new Dialog({
 							type: DialogType.Message,
@@ -357,7 +395,22 @@ sap.ui.define([
 					this.oSuccessMessageDialog.open();
 				}.bind(this),
 				error: function (jqXHR, textStatus, errorThrown) {
-				  	console.log("Got an error response: " + textStatus + errorThrown);
+					if (!this.oErrorDialog) {
+						this.oErrorDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Error",
+							state: ValueState.Error,
+							content: new Text({ text: jqXHR.responseJSON.msg }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									this.oErrorDialog.close();
+								}.bind(this)
+							})
+						});
+					};
+					this.oErrorDialog.open();
 				}
 			  });
 		},
@@ -617,7 +670,22 @@ sap.ui.define([
 							})
 						});
 					}
-				  	console.log("Got an error response: " + textStatus + errorThrown);
+					if (!this.oErrorDialog) {
+						this.oErrorDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Error",
+							state: ValueState.Error,
+							content: new Text({ text: jqXHR.responseJSON.msg }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									this.oErrorDialog.close();
+								}.bind(this)
+							})
+						});
+					};
+					this.oErrorDialog.open();
 				}
 			  });
 
@@ -626,9 +694,11 @@ sap.ui.define([
 		
 			var pageDOM = this.getView().byId("budgetingPageId");
 			pageDOM.setBusy(true);
-			var oModel = this.getView().getModel("budgetingDetailModel");
 			var jsonData = JSON.stringify(oModel.getData());
 			var oJWT = this.oJWT;
+			const oModel = this.getView().getModel("budgetingDetailModel");
+			const budgetingListModel = this.getOwnerComponent().getModel("budgeting");
+			var path = this.path;
 
 			$.ajax({
 				type: "POST",
@@ -640,6 +710,11 @@ sap.ui.define([
 				success: function (res, status, xhr) {
 					  //success code
 					  pageDOM.setBusy(false);
+					  if(budgetingListModel){	
+						budgetingListModel.setProperty(path + "/U_Status",res["U_Status"]);
+					  };
+					oModel.setData(res);
+					oModel.refresh();
 					  
 					  if (!this.oSuccessMessageDialog) {
 						this.oSuccessMessageDialog = new Dialog({
@@ -660,17 +735,34 @@ sap.ui.define([
 					this.oSuccessMessageDialog.open();
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
-				  	console.log("Got an error response: " + textStatus + errorThrown);
+					if (!this.oErrorDialog) {
+						this.oErrorDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Error",
+							state: ValueState.Error,
+							content: new Text({ text: jqXHR.responseJSON.msg }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									this.oErrorDialog.close();
+								}.bind(this)
+							})
+						});
+					};
+					this.oErrorDialog.open();
 				}
 			  });
 	  	},
 		onCancelButtonClick : function(oEvent) {
 			
 			var pageDOM = this.getView().byId("budgetingPageId");
-			var oModel = this.getView().getModel("budgetingDetailModel");
-			var oModelDetailData = oModel.getData();
 			var oJWT = this.oJWT;
 			var company = this.company;
+			const oModel = this.getView().getModel("budgetingDetailModel");
+			var oModelDetailData = oModel.getData();
+			const budgetingListModel = this.getOwnerComponent().getModel("budgeting");
+			var path = this.path;
 
 			MessageBox.warning("Cancel this Budget ?", {
 				actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
@@ -691,6 +783,11 @@ sap.ui.define([
 							success: function (res, status, xhr) {
 								//success code
 								pageDOM.setBusy(false);
+								if(budgetingListModel){	
+									budgetingListModel.setProperty(path + "/U_Status",res["U_Status"]);
+								  };
+								oModel.setData(res);
+								oModel.refresh();
 								
 								if (!this.oSuccessMessageDialog) {
 									this.oSuccessMessageDialog = new Dialog({
@@ -711,7 +808,22 @@ sap.ui.define([
 								this.oSuccessMessageDialog.open();
 							},
 							error: function (jqXHR, textStatus, errorThrown) {
-								console.log("Got an error response: " + textStatus + errorThrown);
+								if (!this.oErrorDialog) {
+									this.oErrorDialog = new Dialog({
+										type: DialogType.Message,
+										title: "Error",
+										state: ValueState.Error,
+										content: new Text({ text: jqXHR.responseJSON.msg }),
+										beginButton: new Button({
+											type: ButtonType.Emphasized,
+											text: "OK",
+											press: function () {
+												this.oErrorDialog.close();
+											}.bind(this)
+										})
+									});
+								};
+								this.oErrorDialog.open();
 							}
 						});
 
@@ -724,10 +836,13 @@ sap.ui.define([
 		onCloseButtonClick : function(oEvent) {
 				
 			var pageDOM = this.getView().byId("budgetingPageId");
-			var oModel = this.getView().getModel("budgetingDetailModel");
-			var oModelDetailData = oModel.getData();
 			var oJWT = this.oJWT;
 			var company = this.company;
+			const oModel = this.getView().getModel("budgetingDetailModel");
+			var oModelDetailData = oModel.getData();
+			const budgetingListModel = this.getOwnerComponent().getModel("budgeting");
+			var path = this.path;
+			
 
 			MessageBox.warning("Close this Budget ?", {
 				actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
@@ -748,7 +863,11 @@ sap.ui.define([
 							success: function (res, status, xhr) {
 								//success code
 								pageDOM.setBusy(false);
-								
+								if(budgetingListModel){	
+									budgetingListModel.setProperty(path + "/U_Status",res["U_Status"]);
+								  };
+								oModel.setData(res);
+								oModel.refresh();
 								if (!this.oSuccessMessageDialog) {
 									this.oSuccessMessageDialog = new Dialog({
 										type: DialogType.Message,
@@ -768,7 +887,22 @@ sap.ui.define([
 								this.oSuccessMessageDialog.open();
 							},
 							error: function (jqXHR, textStatus, errorThrown) {
-								console.log("Got an error response: " + textStatus + errorThrown);
+								if (!this.oErrorDialog) {
+									this.oErrorDialog = new Dialog({
+										type: DialogType.Message,
+										title: "Error",
+										state: ValueState.Error,
+										content: new Text({ text: jqXHR.responseJSON.msg }),
+										beginButton: new Button({
+											type: ButtonType.Emphasized,
+											text: "OK",
+											press: function () {
+												this.oErrorDialog.close();
+											}.bind(this)
+										})
+									});
+								};
+								this.oErrorDialog.open();
 							}
 						});
 

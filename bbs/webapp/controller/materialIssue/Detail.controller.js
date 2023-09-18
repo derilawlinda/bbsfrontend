@@ -225,6 +225,7 @@ sap.ui.define([
 				success: function (res, status, xhr) {
 					  //success code
 					  pageDOM.setBusy(false);
+					
 					  
 					  if (!this.oSuccessMessageDialog) {
 						this.oSuccessMessageDialog = new Dialog({
@@ -237,6 +238,7 @@ sap.ui.define([
 								text: "OK",
 								press: function () {
 									this.oSuccessMessageDialog.close();
+									
 								}.bind(this)
 							})
 						});

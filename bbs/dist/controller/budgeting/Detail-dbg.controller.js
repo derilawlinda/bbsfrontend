@@ -691,14 +691,15 @@ sap.ui.define([
 
 		},
 		onResubmitButtonClick : function(oEvent) {
-		
+
+			const oModel = this.getView().getModel("budgetingDetailModel");
+			const budgetingListModel = this.getOwnerComponent().getModel("budgeting");
+			var path = this.path;
 			var pageDOM = this.getView().byId("budgetingPageId");
 			pageDOM.setBusy(true);
 			var jsonData = JSON.stringify(oModel.getData());
 			var oJWT = this.oJWT;
-			const oModel = this.getView().getModel("budgetingDetailModel");
-			const budgetingListModel = this.getOwnerComponent().getModel("budgeting");
-			var path = this.path;
+			
 
 			$.ajax({
 				type: "POST",

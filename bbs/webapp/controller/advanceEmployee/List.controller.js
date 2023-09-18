@@ -235,6 +235,10 @@ sap.ui.define([
 			var oRouter = this.getOwnerComponent().getRouter();
 			var oRow = oEvent.getSource();
 			var id = oRow.getCells()[0].getText();
+			var path = oRow.getBindingContext("advanceRequests").getPath();
+			this.getOwnerComponent().getModel("globalModel").setData({
+				AEPath : path
+			});
 			oRouter.navTo("advanceEmployeeDetail",{
 				ID : id
 			});
@@ -330,7 +334,7 @@ sap.ui.define([
 					oDialog.setBusy(false);
 					oDialog.close();
 					advanceRequestModel.loadData(backendUrl+"advanceRequest/getAdvanceRequests", {
-						company : this.company
+						company : company
 					}, true, "GET",false,false,{
 						'Authorization': 'Bearer ' + oJWT
 					});

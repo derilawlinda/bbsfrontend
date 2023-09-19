@@ -33,7 +33,7 @@ sap.ui.define([
 		}, true, "GET",false,false,{
 			'Authorization': 'Bearer ' + this.oJWT
 		});
-		this.getView().setModel(oModel,"materialIssue");
+		this.getOwnerComponent().setModel(oModel,"materialIssue");
 		oModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
 			this.getView().byId("materialIssueTableID").setBusy(false);
 		}.bind(this));
@@ -113,6 +113,10 @@ sap.ui.define([
 			var oRouter = this.getOwnerComponent().getRouter();
 			var oRow = oEvent.getSource();
 			var id = oRow.getCells()[0].getText();
+			var path = oRow.getBindingContext("materialIssue").getPath();
+			this.getOwnerComponent().getModel("globalModel").setData({
+				MIPath : path
+			});
 			oRouter.navTo("materialIssueDetail",{
 				ID : id
 			});

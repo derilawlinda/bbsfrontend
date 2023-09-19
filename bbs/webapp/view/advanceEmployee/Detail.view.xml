@@ -107,6 +107,7 @@ xmlns:core="sap.ui.core"
 								change="onBudgetChange"
 								value="{advanceRequestDetailModel>/U_BudgetCode}"
 								showSecondaryValues="true"
+								filterSecondaryValues="true"
 								editable="{viewModel>/editable}"
 								items="{
 								path: 'budgeting>/value',

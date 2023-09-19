@@ -30,6 +30,12 @@ sap.ui.define([
 		_onObjectMatched: async function (oEvent) {
 
 			this.getView().byId("materialIssueLineTableID").setBusy(true);
+
+			this.path = '';
+			var globalData = this.getOwnerComponent().getModel("globalModel").getData();
+			if(globalData["MIPath"] != null || globalData["MIPath"] != ''){
+				this.path = globalData["MIPath"];
+			};
 			
 			var viewModel = new JSONModel({
 				showFooter : false,
@@ -59,15 +65,16 @@ sap.ui.define([
 				path: "/value/" + window.decodeURIComponent(oEvent.getParameter("arguments").ID),
 				model: "materialIssue"
 			});
-			var materialIssueCode = oEvent.getParameter("arguments").ID;
-			if(materialIssueCode === undefined){
+			this.materialIssueCode = oEvent.getParameter("arguments").ID;
+		
+			if(this.materialIssueCode === undefined){
 				var url = window.location.href;
 				var urlArray = url.split("/");
-				materialIssueCode = urlArray[urlArray.length - 1];
+				this.materialIssueCode = urlArray[urlArray.length - 1];
 			}
 			const materialIssueDetailModel = new JSONModel();
 			materialIssueDetailModel.loadData(backendUrl+"materialIssue/getMaterialIssueById", {
-				code : materialIssueCode,
+				code : this.materialIssueCode,
 				company : this.company
 			}, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
@@ -208,6 +215,8 @@ sap.ui.define([
 			pageDOM.setBusy(true);
 			var code = this.getView().byId("_IDGenText101").getText();
 			const oModel = this.getView().getModel("materialIssueDetailModel");
+			const materialIssueListModel = this.getOwnerComponent().getModel("materialIssue");
+			var path = this.path;
 			var oProperty = oModel.getProperty("/");
 			var view = this.getView();
 			var oDialog = this.oDialog;
@@ -225,7 +234,11 @@ sap.ui.define([
 				success: function (res, status, xhr) {
 					  //success code
 					  pageDOM.setBusy(false);
-					
+					  if(materialIssueListModel){	
+						materialIssueListModel.setProperty(path + "/U_Status",res["U_Status"]);
+					  }
+					  oModel.setData(res);
+					  oModel.refresh();
 					  
 					  if (!this.oSuccessMessageDialog) {
 						this.oSuccessMessageDialog = new Dialog({
@@ -289,6 +302,7 @@ sap.ui.define([
 				success: function (res, status, xhr) {
 					  //success code
 					  pageDOM.setBusy(false);
+					  
 					  
 					  if (!this.oSuccessMessageDialog) {
 						this.oSuccessMessageDialog = new Dialog({
@@ -396,7 +410,10 @@ sap.ui.define([
 
 		onConfirmRejectClick : function(){
 			var pageDOM = this.getView().byId("materialIssuePageID");
-			var materialIssueDetailData = this.getView().getModel("materialIssueDetailModel").getData();
+			const oModel = this.getView().getModel("materialIssueDetailModel");
+			var materialIssueDetailData = oModel.getData();
+			var path = this.path;
+			const materialIssueListModel = this.getOwnerComponent().getModel("materialIssue"); 
 			pageDOM.setBusy(true);
 			var oDialog = this.getView().byId("rejectDialog");
 			var code = materialIssueDetailData.Code;
@@ -417,6 +434,12 @@ sap.ui.define([
 					  //success code
 					  oDialog.close();
 					  pageDOM.setBusy(false);
+					  if(materialIssueListModel){	
+						materialIssueListModel.setProperty(path + "/U_Status",res["U_Status"]);
+					  }
+					  oModel.setData(res);
+					  oModel.refresh();
+					  
 					  if (!this.oSuccessMessageDialog) {
 						this.oSuccessMessageDialog = new Dialog({
 							type: DialogType.Message,
@@ -461,13 +484,17 @@ sap.ui.define([
 		
 			var pageDOM = this.getView().byId("materialIssuePageID");
 			pageDOM.setBusy(true);
-			var oModel = this.getView().getModel("materialIssueDetailModel");
+			const oModel = this.getView().getModel("materialIssueDetailModel");
+			var path = this.path;
+			const materialIssueListModel = this.getOwnerComponent().getModel("materialIssue"); 
 			var jsonData = JSON.stringify({
 				company : this.company,
 				data : oModel.getData()
 			});
 			var oJWT = this.oJWT;
 			var viewModel = this.getView().getModel("viewModel");
+
+
 
 			$.ajax({
 				type: "POST",
@@ -479,6 +506,11 @@ sap.ui.define([
 				success: function (res, status, xhr) {
 					  //success code
 					  pageDOM.setBusy(false);
+					  if(materialIssueListModel){	
+						materialIssueListModel.setProperty(path + "/U_Status",res["U_Status"]);
+					  }
+					  oModel.setData(res);
+					  oModel.refresh();
 					  
 					  if (!this.oSuccessMessageDialog) {
 						this.oSuccessMessageDialog = new Dialog({
@@ -521,6 +553,58 @@ sap.ui.define([
 				}
 			  });
 	   },
+
+	   handlePrintButtonPressed : function(oEvent){
+
+			var pageDOM = this.getView().byId("materialIssuePageID");
+			pageDOM.setBusy(true);
+			var oJWT = this.oJWT;
+			$.ajax({
+				type: "POST",
+				data: JSON.stringify({
+					company : this.company,
+					code : this.materialIssueCode
+				}),
+				headers: {"Authorization": "Bearer "+ oJWT},
+				crossDomain: true,
+				url: backendUrl+'materialIssue/printMI',
+				contentType: "application/json",
+				responseType: 'arraybuffer',
+				success: function (res, status, xhr) {
+					pageDOM.setBusy(false);
+					var atobData = atob(res);
+					var num = new Array(atobData.length);
+					for (var i = 0; i < atobData.length; i++) {
+						num[i] = atobData.charCodeAt(i);
+					}
+					var pdfData = new Uint8Array(num);
+
+					var blob = new Blob([pdfData], { type: 'application/pdf;base64' });
+					var url = URL.createObjectURL(blob);
+					window.open(url);
+									
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+					pageDOM.setBusy(false);
+					if (!this.oErrorDialog) {
+						this.oErrorDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Error",
+							state: ValueState.Error,
+							content: new Text({ text: jqXHR.responseJSON.msg }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									this.oErrorDialog.close();
+								}.bind(this)
+							})
+						});
+					};
+					this.oErrorDialog.open();
+				}
+			});
+		},
 
 		onAddPress : function(oEvent){
 			const oModel = this.getView().getModel("materialIssueDetailModel");

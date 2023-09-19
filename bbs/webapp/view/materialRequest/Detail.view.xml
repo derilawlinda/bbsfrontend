@@ -80,6 +80,7 @@ xmlns:core="sap.ui.core"
 								editable="{viewModel>/editable}"
 								value="{materialRequestDetailModel>/U_BudgetCode}"
 								showSecondaryValues="true"
+								filterSecondaryValues="true"
 								items="{
 								path: 'budgeting>/value',
 								templateShareable: false

@@ -39,7 +39,7 @@ sap.ui.define([
 		}, true, "GET",false,false,{
 			'Authorization': 'Bearer ' + this.oJWT
 		});
-		this.getView().setModel(oModel,"advanceRealization");
+		this.getOwnerComponent().setModel(oModel,"advanceRealization");
 		oModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
 			this.getView().byId("advanceRealizationTableID").setBusy(false);
 		}.bind(this));
@@ -234,6 +234,10 @@ sap.ui.define([
 			var oRouter = this.getOwnerComponent().getRouter();
 			var oRow = oEvent.getSource();
 			var id = oRow.getCells()[0].getText();
+			var path = oRow.getBindingContext("advanceRealization").getPath();
+			this.getOwnerComponent().getModel("globalModel").setData({
+				RealizationPath : path
+			});
 			oRouter.navTo("advanceRealizationDetail",{
 				ID : id
 			});

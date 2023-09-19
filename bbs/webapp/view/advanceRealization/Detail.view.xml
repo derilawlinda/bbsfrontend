@@ -16,6 +16,12 @@ xmlns:core="sap.ui.core"
       <VBox class="sapUiTinyMargin" id="createARForm" justifyContent="Start">
 		<Panel expandable="true" expanded="true" headerText="Detail Information" width="auto" class="sapUiTinyMargin">
 			<content>
+			<FlexBox alignContent="End" justifyContent="End">
+					<Button
+						tooltip="Print"
+						icon="sap-icon://print"
+						press="handlePrintButtonPressed"/>
+				</FlexBox>
 			<form:SimpleForm 
 						editable="true"
                         layout="ColumnLayout"
@@ -111,6 +117,47 @@ xmlns:core="sap.ui.core"
 					
 					</form:content>
 				</form:SimpleForm>
+
+				<Table>
+					<columns>
+						<Column>
+							<Text text="Role" />
+						</Column>
+						<Column>
+							<Text text="Name" />
+						</Column>      
+						<Column>
+							<Text text="Approval Date" />
+						</Column>          
+					</columns>
+					<items>
+						<ColumnListItem>
+							<cells>
+								<Text text="Manager" />
+								<Text text="{advanceRequestDetailModel>/U_ManagerRealApp}" />
+								<Text text="{advanceRequestDetailModel>/U_ManagerRealAppAt}" />
+
+							</cells>
+						</ColumnListItem>
+						<ColumnListItem>
+							<cells>
+								<Text text="Director" />
+								<Text text="{advanceRequestDetailModel>/U_DirectorRealApp}" />
+								<Text text="{advanceRequestDetailModel>/U_DirectorRealAppAt}" />
+							</cells>
+						</ColumnListItem>
+
+						<ColumnListItem>
+							<cells>
+								<Text text="Finance" />
+								<Text text="{advanceRequestDetailModel>/U_RealConfirmBy}" />
+								<Text text="{advanceRequestDetailModel>/U_RealConfirmAt}" />
+							</cells>
+						</ColumnListItem>
+					
+					</items>              
+				</Table>
+
 			</content>
 			
 		</Panel>
@@ -397,6 +444,7 @@ xmlns:core="sap.ui.core"
                    	<Button id="submitButton" type="Emphasized" text="Submit" press="onSubmitButtonClick" visible="{viewModel>/is_submit}" />
 					<Button id="saveButton" type="Emphasized" text="Save" press="onSaveButtonClick" visible="{viewModel>/is_save}" />
 					<Button id="approveButton" type="Accept" text="Approve" press="onApproveButtonClick" visible="{viewModel>/is_approver}" />
+					<Button id="rejectByFinanceButton" type="Reject" text="Reject by Finance" press="onRejectButtonClick" visible="{= ${advanceRequestDetailModel>/U_RealiStatus} !== 5 &amp;&amp; ${viewModel>/is_finance} === true }" />
 					<Button id="rejectButton" type="Reject" text="Reject" press="onRejectButtonClick" visible="{viewModel>/is_approver}" />
 					<Button id="transferedButton" type="Emphasized" text="Confirm" press="onConfirmButtonClick" visible="{viewModel>/is_finance}" />
 					<Button id="resubmitButton" type="Critical" text="Resubmit" press="onSubmitButtonClick" visible="{viewModel>/resubmit}" />

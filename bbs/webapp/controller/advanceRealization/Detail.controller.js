@@ -45,6 +45,13 @@ sap.ui.define([
 					{"Name" : 3}
 				]
 			});
+
+			this.path = '';
+			var globalData = this.getOwnerComponent().getModel("globalModel").getData();
+			if(globalData["RealizationPath"] != null || globalData["RealizationPath"] != ''){
+				this.path = globalData["RealizationPath"];
+			};
+			console.log(this.path);
 			this.getView().setModel(viewModel,"viewModel");
 			this.getView().byId("advanceRequestPageId").setBusy(true);
 			var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
@@ -61,6 +68,7 @@ sap.ui.define([
 				model: "advanceRequest"
 			});
 			var advanceRequestCode = oEvent.getParameter("arguments").ID;
+			this.advanceRequestCode = advanceRequestCode;
 			if(advanceRequestCode === undefined){
 				var url = window.location.href;
 				var urlArray = url.split("/");
@@ -235,6 +243,7 @@ sap.ui.define([
 		onSubmitButtonClick : function(oEvent) {
 			const oModel = this.getView().getModel("advanceRequestDetailModel");
 			var oProperty = oModel.getProperty("/");
+			var viewModel = this.getView().getModel("viewModel");
 			oModel.setProperty("/U_DifferenceAmt", oProperty.U_Amount - oProperty.U_RealizationAmt);
 			if(oProperty.U_RealizationAmt < oProperty.U_Amount){
 				if (!this.transferAdvanceRequestDialog) {
@@ -272,8 +281,9 @@ sap.ui.define([
 							}.bind(this)
 						})
 					});
-					this.oTransferConfirmationMessageDialog.open();
 				}
+				this.oTransferConfirmationMessageDialog.open();
+
 			}
 
 			
@@ -288,6 +298,8 @@ sap.ui.define([
 			var oProperty = oModel.getProperty("/");
 			var oJWT = this.oJWT;
 			var company = this.company;
+			const advanceRealizationListModel = this.getOwnerComponent().getModel("advanceRealization");
+			var path = this.path;
 			pageView.setBusy(true);
 
 			$.ajax({
@@ -303,6 +315,11 @@ sap.ui.define([
 				success: function (res, status, xhr) {
 					//success code
 					pageView.setBusy(false);
+					if(advanceRealizationListModel){	
+						advanceRealizationListModel.setProperty(path + "/U_RealiStatus",res["U_RealiStatus"]);
+					  }
+					oModel.setData(res);
+					oModel.refresh();
 					MessageToast.show("Advance Realization confimed");
 					$(".sapMMessageToast").css({"background-color": "#256f3a", "color": "white"});
 
@@ -319,8 +336,11 @@ sap.ui.define([
 
 	   submitAdvanceRealization : function(){
 			const oModel = this.getView().getModel("advanceRequestDetailModel");
-			var view = this.getView();
+			const advanceRealizationListModel = this.getOwnerComponent().getModel("advanceRealization");
 			var pageView = this.getView().byId("advanceRequestPageId");
+			var path = this.path;
+			var view = this.getView();
+			var pageDOM = this.getView().byId("advanceRequestPageId");
 			var dialogID = this.getView().byId("transferDialogID");
 			var oProperty = oModel.getProperty("/");
 			var oJWT = this.oJWT;
@@ -340,24 +360,46 @@ sap.ui.define([
 				contentType: "application/json",
 				success: function (res, status, xhr) {
 					//success code
-					pageView.setBusy(false);
+					pageDOM.setBusy(false);
+					if(advanceRealizationListModel){	
+						advanceRealizationListModel.setProperty(path + "/U_RealiStatus",res["U_RealiStatus"]);
+					  }
+					oModel.setData(res);
+					oModel.refresh();
 					MessageToast.show("Advance Realization Submitted");
 					$(".sapMMessageToast").css({"background-color": "#256f3a", "color": "white"});
 					view.getModel('advanceRequestDetailModel').refresh();
 					viewModel.setProperty("/resubmit", false);
 					viewModel.setProperty("/is_submit", false);
 					viewModel.setProperty("/is_save", true);
-					
-					dialogID.close();
+					if(dialogID){
+						dialogID.close();
+					}
 					
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
-					pageView.setBusy(false);
-					dialogID.close();
-					console.log("Got an error response: " + textStatus + errorThrown);
+					pageDOM.setBusy(false);
+					if(dialogID){
+						dialogID.close();
+					}
+					if (!this.oErrorDialog) {
+						this.oErrorDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Error",
+							state: ValueState.Error,
+							content: new Text({ text: jqXHR.responseJSON.msg }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									this.oErrorDialog.close();
+								}.bind(this)
+							})
+						});
+					};
+					this.oErrorDialog.open();
 				}
 			});
-			
 	   },
 
 
@@ -385,6 +427,9 @@ sap.ui.define([
 			var code = advanceRequestDetailData.Code;
 			var rejectionRemarks = this.getView().byId("RejectionRemarksID").getValue();
 			var viewModel = this.getView().getModel("viewModel");
+			const oModel = this.getView().getModel("advanceRequestDetailModel");
+			const advanceRealizationListModel = this.getOwnerComponent().getModel("advanceRealization");
+			var path = this.path;
 			
 			$.ajax({
 				type: "POST",
@@ -400,6 +445,11 @@ sap.ui.define([
 					//success code
 					oDialog.close();
 					pageDOM.setBusy(false);
+					if(advanceRealizationListModel){	
+						advanceRealizationListModel.setProperty(path + "/U_RealiStatus",res["U_RealiStatus"]);
+					  }
+					oModel.setData(res);
+					oModel.refresh();
 					if (!this.oSuccessMessageDialog) {
 						this.oSuccessMessageDialog = new Dialog({
 							type: DialogType.Message,
@@ -419,7 +469,23 @@ sap.ui.define([
 					this.oSuccessMessageDialog.open();
 				}.bind(this),
 				error: function (jqXHR, textStatus, errorThrown) {
-					console.log("Got an error response: " + textStatus + errorThrown);
+					pageDOM.setBusy(false);
+					if (!this.oErrorDialog) {
+						this.oErrorDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Error",
+							state: ValueState.Error,
+							content: new Text({ text: jqXHR.responseJSON.msg }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									this.oErrorDialog.close();
+								}.bind(this)
+							})
+						});
+					};
+					this.oErrorDialog.open();
 				}
 			});
 		},
@@ -549,7 +615,23 @@ sap.ui.define([
 					this.oSuccessMessageDialog.open();
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
-				  	console.log("Got an error response: " + textStatus + errorThrown);
+					pageDOM.setBusy(false);
+					if (!this.oErrorDialog) {
+						this.oErrorDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Error",
+							state: ValueState.Error,
+							content: new Text({ text: jqXHR.responseJSON.msg }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									this.oErrorDialog.close();
+								}.bind(this)
+							})
+						});
+					};
+					this.oErrorDialog.open();
 				}
 			  });
 
@@ -561,6 +643,8 @@ sap.ui.define([
 			pageDOM.setBusy(true);
 			var code = this.getView().byId("advanceRequestId").getText();
 			const oModel = this.getView().getModel("advanceRequestDetailModel");
+			const advanceRealizationListModel = this.getOwnerComponent().getModel("advanceRealization");
+			var path = this.path;
 			var oAdvanceRequestData = oModel.getData();
 			var code = oAdvanceRequestData.Code;
 			var oJWT = this.oJWT;
@@ -576,6 +660,11 @@ sap.ui.define([
 				success: function (res, status, xhr) {
 					  //success code
 					  pageDOM.setBusy(false);
+					  if(advanceRealizationListModel){	
+						advanceRealizationListModel.setProperty(path + "/U_RealiStatus",res["U_RealiStatus"]);
+					  }
+					  oModel.setData(res);
+					  oModel.refresh();
 					  if (!this.oSuccessMessageDialog) {
 						this.oSuccessMessageDialog = new Dialog({
 							type: DialogType.Message,
@@ -596,7 +685,75 @@ sap.ui.define([
 					this.oSuccessMessageDialog.open();
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
-				  	console.log("Got an error response: " + textStatus + errorThrown);
+					pageDOM.setBusy(false);
+					if (!this.oErrorDialog) {
+						this.oErrorDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Error",
+							state: ValueState.Error,
+							content: new Text({ text: jqXHR.responseJSON.msg }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									this.oErrorDialog.close();
+								}.bind(this)
+							})
+						});
+					};
+					this.oErrorDialog.open();
+				}
+			  });
+		},
+
+		handlePrintButtonPressed : function(oEvent){
+
+			var pageDOM = this.getView().byId("advanceRequestPageId");
+			pageDOM.setBusy(true);
+			var oJWT = this.oJWT;
+			$.ajax({
+				type: "POST",
+				data: JSON.stringify({
+					company : this.company,
+					code : this.advanceRequestCode
+				}),
+				headers: {"Authorization": "Bearer "+ oJWT},
+				crossDomain: true,
+				url: backendUrl+'advanceRequest/printRealization',
+				contentType: "application/json",
+				responseType: 'arraybuffer',
+				success: function (res, status, xhr) {
+					pageDOM.setBusy(false);
+					var atobData = atob(res);
+                    var num = new Array(atobData.length);
+                    for (var i = 0; i < atobData.length; i++) {
+                        num[i] = atobData.charCodeAt(i);
+                    }
+                    var pdfData = new Uint8Array(num);
+
+					var blob = new Blob([pdfData], { type: 'application/pdf;base64' });
+                    var url = URL.createObjectURL(blob);
+					window.open(url);
+									
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+					pageDOM.setBusy(false);
+					if (!this.oErrorDialog) {
+						this.oErrorDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Error",
+							state: ValueState.Error,
+							content: new Text({ text: jqXHR.responseJSON.msg }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									this.oErrorDialog.close();
+								}.bind(this)
+							})
+						});
+					};
+					this.oErrorDialog.open();
 				}
 			  });
 		},

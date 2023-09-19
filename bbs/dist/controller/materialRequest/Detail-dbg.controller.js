@@ -257,8 +257,6 @@ sap.ui.define([
 					  }
 					  oModel.setData(res);
 					  oModel.refresh();
-
-					
 					  
 					if (!this.oSuccessMessageDialog) {
 						this.oSuccessMessageDialog = new Dialog({

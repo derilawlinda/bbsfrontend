@@ -2,17 +2,10 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/core/routing/History",
 	"sap/ui/core/Fragment",
-	"sap/ui/layout/HorizontalLayout",
-	"sap/ui/layout/VerticalLayout",
-	"sap/m/Dialog",
-	"sap/m/Button",
-	"sap/m/Label",
 	"sap/m/library",
-	"sap/m/MessageToast",
-	"sap/m/Text",
-	"sap/m/TextArea",
-	"sap/ui/model/json/JSONModel"
- ], function (Controller,History,Fragment,HorizontalLayout, VerticalLayout, Dialog, Button, Label, mobileLibrary, MessageToast, Text, TextArea,JSONModel) {
+	"sap/ui/model/json/JSONModel",
+	"sap/ui/Device"
+ ], function (Controller,History,Fragment, mobileLibrary,JSONModel,Device) {
     "use strict";
 
 	// shortcut for sap.m.ButtonType

@@ -46,6 +46,8 @@ sap.ui.define([
 				]
 			});
 
+			
+
 			this.path = '';
 			var globalData = this.getOwnerComponent().getModel("globalModel").getData();
 			if(globalData["RealizationPath"] != null || globalData["RealizationPath"] != ''){
@@ -82,6 +84,14 @@ sap.ui.define([
 			}, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + this.oJWT
 			});
+
+			var oTransferAccounts = new JSONModel();
+			oTransferAccounts.loadData(backendUrl+"coa/getCOAsForTransfer", {
+				company : this.company
+			}, true, "GET",false,false,{
+				'Authorization': 'Bearer ' + this.oJWT
+			});
+			this.getView().setModel(oTransferAccounts,"transferAccounts");
 			
 			this.getView().setModel(advanceRequestDetailModel,"advanceRequestDetailModel");
 			var advanceRealLineTableID = this.getView().byId("advanceRealLineTableID");
@@ -242,9 +252,11 @@ sap.ui.define([
 
 		onSubmitButtonClick : function(oEvent) {
 			const oModel = this.getView().getModel("advanceRequestDetailModel");
+
 			var oProperty = oModel.getProperty("/");
 			var viewModel = this.getView().getModel("viewModel");
 			oModel.setProperty("/U_DifferenceAmt", oProperty.U_Amount - oProperty.U_RealizationAmt);
+			
 			if(oProperty.U_RealizationAmt < oProperty.U_Amount){
 				if (!this.transferAdvanceRequestDialog) {
 					this.transferAdvanceRequestDialog = this.loadFragment({
@@ -292,9 +304,11 @@ sap.ui.define([
 
 	   onConfirmButtonClick : function(){
 
+
 			const oModel = this.getView().getModel("advanceRequestDetailModel");
 			var pageView = this.getView().byId("advanceRequestPageId");
 			var view = this.getView();
+		
 			var oProperty = oModel.getProperty("/");
 			var oJWT = this.oJWT;
 			var company = this.company;
@@ -328,7 +342,22 @@ sap.ui.define([
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					pageView.setBusy(false);
-					console.log("Got an error response: " + textStatus + errorThrown);
+					if (!this.oErrorDialog) {
+						this.oErrorDialog = new Dialog({
+							type: DialogType.Message,
+							title: "Error",
+							state: ValueState.Error,
+							content: new Text({ text: jqXHR.responseJSON.msg }),
+							beginButton: new Button({
+								type: ButtonType.Emphasized,
+								text: "OK",
+								press: function () {
+									this.oErrorDialog.close();
+								}.bind(this)
+							})
+						});
+					};
+					this.oErrorDialog.open();
 				}
 			});
 
@@ -342,6 +371,7 @@ sap.ui.define([
 			var view = this.getView();
 			var pageDOM = this.getView().byId("advanceRequestPageId");
 			var dialogID = this.getView().byId("transferDialogID");
+			oModel.setProperty("/U_RealTrfBank",view.byId("transferTo").getSelectedKey());
 			var oProperty = oModel.getProperty("/");
 			var oJWT = this.oJWT;
 			var company = this.company;

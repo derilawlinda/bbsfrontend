@@ -30,7 +30,19 @@
                                         formatOptions: {showMeasure: true}
                         }"/>
 
-                  		<Label  text="Transfer To" required="true"  />
+						<Label  text="Transfer To" required="true"  />
+						<Select
+								forceSelection="false"
+								id="transferTo"
+								selectedKey="advanceRequestDetailModel>/U_RealTrfBank"
+								items="{
+									path: 'transferAccounts>/value',
+									sorter: { path: 'Name' }
+								}">
+							<core:Item key="{transferAccounts>Code}" text="{transferAccounts>Name}" />
+						</Select>
+
+                  		<!-- <Label  text="Transfer To" required="true"  />
 						<Select id="Bank" selectedKey="{advanceRequestDetailModel>/U_RealTrfBank}">
 							<items>
 								<core:Item text="BCA" key="BCA" />
@@ -40,7 +52,7 @@
 								<core:Item text="Bank QNB" key="QNB" />
 								<core:Item text="Bank Sinarmas" key="SIN" />
 							</items>
-						</Select> 
+						</Select>  -->
 						
 
 						<Label  text="Transfer Detail" />

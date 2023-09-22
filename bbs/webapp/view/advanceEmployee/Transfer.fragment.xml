@@ -36,7 +36,7 @@
 					<Label  text="Transfer From" required="true"  />
 					<Select
 							forceSelection="false"
-							selectedKey="advanceRequestDetailModel>/U_TransferFrom"
+							selectedKey="{advanceRequestDetailModel>/U_TransferFrom}"
 							items="{
 								path: 'transferAccounts>/value',
 								sorter: { path: 'Name' }

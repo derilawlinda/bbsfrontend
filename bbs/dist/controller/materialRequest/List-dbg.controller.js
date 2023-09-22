@@ -8,8 +8,9 @@ sap.ui.define([
 	'sap/ui/core/Fragment',
 	'sap/ui/Device',
 	"sap/m/Dialog",
+	"sap/m/Button",
 	'frontend/bbs/libs/lodash',
- ], function (Controller,History, mobileLibrary, MessageToast, JSONModel,coreLibrary,Fragment,Device,Dialog) {
+ ], function (Controller,History, mobileLibrary, MessageToast, JSONModel,coreLibrary,Fragment,Device,Dialog,Button) {
     "use strict";
 
 	// shortcut for sap.m.ButtonType
@@ -20,6 +21,7 @@ sap.ui.define([
 
 
 	var ValueState = coreLibrary.ValueState;
+
     return Controller.extend("frontend.bbs.controller.materialRequest.List", {
        onInit: async function () {
 		this.getView().byId("materialRequestTableID").setBusy(true);

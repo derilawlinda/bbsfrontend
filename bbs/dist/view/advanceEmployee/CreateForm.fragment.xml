@@ -60,7 +60,7 @@
 										pattern:'yyyy-MM-ddTHH:mm:ss.SSSX'
 									},
 									'pattern': 'y-MM-dd',
-									UTC: false
+									UTC:true
 									
 								}
 							}"/>

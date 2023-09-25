@@ -27,7 +27,7 @@
 								'type': 'sap.ui.model.type.Date',
 								'formatOptions': {
 									'pattern': 'y-MM-dd',
-									UTC:false
+									UTC:true
 								}
 							}"/>
 						
@@ -35,7 +35,7 @@
 						<Select
 								forceSelection="false"
 								id="transferFrom"
-								selectedKey="reimbursementDetailModel>/U_TransferFrom"
+								selectedKey="{reimbursementDetailModel>/U_TransferFrom}"
 								items="{
 									path: 'transferAccounts>/value',
 									sorter: { path: 'Name' }

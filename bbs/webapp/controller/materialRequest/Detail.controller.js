@@ -593,11 +593,11 @@ sap.ui.define([
 		
 	
 			var oItemModel = this.getView().getModel("items");
-			oItemModel.setSizeLimit(5000);
+			oItemModel.setSizeLimit(200);
 			var oItemData = oItemModel.getData();
 			if(!(oSelectedItem in oItemData)){
 				var oItemByAccountModel = new JSONModel();
-				oItemByAccountModel.setSizeLimit(5000);
+				oItemByAccountModel.setSizeLimit(200);
 				await oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount", {
 					accountCode : oSelectedItem,
 					company : this.company

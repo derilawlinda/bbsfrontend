@@ -9,8 +9,10 @@ sap.ui.define([
 	'sap/ui/Device',
 	"sap/m/Dialog",
 	"sap/m/Button",
+	"sap/ui/model/Filter",
+	"sap/ui/model/FilterOperator",
 	'frontend/bbs/libs/lodash',
- ], function (Controller,History, mobileLibrary, MessageToast, JSONModel,coreLibrary,Fragment,Device,Dialog,Button) {
+ ], function (Controller,History, mobileLibrary, MessageToast, JSONModel,coreLibrary,Fragment,Device,Dialog,Button,Filter,FilterOperator) {
     "use strict";
 
 	// shortcut for sap.m.ButtonType
@@ -167,7 +169,7 @@ sap.ui.define([
 			i.refresh();
 		}
 
-		oSelectedRow.getCells()[1].bindAggregation("items", {
+		oSelectedRow.getCells()[1].bindAggregation("suggestionItems", {
 			path: 'items>/'+ oSelectedItem,
 			template: new sap.ui.core.Item({
 				key: "{items>ItemCode}",
@@ -178,7 +180,48 @@ sap.ui.define([
 
 		
 	},
-	    getRouter : function () {
+	onValueHelpRequest: function (oEvent) {
+		var sInputValue = oEvent.getSource().getValue(),
+			oView = this.getView();
+
+		var oSelectedRow = oEvent.getSource().getParent(); //Selected Row.
+		var account = oSelectedRow.getCells()[0].getSelectedKey();
+
+		var oItemByAccountModel = new JSONModel();
+		oItemByAccountModel.setSizeLimit(10000);
+		oItemByAccountModel.loadData(backendUrl+"items/getItemsByAccount", {
+			accountCode : account,
+			company : this.company
+		}, true, "GET",false,false,{
+			'Authorization': 'Bearer ' + this.oJWT
+		});
+		var oItemByAccountData = oItemByAccountModel.getData();
+		oItemData[account] = oItemByAccountData;
+		var i = new sap.ui.model.json.JSONModel(oItemData);
+		i.setSizeLimit(10000);
+		this.getView().setModel(i, 'items');
+		i.refresh();
+
+		if (!this._pValueHelpDialog) {
+			this._pValueHelpDialog = Fragment.load({
+				id: oView.getId(),
+				name: "frontend.bbs.view.materialRequest.ValueHelpDialog",
+				controller: this
+			}).then(function (oDialog) {
+				oView.addDependent(oDialog);
+				return oDialog;
+			});
+		}
+		this._pValueHelpDialog.then(function(oDialog) {
+			// Create a filter for the binding
+			oDialog.getBinding("items").filter([new Filter("Name", FilterOperator.Contains, sInputValue)]);
+			// Open ValueHelpDialog filtered by the input's value
+			oDialog.open(sInputValue);
+		});
+	},	
+	
+	
+	getRouter : function () {
 			return sap.ui.core.UIComponent.getRouterFor(this);
 		},
        onNavBack: function (oEvent) {
@@ -209,6 +252,9 @@ sap.ui.define([
 				materialRequestID : id
 			});
 			
+		},
+		onItemNameChange : function(e){
+			console.log(e);
 		},
 		objectFormatter: function(sStatus) {
 			if(sStatus == 1 ){

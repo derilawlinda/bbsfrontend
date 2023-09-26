@@ -145,12 +145,23 @@
 					<table:Column >
 						<Text text="Item Name" />
 						<table:template>
-							<ComboBox width="100%"
+							<!-- <ComboBox width="100%"
 								selectedKey="{new_mr_items>U_ItemCode}"
 								enabled="false"
+								change="onItemNameChange"
 							>
 
-							</ComboBox>
+							</ComboBox> -->
+							<Input
+								placeholder="Enter Item"
+								showSuggestion="true"
+								showValueHelp="true"
+								valueHelpRequest=".onValueHelpRequest"
+								>
+								<!-- <suggestionItems>
+									<core:Item text="{Name}" />
+								</suggestionItems> -->
+							</Input>
 						</table:template>
 					</table:Column>
 

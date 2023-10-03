@@ -114,7 +114,7 @@ xmlns:core="sap.ui.core"
 
 						<ComboBox id="CreateClassification" 
 									change="onClassificationChange"
-									selectedKey="{budgetingDetailModel>/U_Classification}"
+									selectedKey="{budgetingDetailModel>/U_ClassificationCode}"
 									editable="{viewModel>/editable}"
 									required="true">
 						</ComboBox>
@@ -123,7 +123,7 @@ xmlns:core="sap.ui.core"
 
 						<ComboBox id="CreateSubClassification" 
 									change="onSubClassificationChange"
-									selectedKey="{budgetingDetailModel>/U_SubClass}"
+									selectedKey="{budgetingDetailModel>/U_SubClassCode}"
 									editable="{viewModel>/editable}"
 									required="true">
 						</ComboBox>
@@ -131,7 +131,7 @@ xmlns:core="sap.ui.core"
                         <Label id="_IDGenLabel444" text="Subclass2" />
 
 						<ComboBox id="CreateSubClassification2" 
-									selectedKey="{budgetingDetailModel>/U_SubClass2}"
+									selectedKey="{budgetingDetailModel>/U_SubClass2Code}"
 									editable="{viewModel>/editable}"
 									required="true">
 						</ComboBox>

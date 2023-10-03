@@ -622,6 +622,7 @@ sap.ui.define([
 			oModel.setProperty("/U_SubClass",this.getView().byId("CreateSubClassification").getValue());
 			oModel.setProperty("/U_SubClass2",this.getView().byId("CreateSubClassification2").getValue());
 			var jsonData = JSON.stringify(oModel.getData());
+			console.log(jsonData);
 			var oJWT = this.oJWT;
 
 			$.ajax({
@@ -736,6 +737,7 @@ sap.ui.define([
 					this.oSuccessMessageDialog.open();
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
+					pageDOM.setBusy(false);
 					if (!this.oErrorDialog) {
 						this.oErrorDialog = new Dialog({
 							type: DialogType.Message,

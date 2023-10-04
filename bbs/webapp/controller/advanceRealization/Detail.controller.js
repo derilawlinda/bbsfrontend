@@ -371,8 +371,10 @@ sap.ui.define([
 			var view = this.getView();
 			var pageDOM = this.getView().byId("advanceRequestPageId");
 			var dialogID = this.getView().byId("transferDialogID");
-			oModel.setProperty("/U_RealTrfBank",view.byId("transferTo").getSelectedKey());
 			var oProperty = oModel.getProperty("/");
+			if(oProperty.U_RealizationAmt < oProperty.U_Amount){
+				oModel.setProperty("/U_RealTrfBank",view.byId("transferTo").getSelectedKey());
+			}
 			var oJWT = this.oJWT;
 			var company = this.company;
 			var viewModel = this.getView().getModel("viewModel");

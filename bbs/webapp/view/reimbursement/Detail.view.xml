@@ -63,6 +63,7 @@ xmlns:core="sap.ui.core"
 
 						<Label text="Status" />
 						<ObjectStatus text="{path : 'reimbursementDetailModel>/U_Status', formatter:'.textFormatter'}" state="{path:'reimbursementDetailModel>/U_Status', formatter:'.objectFormatter'}" inverted="true"></ObjectStatus>
+						<Text text="SAP Doc No : {reimbursementDetailModel>/U_SAP_DocNum}" visible="{= ${reimbursementDetailModel>/U_Status} === 5}" />
 
 						<Label id="_IDGenLabel4" text="Remarks" />
 						<Text id="_IDGenText4"  text="{reimbursementDetailModel>/U_RejRemarks}"/>

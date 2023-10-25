@@ -63,7 +63,7 @@ xmlns:table="sap.ui.table"
                 <Column id="_IDGenColumn6" minScreenWidth="Desktop" demandPopin="true">
                         <Text id="_IDGenTextView6" text="SubClass" />
                 </Column>
-                 <Column id="_IDGenColumn16" minScreenWidth="Desktop" demandPopin="true">
+                <Column id="_IDGenColumn16" minScreenWidth="Desktop" demandPopin="true">
                         <Text id="_IDGenTextView16" text="SubClass2" />
                 </Column>
                   <Column id="_IDGenColumn11" minScreenWidth="Desktop" demandPopin="true" visible="{viewModel>/is_approver}">
@@ -93,7 +93,7 @@ xmlns:table="sap.ui.table"
                         <Text id="_IDGenText3" text="{budgeting>U_Pillar}" />
                         <Text id="_IDGenText4" text="{budgeting>U_Classification}" />
                         <Text id="_IDGenText5" text="{budgeting>U_SubClass}" />
-                        <Text id="_IDGenText9" text="{budgeting>U_SubClas2}" />
+                        <Text id="_IDGenText16" text="{budgeting>U_SubClass2}" />
                         <Text id="_IDGenText6" text="{budgeting>U_RequestorName}" visible="{viewModel>/is_approver}" />
                         <ObjectNumber id="_IDGenObjectNumber1" 
                         	number="{

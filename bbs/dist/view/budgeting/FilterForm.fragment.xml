@@ -14,6 +14,7 @@
 					<ViewSettingsItem text="Approved by Manager" key="2" />
 					<ViewSettingsItem text="Approved by Director" key="3" />
                     <ViewSettingsItem text="Rejected" key="4" />
+					<ViewSettingsItem text="Cancelled" key="99" />
 				</items>
 			</ViewSettingsFilterItem>
 		</filterItems>

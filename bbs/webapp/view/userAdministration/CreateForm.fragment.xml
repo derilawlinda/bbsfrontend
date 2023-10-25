@@ -1,0 +1,60 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:f="sap.ui.layout.form"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout"
+	xmlns:table="sap.ui.table"
+    
+    height="100%">
+	<Dialog
+		id="mainDialog"
+		title="Create User">
+			<VBox class="sapUiSmallMargin" id="formContainer">
+				<f:SimpleForm id="createUserForm"
+						editable="true"
+                        layout="ColumnLayout"
+                        columnsM="1"
+                        columnsL="1"
+                        columnsXL="1">
+					<f:content>
+
+						<Label id="_IDGenLabel2" text="Name" />
+						<Input id="name" value="{userCreate>/name}" required="true"></Input>
+
+                        <Label id="_IDGenLabel12" text="Email" />
+						<Input id="email" value="{userCreate>/email}" type="Email" required="true"></Input>
+
+						<Label id="_IDGenLabel3" text="Password" />
+						<Input id="password" type="Password" value="{userCreate>/password}" required="true"></Input>
+
+						<Label id="_IDGenLabel4" text="Reenter Password" />
+						<Input id="password2" type="Password" value="{userCreate>/password2}" ></Input>
+
+						<Label id="_IDGenLabel5" text="Role" />
+						<ComboBox
+							id="role"
+							required="true"
+							value="{userCreate>/role_id}"
+							items="{
+								path: 'roles>/'
+							}">
+							<core:Item key="{roles>id}" text="{roles>name}" />
+						</ComboBox>
+
+					</f:content>
+				</f:SimpleForm>
+                 
+			</VBox>
+        <Page id="_IDGenPage1">
+			
+		<footer>
+				<Toolbar id="_IDGenToolbar12">
+					<ToolbarSpacer id="_IDGenToolbarSpacer12" />
+                    <Button id="_IDGenButton12" type="Emphasized" text="Create User" press="onSaveButtonClick" enabled="{createFragmentViewModel>/createButtonEnabled}" />
+				    <Button id="_IDGenButton13" text="Cancel" press="._closeDialog" />
+				</Toolbar>
+		</footer>
+         </Page>
+	</Dialog>
+</core:FragmentDefinition>

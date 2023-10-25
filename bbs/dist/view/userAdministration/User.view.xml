@@ -5,56 +5,64 @@ xmlns="sap.m"
 xmlns:f="sap.f"
 xmlns:table="sap.ui.table" 
 >
-  <f:DynamicPage  id="_IDGenDynamicPage1" headerExpanded="true" toggleHeaderOnTitleClick="true" class="sapUiContentPadding">
+  <f:DynamicPage  id="userTableID" headerExpanded="true" toggleHeaderOnTitleClick="true" class="sapUiContentPadding">
     
     <f:content>
-      <table:Table 
-        id="_IDGenTable1" 
-        visibleRowCount="10" 
-        selectionMode="Single" 
-        selectionBehavior="Row"
-        
-        rows="{
-					path: '/Users',
+      <Table 
+        id="userTable" 
+        inset="false"
+        selectionChange="handleSelectionChange"
+        items="{
+					path: 'userList>/',
 					sorter: {
-						path: 'ID'
+						path: 'Code',
+                                                descending : 'true'
 					}
 				}">
-            <table:extension>
-                <OverflowToolbar id="_IDGenOverflowToolbar1" style="Clear">
-                    <Title id="title" text="Users"/>
-                    <ToolbarSpacer id="_IDGenToolbarSpacer1"/>
-                    <Button id="_IDGenButton1" text="Create" press="onCreateButtonClick" />
-                    <Button id="_IDGenButton2" text="Assign" press="onAssignPress" />
-                </OverflowToolbar>
-            </table:extension>
-            <table:columns>
-                <table:Column id="_IDGenColumn1">
-                    <Label id="_IDGenLabel4" text="ID" />
-                    <table:template>
-                        <Text id="_IDGenTextView1" text="{ID}" />
-                    </table:template>
-                </table:Column>
-                <table:Column id="_IDGenColumn2">
-                    <Label id="_IDGenLabel2" text="Name" />
-                    <table:template>
-                        <Text id="_IDGenTextView2" text="{username}" />
-                    </table:template>
-                </table:Column>
-                <table:Column id="_IDGenColumn3">
-                    <Label id="_IDGenLabel3" text="Email" />
-                    <table:template>
-                        <Text id="_IDGenTextView3" text="{email}" />
-                    </table:template>
-                </table:Column>
-                <table:Column id="_IDGenColumn4">
-                    <Label id="_IDGenLabel5" text="Role" />
-                    <table:template>
-                        <Text id="_IDGenTextView4" text="{role}" />
-                    </table:template>
-                </table:Column>
-            </table:columns>
-      </table:Table>
+         	<headerToolbar>
+			<OverflowToolbar id="_IDGenOverflowToolbar1">
+                <Title id="title" text="Users"/>
+                <ToolbarSpacer id="_IDGenToolbarSpacer1" ></ToolbarSpacer>
+                <SearchField
+                        id="searchField"
+                        width="20%"
+                        placeholder="Search here..."
+                        search=".onSearch"/>
+                <Button id="_IDGenButton2" text=" + Create User" press="onCreateButtonClick" type="Emphasized" visible="{viewModel>/showCreateButton}"/>
+            </OverflowToolbar>
+            </headerToolbar>
+            <columns>
+                <Column id="_IDGenColumn1"
+                	width="12em">
+                        <Text id="_IDGenTextView1" text="ID" />
+                </Column>
+                <Column id="_IDGenColumn2" minScreenWidth="Desktop" demandPopin="true">
+                        <Text id="_IDGenTextView2" text="Name"  />
+                </Column>
+
+                <Column id="_IDGenColumn4" minScreenWidth="Desktop" demandPopin="true">
+                        <Text id="_IDGenTextView4" text="Email"  />
+                </Column>
+
+                  <Column id="_IDGenColumn5" minScreenWidth="Desktop" demandPopin="true">
+                        <Text id="_IDGenTextView5" text="Role"  />
+                </Column>
+                
+            </columns>
+
+             <items>
+             <ColumnListItem id="_IDGenColumnListItem1" vAlign="Middle" type="Navigation" press=".onPress" >
+                <cells>
+                    	<ObjectIdentifier id="_IDGenObjectIdentifier1"
+						    text="{userList>id}"/>
+                        <Text text="{userList>name}" />
+                        <Text text="{userList>email}" />
+                        <Text text="{path : 'userList>role_id', formatter:'.roleFormatter'}"  />
+                </cells>
+             </ColumnListItem>
+                
+            </items>
+      </Table>
       
     </f:content>
   </f:DynamicPage>

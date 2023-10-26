@@ -9,13 +9,25 @@ sap.ui.define([
 	"sap/m/MessageBox",
 	"frontend/bbs/utils/Validator",
 	'sap/ui/core/Fragment',
-	'sap/ui/Device'
+	'sap/ui/Device',
+	"sap/m/Dialog",
+	"sap/m/library",
+	"sap/m/Button",
 
- ], function (Controller,History,JSONModel,ODataModel,MessageToast,Models,coreLibrary,MessageBox,Validator,Fragment,Device) {
+ ], function (Controller,History,JSONModel,ODataModel,MessageToast,Models,coreLibrary,MessageBox,Validator,Fragment,Device, Dialog,mobileLibrary,Button) {
     "use strict";
 	var endTerm;
 	var startTerm;
 	var matches = [];
+
+	// shortcut for sap.m.ButtonType
+	var ButtonType = mobileLibrary.ButtonType;
+
+	// shortcut for sap.m.DialogType
+	var DialogType = mobileLibrary.DialogType;
+
+
+	var ValueState = coreLibrary.ValueState;
 
 	// shortcut for sap.ui.core.ValueState
 	var ValueState = coreLibrary.ValueState;
@@ -202,9 +214,17 @@ sap.ui.define([
 			var bValidationError = false;
 			var company = this.company;
 
-			if(oModelData.BUDGETREQLINESCollection.length < 1 ){
-				MessageBox.error("Account can not empty");
-			}else {
+			var accounts = [];
+
+			oModelAccounts.getData().BUDGETREQLINESCollection.forEach(function(i) {
+				accounts.push(i.U_AccountCode);
+			});
+			if(this.hasDuplicates(accounts)){
+				MessageBox.error("Account must be unique");
+			}else{
+				if(oModelData.BUDGETREQLINESCollection.length < 1 ){
+					MessageBox.error("Account can not empty");
+				}else {
 				// var validator = new Validator();
 				// var rows = table.getRows();
 				
@@ -265,9 +285,16 @@ sap.ui.define([
 
 				// }
 			}
+			}
+
+
+
+			
 
 	   },
-	   
+	    hasDuplicates : function(array){
+			return (new Set(array)).size !== array.length;
+		},
 	    getRouter : function () {
 			return sap.ui.core.UIComponent.getRouterFor(this);
 		},

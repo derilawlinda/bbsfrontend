@@ -608,10 +608,12 @@ sap.ui.define([
 			f.refresh();
 		
 		},
+		hasDuplicates : function(array){
+			return (new Set(array)).size !== array.length;
+		},
 
 		onSaveButtonClick : function(oEvent){
 			var pageDOM = this.getView().byId("budgetingPageId");
-			pageDOM.setBusy(true);
 			var oModel = this.getView().getModel("budgetingDetailModel");
 			oModel.setProperty("/U_PillarCode",this.getView().byId("CreatePillar").getSelectedKey());
 			oModel.setProperty("/U_ClassificationCode",this.getView().byId("CreateClassification").getSelectedKey());
@@ -625,7 +627,15 @@ sap.ui.define([
 			console.log(jsonData);
 			var oJWT = this.oJWT;
 
-			$.ajax({
+			var accounts = [];
+			oModel.getData().BUDGETREQLINESCollection.forEach(function(i) {
+				accounts.push(i.U_AccountCode);
+			});
+			if(this.hasDuplicates(accounts)){
+				MessageBox.error("Account must be unique");
+			}else{
+				pageDOM.setBusy(true);
+				$.ajax({
 				type: "POST",
 				data: jsonData,
 				headers: {"Authorization": "Bearer "+ oJWT},
@@ -689,6 +699,10 @@ sap.ui.define([
 					this.oErrorDialog.open();
 				}
 			  });
+			}
+
+
+			
 
 		},
 		onResubmitButtonClick : function(oEvent) {

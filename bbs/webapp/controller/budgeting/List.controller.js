@@ -264,22 +264,8 @@ sap.ui.define([
 						},
 						error: function (jqXHR, textStatus, errorThrown) {
 							oDialog.setBusy(false);
-							if (!this.oErrorDialog) {
-								this.oErrorDialog = new Dialog({
-									type: DialogType.Message,
-									title: "Error",
-									state: ValueState.Error,
-									content: new Text({ text: jqXHR.responseJSON.msg }),
-									beginButton: new Button({
-										type: ButtonType.Emphasized,
-										text: "OK",
-										press: function () {
-											this.oErrorDialog.close();
-										}.bind(this)
-									})
-								});
-							};
-							this.oErrorDialog.open();
+							MessageBox.error(jqXHR.responseJSON.msg);
+							
 						}
 					});
 

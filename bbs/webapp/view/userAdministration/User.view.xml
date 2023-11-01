@@ -15,8 +15,8 @@ xmlns:table="sap.ui.table"
         items="{
 					path: 'userList>/',
 					sorter: {
-						path: 'Code',
-                                                descending : 'true'
+						path: 'id',
+                                                descending : true
 					}
 				}">
          	<headerToolbar>
@@ -27,7 +27,7 @@ xmlns:table="sap.ui.table"
                         id="searchField"
                         width="20%"
                         placeholder="Search here..."
-                        search=".onSearch"/>
+                        liveChange=".onSearch"/>
                 <Button id="_IDGenButton2" text=" + Create User" press="onCreateButtonClick" type="Emphasized" visible="{viewModel>/showCreateButton}"/>
             </OverflowToolbar>
             </headerToolbar>

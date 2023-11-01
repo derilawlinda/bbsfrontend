@@ -142,6 +142,11 @@
             "target": "userAdministrationUser"
           },
           {
+            "pattern": "userDetail/{userID}",
+            "name": "userDetail",
+            "target": "userDetail"
+          },
+          {
             "pattern": "pillarSettings",
             "name": "pillarSettings",
             "target": "testing"
@@ -259,6 +264,13 @@
         "userAdministrationUser" : {
           "viewId": "userAdministration_User",
           "viewName": "userAdministration.User",
+          "parent": "TargetBBSSAPAddOnDashboard",
+          "controlId": "modulContainer",
+          "controlAggregation": "pages"
+				},
+        "userDetail" : {
+          "viewId": "userDetail",
+          "viewName": "userAdministration.UserDetail",
           "parent": "TargetBBSSAPAddOnDashboard",
           "controlId": "modulContainer",
           "controlAggregation": "pages"

@@ -14,7 +14,11 @@ sap.ui.define([
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/core/library",
 	"frontend/bbs/utils/Validator",
- ], function (Controller,History,Fragment,HorizontalLayout, VerticalLayout, Dialog, Button, Label, mobileLibrary, MessageToast, Text, TextArea,JSONModel,coreLibrary,Validator) {
+	"sap/ui/model/Filter",
+	"sap/ui/model/FilterOperator",
+	"sap/m/MessageBox",
+
+ ], function (Controller,History,Fragment,HorizontalLayout, VerticalLayout, Dialog, Button, Label, mobileLibrary, MessageToast, Text, TextArea,JSONModel,coreLibrary,Validator,Filter,FilterOperator,MessageBox) {
     "use strict";
 
 	// shortcut for sap.m.ButtonType
@@ -127,29 +131,13 @@ sap.ui.define([
 							'Authorization': 'Bearer ' + oJWT
 						});
 						userListModel.refresh();
-						MessageToast.show("Material Request created");
+						MessageToast.show("User created");
 						$(".sapMMessageToast").css({"background-color": "#256f3a", "color": "white"});
 	
 						
 					},
 					error: function (jqXHR, textStatus, errorThrown) {
-						oDialog.setBusy(false);
-						if (!this.oErrorDialog) {
-							this.oErrorDialog = new Dialog({
-								type: DialogType.Message,
-								title: "Error",
-								state: ValueState.Error,
-								content: new Text({ text: jqXHR.responseJSON.msg }),
-								beginButton: new Button({
-									type: ButtonType.Emphasized,
-									text: "OK",
-									press: function () {
-										this.oErrorDialog.close();
-									}.bind(this)
-								})
-							});
-						};
-						this.oErrorDialog.open();
+						MessageBox.error(jqXHR.responseJSON.msg);
 					}
 				  });
           	}
@@ -157,6 +145,14 @@ sap.ui.define([
 			
 
 
+		},
+		onPress: function (oEvent) {
+			var oRouter = this.getOwnerComponent().getRouter();
+			var oRow = oEvent.getSource();
+			var id = oRow.getCells()[0].getText();
+			oRouter.navTo("userDetail",{
+				userID : id
+			});
 		},
        onNavBack: function (oEvent) {
 			var oHistory, sPreviousHash;
@@ -167,6 +163,26 @@ sap.ui.define([
 			} else {
 				this.getRouter().navTo("login", {}, true /*no history*/);
 			}
+		},
+		onSearch: function (oEvent) {
+			// add filter for search
+			var aFilters = [];
+			var sQuery = oEvent.getSource().getValue();
+			if (sQuery && sQuery.length > 0) {
+				var filter = new Filter({
+                    filters: [
+                      new Filter("name", FilterOperator.Contains, sQuery),
+                      new Filter("email", FilterOperator.Contains, sQuery),
+                    ],
+                    and: false,
+                  });
+				aFilters.push(filter);
+			}
+
+			// update list binding
+			var oList = this.byId("userTable");
+			var oBinding = oList.getBinding("items");
+			oBinding.filter(aFilters, "Application");
 		}
     });
  });

@@ -1,0 +1,65 @@
+
+<mvc:View xmlns:cards="sap.f.cards" 
+controllerName="frontend.bbs.controller.userAdministration.UserDetail"
+xmlns:mvc="sap.ui.core.mvc"
+xmlns="sap.m"
+xmlns:f="sap.f"
+xmlns:form="sap.ui.layout.form"
+xmlns:table="sap.ui.table"
+xmlns:core="sap.ui.core"
+>
+
+<Page  id="userPageID" showNavButton="true"
+		navButtonPress=".onNavBack">
+    
+    <content>
+      <VBox class="sapUiSmallMargin">
+	  <Panel>
+				
+				<form:SimpleForm id="editUserForm"
+						editable="true"
+                        layout="ColumnLayout"
+                        columnsM="1"
+                        columnsL="1"
+                        columnsXL="1">
+					<form:content>
+
+						<Label id="_IDGenLabel2" text="Name" />
+                        <Text text="{userDetailModel>/name}" />
+
+                        <Label id="_IDGenLabel12" text="Email" />
+                        <Text text="{userDetailModel>/email}" />
+
+						<Label id="_IDGenLabel3" text="Password" />
+						<Input id="password" type="Password" value="{userDetailModel>/password}" ></Input>
+
+						<Label id="_IDGenLabel4" text="Reenter Password" />
+						<Input id="password2" type="Password" value="{userDetailModel>/password2}" ></Input>
+
+						<Label id="_IDGenLabel5" text="Role" />
+						<ComboBox
+							id="role"
+							required="true"
+							selectedKey="{userDetailModel>/role_id}"
+							items="{
+								path: 'roles>/'
+							}">
+							<core:Item key="{roles>id}" text="{roles>name}" />
+						</ComboBox>
+
+					</form:content>
+				</form:SimpleForm>
+		</Panel>
+                
+			</VBox>
+    </content>
+	<footer  >
+				<Toolbar>
+					<ToolbarSpacer />
+                   	<Button id="submitButton" type="Emphasized" text="Save" press="onSaveButtonClick" />
+				</Toolbar>
+		</footer>
+  </Page>
+
+  
+</mvc:View>

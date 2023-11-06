@@ -7,7 +7,8 @@ sap.ui.define([
 	"sap/ui/core/library",
 	'sap/ui/core/Fragment',
 	'sap/ui/Device',
- ], function (Controller,History,mobileLibrary, MessageToast, JSONModel,coreLibrary,Fragment,Device) {
+	"sap/m/MessageBox",
+ ], function (Controller,History,mobileLibrary, MessageToast, JSONModel,coreLibrary,Fragment,Device,MessageBox) {
     "use strict";
 
 	// shortcut for sap.m.ButtonType

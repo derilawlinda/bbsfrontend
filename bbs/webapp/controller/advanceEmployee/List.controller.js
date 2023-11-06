@@ -343,7 +343,8 @@ sap.ui.define([
 					view.getModel('advanceRequests').refresh();
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
-				  	console.log("Got an error response: " + textStatus + errorThrown);
+					oDialog.setBusy(false);
+					MessageBox.error(jqXHR.responseJSON.msg);
 				}
 			  });
 			// alert(JSON.stringify(oProperty));

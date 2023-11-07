@@ -61,6 +61,15 @@ sap.ui.define([
 		});
 		this.getView().setModel(oBudgetingModel,"budgeting");
 
+		var oWarehouseModel = new JSONModel();
+		oWarehouseModel.setSizeLimit(500);
+		oWarehouseModel.loadData(backendUrl+"warehouse/getWarehouses", {
+			company : this.company
+		}, true, "GET",false,false,{
+			'Authorization': 'Bearer ' + this.oJWT
+		});
+		this.getView().setModel(oWarehouseModel,"warehouses");
+
 		//NEW MATERIAL ISSUE MODEL
 		var oNewMaterialIssueAccounts = new sap.ui.model.json.JSONModel();
 		this.getView().setModel(oNewMaterialIssueAccounts,"new_mi_items");
@@ -183,10 +192,10 @@ sap.ui.define([
 			
 			var oSelectedItem = oEvent.getSource().getSelectedKey(); //Get Selected Item
 			var oSelectedRow = oEvent.getSource().getParent(); //Selected Row.
-			oSelectedRow.getCells()[1].setBusy(true);
-			oSelectedRow.getCells()[1].setSelectedKey("");
-			oSelectedRow.getCells()[1].setEnabled(true);
-			oSelectedRow.getCells()[1].setEnabled(true);
+			oSelectedRow.getCells()[2].setBusy(true);
+			oSelectedRow.getCells()[2].setSelectedKey("");
+			oSelectedRow.getCells()[2].setEnabled(true);
+			oSelectedRow.getCells()[2].setEnabled(true);
 
 			
 
@@ -209,14 +218,14 @@ sap.ui.define([
 				i.refresh();
 			}
 
-			oSelectedRow.getCells()[1].bindAggregation("items", {
+			oSelectedRow.getCells()[2].bindAggregation("items", {
 				path: 'items>/'+ oSelectedItem,
 				template: new sap.ui.core.Item({
 					key: "{items>ItemCode}",
 					text: "{items>ItemCode} - {items>ItemName}"
 				})
 			});
-			oSelectedRow.getCells()[1].setBusy(false);
+			oSelectedRow.getCells()[2].setBusy(false);
 
 			
 		},

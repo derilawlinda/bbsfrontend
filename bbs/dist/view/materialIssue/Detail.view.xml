@@ -196,6 +196,27 @@ xmlns:core="sap.ui.core"
 					</table:Column>
 
 					<table:Column >
+						<Text text="Warehouse" />
+						<table:template>
+							<ComboBox width="100%"
+								selectedKey="{materialIssueDetailModel>U_WhsCode}"
+								editable="{viewModel>/editable}"
+								items="{
+								path: 'warehouses>/value/',
+								templateShareable: false
+								}"
+							>
+
+								<core:Item
+									key="{warehouses>WarehouseCode}"
+									text="{warehouses>WarehouseName}"
+								/>
+
+							</ComboBox>
+						</table:template>
+					</table:Column>
+
+					<table:Column >
 						<Text text="Item Name" />
 						<table:template>
 							<ComboBox width="100%"

@@ -92,6 +92,15 @@ sap.ui.define([
 			});
 			this.getView().setModel(oBudgetingModel,"budgeting");
 
+			var oWarehouseModel = new JSONModel();
+			oWarehouseModel.setSizeLimit(500);
+			oWarehouseModel.loadData(backendUrl+"warehouse/getWarehouses", {
+				company : this.company
+			}, true, "GET",false,false,{
+				'Authorization': 'Bearer ' + this.oJWT
+			});
+			this.getView().setModel(oWarehouseModel,"warehouses");
+
 			materialIssueDetailModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
 				var userData = oUserModel.getData();
 				var materialIssueDetailData = this.getView().getModel("materialIssueDetailModel").getData();
@@ -179,16 +188,16 @@ sap.ui.define([
 
 				
 				for (let i = 0; i < materialIssueDetailData.MATERIALISSUELINESCollection.length; i++) {
-					materialIssueLineTable.getRows()[i].getCells()[1].setBusy(true);
+					materialIssueLineTable.getRows()[i].getCells()[2].setBusy(true);
 					let account = (materialIssueDetailData.MATERIALISSUELINESCollection[i].U_AccountCode).toString();
-					materialIssueLineTable.getRows()[i].getCells()[1].bindAggregation("items", {
+					materialIssueLineTable.getRows()[i].getCells()[2].bindAggregation("items", {
 						path: 'items>/data/'+ account,
 						template: new sap.ui.core.Item({
 							key: "{items>ItemCode}",
 							text: "{items>ItemCode} - {items>ItemName}"
 						})
 					});
-					materialIssueLineTable.getRows()[i].getCells()[1].setBusy(false);
+					materialIssueLineTable.getRows()[i].getCells()[2].setBusy(false);
 				}
 
 				
@@ -552,10 +561,10 @@ sap.ui.define([
 			
 			var oSelectedItem = oEvent.getSource().getSelectedKey(); //Get Selected Item
 			var oSelectedRow = oEvent.getSource().getParent(); //Selected Row.
-			oSelectedRow.getCells()[1].setBusy(true);
-			oSelectedRow.getCells()[1].setSelectedKey("");
-			oSelectedRow.getCells()[1].setEnabled(true);
-			oSelectedRow.getCells()[1].setEnabled(true);
+			oSelectedRow.getCells()[2].setBusy(true);
+			oSelectedRow.getCells()[2].setSelectedKey("");
+			oSelectedRow.getCells()[2].setEnabled(true);
+			oSelectedRow.getCells()[2].setEnabled(true);
 
 			var oItemModel = this.getView().getModel("items");
 			var oItemData = oItemModel.getData();
@@ -575,14 +584,14 @@ sap.ui.define([
 				i.refresh();
 			}
 
-			oSelectedRow.getCells()[1].bindAggregation("items", {
+			oSelectedRow.getCells()[2].bindAggregation("items", {
 				path: 'items>/'+ oSelectedItem,
 				template: new sap.ui.core.Item({
 					key: "{items>ItemCode}",
 					text: "{items>ItemCode} - {items>ItemName}"
 				})
 			});
-			oSelectedRow.getCells()[1].setBusy(false);
+			oSelectedRow.getCells()[2].setBusy(false);
 		},
 		objectFormatter: function(sStatus) {
 			if(sStatus == 1 ){

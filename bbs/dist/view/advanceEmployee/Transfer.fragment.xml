@@ -13,6 +13,7 @@
 		id="transferDialog" title="Transfer">
 			<VBox class="sapUiSmallMargin" width="80%" >
 				<f:SimpleForm 
+						id="advanceTransferFrom"
 						editable="true"
                         layout="ColumnLayout"
                         columnsM="1"

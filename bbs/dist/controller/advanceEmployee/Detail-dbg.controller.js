@@ -9,7 +9,8 @@ sap.ui.define([
 	"sap/ui/core/library",
 	"sap/m/MessageToast",
 	"sap/m/MessageBox",
-], function (Controller, History, JSONModel,Dialog,Button,mobileLibrary,Text,coreLibrary,MessageToast,MessageBox) {
+	"frontend/bbs/utils/Validator",
+], function (Controller, History, JSONModel,Dialog,Button,mobileLibrary,Text,coreLibrary,MessageToast,MessageBox,Validator) {
 	"use strict";
 
 	var ButtonType = mobileLibrary.ButtonType;
@@ -406,47 +407,50 @@ sap.ui.define([
 
 		onTransferConfirm: function(){
 
-			const oModel = this.getView().getModel("advanceRequestDetailModel");
-			const advanceRequestListModel = this.getOwnerComponent().getModel("advanceRequests");
-			var path = this.path;
-			var oJWT = this.oJWT;
-			var DisbursedDate = this.getView().byId("DatePickerTransferAt").getValue();
-			oModel.setProperty("/DisbursedDate", DisbursedDate)
-			var pageDOM = this.getView().byId("advanceRequestPageId");
-			var transferDialog = this.getView().byId("transferDialog");
-			var oProperty = oModel.getProperty("/");
-			var company = this.company;
-			var viewModel = this.getView().getModel("viewModel");
-			transferDialog.close();
-			pageDOM.setBusy(true);
-			$.ajax({
-				type: "POST",
-				data: JSON.stringify({
-					company : company,
-					oProperty : oProperty
-				}),
-				headers: {"Authorization": "Bearer "+ oJWT},
-				crossDomain: true,
-				url: backendUrl+'advanceRequest/transferAR',
-				contentType: "application/json",
-				success: function (res, status, xhr) {
-					pageDOM.setBusy(false);
-					if(advanceRequestListModel){	
-						advanceRequestListModel.setProperty(path + "/U_Status",res["U_Status"]);
-						advanceRequestListModel.setProperty(path + "/U_DisbursedAt",res["U_DisbursedAt"]);
-					};
-					oModel.setData(res);
-					oModel.refresh();
-					MessageToast.show("Advance Transfered");
-					$(".sapMMessageToast").css({"background-color": "#256f3a", "color": "white"});
-					viewModel.setProperty("/showFooter", false);
-				},
-				error: function (jqXHR, textStatus, errorThrown) {
-					  pageDOM.setBusy(false);
-					  MessageBox.error(jqXHR.responseJSON.msg);
-				}
-			});
+			var validator = new Validator();
 
+			if (validator.validate(this.byId("advanceTransferFrom"))) {
+				const oModel = this.getView().getModel("advanceRequestDetailModel");
+				const advanceRequestListModel = this.getOwnerComponent().getModel("advanceRequests");
+				var path = this.path;
+				var oJWT = this.oJWT;
+				var DisbursedDate = this.getView().byId("DatePickerTransferAt").getValue();
+				oModel.setProperty("/DisbursedDate", DisbursedDate)
+				var pageDOM = this.getView().byId("advanceRequestPageId");
+				var transferDialog = this.getView().byId("transferDialog");
+				var oProperty = oModel.getProperty("/");
+				var company = this.company;
+				var viewModel = this.getView().getModel("viewModel");
+				transferDialog.close();
+				pageDOM.setBusy(true);
+				$.ajax({
+					type: "POST",
+					data: JSON.stringify({
+						company : company,
+						oProperty : oProperty
+					}),
+					headers: {"Authorization": "Bearer "+ oJWT},
+					crossDomain: true,
+					url: backendUrl+'advanceRequest/transferAR',
+					contentType: "application/json",
+					success: function (res, status, xhr) {
+						pageDOM.setBusy(false);
+						if(advanceRequestListModel){	
+							advanceRequestListModel.setProperty(path + "/U_Status",res["U_Status"]);
+							advanceRequestListModel.setProperty(path + "/U_DisbursedAt",res["U_DisbursedAt"]);
+						};
+						oModel.setData(res);
+						oModel.refresh();
+						MessageToast.show("Advance Transfered");
+						$(".sapMMessageToast").css({"background-color": "#256f3a", "color": "white"});
+						viewModel.setProperty("/showFooter", false);
+					},
+					error: function (jqXHR, textStatus, errorThrown) {
+						  pageDOM.setBusy(false);
+						  MessageBox.error(jqXHR.responseJSON.msg);
+					}
+				});
+			}
 		},
         onNavBack: function () {
 			var oHistory = History.getInstance();

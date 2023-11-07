@@ -6,8 +6,9 @@ sap.ui.define([
 	"sap/m/Button",
 	"sap/m/library",
 	"sap/m/Text",
-	"sap/ui/core/library"
-], function (Controller, History, JSONModel,Dialog,Button,mobileLibrary,Text,coreLibrary) {
+	"sap/ui/core/library",
+	"sap/m/MessageBox"
+], function (Controller, History, JSONModel,Dialog,Button,mobileLibrary,Text,coreLibrary,MessageBox) {
 	"use strict";
 
 	var ButtonType = mobileLibrary.ButtonType;
@@ -279,22 +280,7 @@ sap.ui.define([
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					pageDOM.setBusy(false);
-					if (!this.oErrorDialog) {
-						this.oErrorDialog = new Dialog({
-							type: DialogType.Message,
-							title: "Error",
-							state: ValueState.Error,
-							content: new Text({ text: jqXHR.responseJSON.msg }),
-							beginButton: new Button({
-								type: ButtonType.Emphasized,
-								text: "OK",
-								press: function () {
-									this.oErrorDialog.close();
-								}.bind(this)
-							})
-						});
-					};
-					this.oErrorDialog.open();
+					MessageBox.error(jqXHR.responseJSON.msg);
 		
 				}
 			  });
@@ -368,22 +354,7 @@ sap.ui.define([
 				}.bind(this),
 				error: function (jqXHR, textStatus, errorThrown) {
 					pageDOM.setBusy(false);
-					if (!this.oErrorDialog) {
-						this.oErrorDialog = new Dialog({
-							type: DialogType.Message,
-							title: "Error",
-							state: ValueState.Error,
-							content: new Text({ text: jqXHR.responseJSON.msg }),
-							beginButton: new Button({
-								type: ButtonType.Emphasized,
-								text: "OK",
-								press: function () {
-									this.oErrorDialog.close();
-								}.bind(this)
-							})
-						});
-					};
-					this.oErrorDialog.open();
+					MessageBox.error(jqXHR.responseJSON.msg);
 				}
 			  });
 		},
@@ -452,22 +423,7 @@ sap.ui.define([
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					pageDOM.setBusy(false);
-					if (!this.oErrorDialog) {
-						this.oErrorDialog = new Dialog({
-							type: DialogType.Message,
-							title: "Error",
-							state: ValueState.Error,
-							content: new Text({ text: jqXHR.responseJSON.msg }),
-							beginButton: new Button({
-								type: ButtonType.Emphasized,
-								text: "OK",
-								press: function () {
-									this.oErrorDialog.close();
-								}.bind(this)
-							})
-						});
-					};
-					this.oErrorDialog.open();
+					MessageBox.error(jqXHR.responseJSON.msg);
 				}
 			  });
 
@@ -525,22 +481,7 @@ sap.ui.define([
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					pageDOM.setBusy(false);
-					if (!this.oErrorDialog) {
-						this.oErrorDialog = new Dialog({
-							type: DialogType.Message,
-							title: "Error",
-							state: ValueState.Error,
-							content: new Text({ text: jqXHR.responseJSON.msg }),
-							beginButton: new Button({
-								type: ButtonType.Emphasized,
-								text: "OK",
-								press: function () {
-									this.oErrorDialog.close();
-								}.bind(this)
-							})
-						});
-					};
-					this.oErrorDialog.open();
+					MessageBox.error(jqXHR.responseJSON.msg);
 				}
 			  });
 	   },
@@ -656,22 +597,7 @@ sap.ui.define([
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					pageDOM.setBusy(false);
-					if (!this.oErrorDialog) {
-						this.oErrorDialog = new Dialog({
-							type: DialogType.Message,
-							title: "Error",
-							state: ValueState.Error,
-							content: new Text({ text: jqXHR.responseJSON.msg }),
-							beginButton: new Button({
-								type: ButtonType.Emphasized,
-								text: "OK",
-								press: function () {
-									this.oErrorDialog.close();
-								}.bind(this)
-							})
-						});
-					};
-					this.oErrorDialog.open();
+					MessageBox.error(jqXHR.responseJSON.msg);
 				}
 			  });
 		},

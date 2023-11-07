@@ -9,8 +9,9 @@ sap.ui.define([
 	"sap/ui/core/library",
 	"sap/m/MessageToast",
 	'sap/ui/core/Fragment',
-	'sap/ui/Device'
- ], function (Controller, History, JSONModel,Dialog,Button,mobileLibrary,Text,coreLibrary,MessageToast,Fragment,Device) {
+	'sap/ui/Device',
+	"sap/m/MessageBox"
+ ], function (Controller, History, JSONModel,Dialog,Button,mobileLibrary,Text,coreLibrary,MessageToast,Fragment,Device,MessageBox) {
     "use strict";
 	var ButtonType = mobileLibrary.ButtonType;
 
@@ -253,7 +254,7 @@ sap.ui.define([
 		}
 	  },
 	   onSaveButtonClick : function(oEvent) {
-		var oDialog = this.oDialog;
+			var oDialog = this.oDialog;
 			oDialog.setBusy(true);
 			var reimbursementModel = this.getView().getModel("reimbursements");
 			const oModel = this.getView().getModel("reimbursementHeader");
@@ -289,22 +290,7 @@ sap.ui.define([
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					oDialog.setBusy(false);
-					if (!this.oErrorDialog) {
-						this.oErrorDialog = new Dialog({
-							type: DialogType.Message,
-							title: "Error",
-							state: ValueState.Error,
-							content: new Text({ text: jqXHR.responseJSON.msg }),
-							beginButton: new Button({
-								type: ButtonType.Emphasized,
-								text: "OK",
-								press: function () {
-									this.oErrorDialog.close();
-								}.bind(this)
-							})
-						});
-					};
-					this.oErrorDialog.open();
+					MessageBox.error(jqXHR.responseJSON.msg);
 				}
 			  });
 	   },
@@ -365,7 +351,6 @@ sap.ui.define([
 		},
 		onSearch : function(oEvent){
 			var mParamas = oEvent.getParameters();
-			console.log(mParamas);
 			if(mParamas.filterKeys){
 				var statusFilter = Object.keys(mParamas.filterKeys).toString();
 			}else{
@@ -382,7 +367,7 @@ sap.ui.define([
 			}, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + oJWT
 			});
-			oModel.dataLoaded().then(function() { // Ensuring data availability instead of assuming it.
+			oModel.dataLoaded().then(function() { 
 				this.getView().byId("reimbursementTable").setBusy(false);
 			}.bind(this));
 			this.getView().setModel(oModel,"reimbursements");

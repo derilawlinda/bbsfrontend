@@ -307,22 +307,7 @@ sap.ui.define([
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					pageDOM.setBusy(false);
-					if (!this.oErrorDialog) {
-						this.oErrorDialog = new Dialog({
-							type: DialogType.Message,
-							title: "Error",
-							state: ValueState.Error,
-							content: new Text({ text: jqXHR.responseJSON.msg }),
-							beginButton: new Button({
-								type: ButtonType.Emphasized,
-								text: "OK",
-								press: function () {
-									this.oErrorDialog.close();
-								}.bind(this)
-							})
-						});
-					};
-					this.oErrorDialog.open();
+					MessageBox.error(jqXHR.responseJSON.msg);
 				}
 			  });
 		},
@@ -395,22 +380,7 @@ sap.ui.define([
 					this.oSuccessMessageDialog.open();
 				}.bind(this),
 				error: function (jqXHR, textStatus, errorThrown) {
-					if (!this.oErrorDialog) {
-						this.oErrorDialog = new Dialog({
-							type: DialogType.Message,
-							title: "Error",
-							state: ValueState.Error,
-							content: new Text({ text: jqXHR.responseJSON.msg }),
-							beginButton: new Button({
-								type: ButtonType.Emphasized,
-								text: "OK",
-								press: function () {
-									this.oErrorDialog.close();
-								}.bind(this)
-							})
-						});
-					};
-					this.oErrorDialog.open();
+					MessageBox.error(jqXHR.responseJSON.msg);
 				}
 			  });
 		},
@@ -666,37 +636,7 @@ sap.ui.define([
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					pageDOM.setBusy(false);
-					if (!this.oSuccessMessageDialog) {
-						this.oSuccessMessageDialog = new Dialog({
-							type: DialogType.Message,
-							title: "Error",
-							state: ValueState.Error,
-							content: new Text({ text: "Can not create budget." + errorThrown }),
-							beginButton: new Button({
-								type: ButtonType.Emphasized,
-								text: "OK",
-								press: function () {
-									this.oSuccessMessageDialog.close();
-								}.bind(this)
-							})
-						});
-					}
-					if (!this.oErrorDialog) {
-						this.oErrorDialog = new Dialog({
-							type: DialogType.Message,
-							title: "Error",
-							state: ValueState.Error,
-							content: new Text({ text: jqXHR.responseJSON.msg }),
-							beginButton: new Button({
-								type: ButtonType.Emphasized,
-								text: "OK",
-								press: function () {
-									this.oErrorDialog.close();
-								}.bind(this)
-							})
-						});
-					};
-					this.oErrorDialog.open();
+					MessageBox.error(jqXHR.responseJSON.msg);
 				}
 			  });
 			}
@@ -752,22 +692,7 @@ sap.ui.define([
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					pageDOM.setBusy(false);
-					if (!this.oErrorDialog) {
-						this.oErrorDialog = new Dialog({
-							type: DialogType.Message,
-							title: "Error",
-							state: ValueState.Error,
-							content: new Text({ text: jqXHR.responseJSON.msg }),
-							beginButton: new Button({
-								type: ButtonType.Emphasized,
-								text: "OK",
-								press: function () {
-									this.oErrorDialog.close();
-								}.bind(this)
-							})
-						});
-					};
-					this.oErrorDialog.open();
+					MessageBox.error(jqXHR.responseJSON.msg);
 				}
 			  });
 	  	},
@@ -825,22 +750,8 @@ sap.ui.define([
 								this.oSuccessMessageDialog.open();
 							},
 							error: function (jqXHR, textStatus, errorThrown) {
-								if (!this.oErrorDialog) {
-									this.oErrorDialog = new Dialog({
-										type: DialogType.Message,
-										title: "Error",
-										state: ValueState.Error,
-										content: new Text({ text: jqXHR.responseJSON.msg }),
-										beginButton: new Button({
-											type: ButtonType.Emphasized,
-											text: "OK",
-											press: function () {
-												this.oErrorDialog.close();
-											}.bind(this)
-										})
-									});
-								};
-								this.oErrorDialog.open();
+								pageDOM.setBusy(false);
+								MessageBox.error(jqXHR.responseJSON.msg);
 							}
 						});
 
@@ -904,22 +815,8 @@ sap.ui.define([
 								this.oSuccessMessageDialog.open();
 							},
 							error: function (jqXHR, textStatus, errorThrown) {
-								if (!this.oErrorDialog) {
-									this.oErrorDialog = new Dialog({
-										type: DialogType.Message,
-										title: "Error",
-										state: ValueState.Error,
-										content: new Text({ text: jqXHR.responseJSON.msg }),
-										beginButton: new Button({
-											type: ButtonType.Emphasized,
-											text: "OK",
-											press: function () {
-												this.oErrorDialog.close();
-											}.bind(this)
-										})
-									});
-								};
-								this.oErrorDialog.open();
+								pageDOM.setBusy(false);
+								MessageBox.error(jqXHR.responseJSON.msg);
 							}
 						});
 
@@ -982,23 +879,8 @@ sap.ui.define([
 									
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
-					// pageDOM.setBusy(false);
-					if (!this.oErrorDialog) {
-						this.oErrorDialog = new Dialog({
-							type: DialogType.Message,
-							title: "Error",
-							state: ValueState.Error,
-							content: new Text({ text: jqXHR.responseJSON.msg }),
-							beginButton: new Button({
-								type: ButtonType.Emphasized,
-								text: "OK",
-								press: function () {
-									this.oErrorDialog.close();
-								}.bind(this)
-							})
-						});
-					};
-					this.oErrorDialog.open();
+					pageDOM.setBusy(false);
+					MessageBox.error(jqXHR.responseJSON.msg);
 				}
 			  });
 		},

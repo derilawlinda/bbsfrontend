@@ -9,8 +9,9 @@ sap.ui.define([
 	'sap/ui/Device',
 	"sap/m/Dialog",
 	"sap/m/Button",
+	"sap/m/MessageBox",
 	'frontend/bbs/libs/lodash',
- ], function (Controller,History, mobileLibrary, MessageToast, JSONModel,coreLibrary,Fragment,Device,Dialog,Button) {
+ ], function (Controller,History, mobileLibrary, MessageToast, JSONModel,coreLibrary,Fragment,Device,Dialog,Button,MessageBox) {
     "use strict";
 
 	// shortcut for sap.m.ButtonType
@@ -320,22 +321,7 @@ sap.ui.define([
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					oDialog.setBusy(false);
-					if (!this.oErrorDialog) {
-						this.oErrorDialog = new Dialog({
-							type: DialogType.Message,
-							title: "Error",
-							state: ValueState.Error,
-							content: new Text({ text: jqXHR.responseJSON.msg }),
-							beginButton: new Button({
-								type: ButtonType.Emphasized,
-								text: "OK",
-								press: function () {
-									this.oErrorDialog.close();
-								}.bind(this)
-							})
-						});
-					};
-					this.oErrorDialog.open();
+					MessageBox.error(jqXHR.responseJSON.msg);
 				}
 			  });
 			// console.log(JSON.stringify(oProperty));

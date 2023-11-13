@@ -14,7 +14,7 @@ sap.ui.define(
 			var oJWT = oStore.get("jwt");
             this.getOwnerComponent().checkToken(oJWT,"dashboard");
             this.domain = window.location.hostname;
-            console.log(this.company);
+            console.log(this.domain);
             if(this.domain =='ess-kkb' || this.domain == 'ess-bbs'){
                 this.getView().byId("Company").setEnabled(false);
                 if(this.domain == 'ess-kkb'){

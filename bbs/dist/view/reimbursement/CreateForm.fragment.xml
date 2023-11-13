@@ -49,9 +49,10 @@
 						<Label text="Transfer Remarks" />
 						<Input value="{reimbursementHeader>/U_TransferRemarks}" placeholder="ct: BCA 0123456789 an Bali United" ></Input>
 
-							<Label  text="Post Date" required="true"  />
+							<Label  text="Post Date" required="false" visible="false"   />
 						<DatePicker
 							id="DatePicker"
+							visible="false"
 							class="sapUiSmallMarginBottom"
 							value="{
 								'path': 'reimbursementHeader>/U_RequestDate',

@@ -48,10 +48,11 @@
 
 						</ComboBox>
 
-							<Label  text="Post Date" required="true"  />
+							<Label  text="Post Date" required="false" visible="false"   />
 						<DatePicker
 							id="DatePicker"
 							class="sapUiSmallMarginBottom"
+							visible="false"
 							value="{
 								'path': 'advanceRequestHeader>/U_RequestDate',
 								'type': 'sap.ui.model.type.Date',

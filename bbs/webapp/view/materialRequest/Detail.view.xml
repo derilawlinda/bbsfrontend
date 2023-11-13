@@ -37,10 +37,11 @@ xmlns:core="sap.ui.core"
                         <Label id="_IDGenLabel1" text="Date" />
 						<Text id="_IDGenText1" text="{materialRequestDetailModel>/CreateDate}" />
 
-						<Label  text="Post Date" required="true"  />
+						<Label  text="Post Date" required="false" visible="false"  />
 						<DatePicker
 							editable="{viewModel>/editable}"
 							id="DatePicker"
+							visible="false"
 							class="sapUiSmallMarginBottom"
 							value="{
 								'path': 'materialRequestDetailModel>/U_DocDate',

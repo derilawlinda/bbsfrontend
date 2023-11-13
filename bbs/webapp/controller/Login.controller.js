@@ -14,12 +14,13 @@ sap.ui.define(
 			var oJWT = oStore.get("jwt");
             this.getOwnerComponent().checkToken(oJWT,"dashboard");
             this.domain = window.location.hostname;
-            console.log(this.domain);
-            if(this.domain =='ess-kkb' || this.domain == 'ess-bbs'){
+            var subdomain = this.domain.split('.')[0];
+            console.log(subdomain);
+            if(subdomain =='ess-kkb' || subdomain == 'ess-bbs'){
                 this.getView().byId("Company").setEnabled(false);
-                if(this.domain == 'ess-kkb'){
+                if(subdomain == 'ess-kkb'){
                     this.getView().byId("Company").setSelectedKey('KKB');
-                }else if(this.domain == 'ess-bbs'){
+                }else if(subdomain == 'ess-bbs'){
                     this.getView().byId("Company").setSelectedKey('BBS');
                 }
 

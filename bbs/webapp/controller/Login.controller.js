@@ -15,6 +15,7 @@ sap.ui.define(
             this.getOwnerComponent().checkToken(oJWT,"dashboard");
             var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
             this.domain = window.location.hostname;
+            console.log(this.company);
             if(this.domain =='ess-kkb' || this.domain == 'ess-bbs'){
                 this.getView().byId("Company").setEnabled(false);
                 if(this.domain == 'ess-kkb'){

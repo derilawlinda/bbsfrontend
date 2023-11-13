@@ -13,7 +13,6 @@ sap.ui.define(
             var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 			var oJWT = oStore.get("jwt");
             this.getOwnerComponent().checkToken(oJWT,"dashboard");
-            var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
             this.domain = window.location.hostname;
             console.log(this.company);
             if(this.domain =='ess-kkb' || this.domain == 'ess-bbs'){
@@ -32,6 +31,7 @@ sap.ui.define(
             // this.getOwnerComponent().getRouter().getTargets().display("notFound", {
 			// 	fromTarget : "login"
 			// });
+            var oStore = jQuery.sap.storage(jQuery.sap.storage.Type.local);
             let company = this.getView().byId("Company").getSelectedKey();
             oStore.put("company",company)
             let username = this.getView().byId("username").valueOf().getValue();

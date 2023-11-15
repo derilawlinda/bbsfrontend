@@ -64,7 +64,7 @@ xmlns:core="sap.ui.core"
 
 						<Label text="Status" />
 						<ObjectStatus text="{path : 'advanceRequestDetailModel>/U_Status', formatter:'.textFormatter'}" state="{path:'advanceRequestDetailModel>/U_Status', formatter:'.objectFormatter'}" inverted="true"></ObjectStatus>
-
+						<Text text="SAP Doc No : {advanceRequestDetailModel>/U_SAP_DocNum}" visible="{= ${advanceRequestDetailModel>/U_Status} === 5}" />
 
 						<Label id="_IDGenLabel4" text="Remarks" />
 						<Text id="_IDGenText4"  text="{advanceRequestDetailModel>/U_Remarks}"/>

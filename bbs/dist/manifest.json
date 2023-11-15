@@ -17,7 +17,7 @@
     },
     "dataSources": {
       "default": {
-        "uri": "http://localhost:8000/api/",
+        "uri": "https://essapi.unitedcreative.co.id/api/",
         "type": "OData",
         "settings": {
           "odataVersion": "4.0"
@@ -33,7 +33,7 @@
         }
       },
       "bbsbackend": {
-        "uri" : "http://localhost:8000/api/"
+        "uri" : "https://essapi.unitedcreative.co.id/api/"
       },
       "navigationList": {
 				"uri": "model/navigation.json",

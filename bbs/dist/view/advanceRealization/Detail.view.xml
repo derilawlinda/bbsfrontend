@@ -182,7 +182,7 @@ xmlns:core="sap.ui.core"
 						<Text  text="{advanceRequestDetailModel>/U_TransferRemarks}" />
 						
 						<Label text="Realization Rejected Reason" />
-						<Text  text="{advanceRequestDetailModel>/U_RealizationRemarks}" />
+						<Text  text="{advanceRequestDetailModel>/U_RealTrfRemarks}" />
 					
 					<core:Title text="Advance Information" />
 

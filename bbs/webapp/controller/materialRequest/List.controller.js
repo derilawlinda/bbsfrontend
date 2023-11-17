@@ -11,7 +11,9 @@ sap.ui.define([
 	"sap/m/Button",
 	"sap/m/MessageBox",
 	'frontend/bbs/libs/lodash',
- ], function (Controller,History, mobileLibrary, MessageToast, JSONModel,coreLibrary,Fragment,Device,Dialog,Button,MessageBox) {
+	"sap/ui/model/Filter",
+	"sap/ui/model/FilterOperator"
+ ], function (Controller,History, mobileLibrary, MessageToast, JSONModel,coreLibrary,Fragment,Device,Dialog,Button,MessageBox,Filter,FilterOperator) {
     "use strict";
 
 	// shortcut for sap.m.ButtonType
@@ -141,6 +143,7 @@ sap.ui.define([
 	   onAccountCodeChange : async function(oEvent){
 		var oSelectedItem = oEvent.getSource().getSelectedKey(); //Get Selected Item
 		var oSelectedRow = oEvent.getSource().getParent(); //Selected Row.
+		this.selectedRow = oSelectedRow;
 		oSelectedRow.getCells()[1].setBusy(true);
 		oSelectedRow.getCells()[1].setSelectedKey("");
 		oSelectedRow.getCells()[1].setEnabled(true);
@@ -168,13 +171,13 @@ sap.ui.define([
 			i.refresh();
 		}
 
-		oSelectedRow.getCells()[1].bindAggregation("items", {
-			path: 'items>/'+ oSelectedItem,
-			template: new sap.ui.core.Item({
-				key: "{items>ItemCode}",
-				text: "{items>ItemCode} - {items>ItemName}"
-			})
-		});
+		// oSelectedRow.getCells()[1].bindAggregation("items", {
+		// 	path: 'items>/'+ oSelectedItem,
+		// 	template: new sap.ui.core.Item({
+		// 		key: "{items>ItemCode}",
+		// 		text: "{items>ItemCode} - {items>ItemName}"
+		// 	})
+		// });
 		oSelectedRow.getCells()[1].setBusy(false);
 
 		
@@ -185,8 +188,11 @@ sap.ui.define([
 		onValueHelpRequest: function (oEvent) {
 			var sInputValue = oEvent.getSource().getValue(),
 				oView = this.getView();
+
+			
 	
 			var oSelectedRow = oEvent.getSource().getParent(); //Selected Row.
+			this.selectedRow = oSelectedRow;
 			var account = oSelectedRow.getCells()[0].getSelectedKey();
 			var oModelItems = this.getView().getModel("items");
 			var oItemData = oModelItems.getData();
@@ -212,9 +218,32 @@ sap.ui.define([
 					model : "oItemShow",
 					path : account
 				})
+			
 				oDialog.open(sInputValue);
 			});
-		},	
+		},
+		onValueHelpClose: function (oEvent) {
+			var oSelectedItem = oEvent.getParameter("selectedItem");
+			oEvent.getSource().getBinding("items").filter([]);
+
+			if (!oSelectedItem) {
+				return;
+			}
+
+			this.selectedRow.getCells()[1].setValue(oSelectedItem.getTitle());
+		},
+		onValueHelpSearch: function (oEvent) {
+			var sValue = oEvent.getParameter("value");
+			var oBindingInfo = this.getView().byId("selectDialog").getBindingInfo('items');
+			if (sValue) {
+			oBindingInfo.filters = [
+				new sap.ui.model.Filter("ItemCode", sap.ui.model.FilterOperator.EQ, sValue)
+			];
+			} else {
+				delete oBindingInfo.filters;
+			}
+			this.getView().byId("selectDialog").bindAggregation('items', oBindingInfo);
+		},
        onNavBack: function (oEvent) {
 			var oHistory, sPreviousHash;
 			oHistory = History.getInstance();

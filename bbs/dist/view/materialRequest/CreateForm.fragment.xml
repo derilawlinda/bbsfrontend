@@ -158,6 +158,7 @@
 								showSuggestion="true"
 								showValueHelp="true"
 								valueHelpRequest=".onValueHelpRequest"
+								value="{new_mr_items>U_ItemCode}"
 								>
 								<!-- <suggestionItems>
 									<core:Item text="{Name}" />

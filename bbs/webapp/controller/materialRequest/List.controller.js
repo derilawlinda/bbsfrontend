@@ -182,6 +182,39 @@ sap.ui.define([
 	    getRouter : function () {
 			return sap.ui.core.UIComponent.getRouterFor(this);
 		},
+		onValueHelpRequest: function (oEvent) {
+			var sInputValue = oEvent.getSource().getValue(),
+				oView = this.getView();
+	
+			var oSelectedRow = oEvent.getSource().getParent(); //Selected Row.
+			var account = oSelectedRow.getCells()[0].getSelectedKey();
+			var oModelItems = this.getView().getModel("items");
+			var oItemData = oModelItems.getData();
+			var oItemShow = new JSONModel();
+			oItemShow.setData(oItemData[account]);
+			this.getView().setModel(oItemShow,"oItemShow");
+	
+			if (!this._pValueHelpDialog) {
+				this._pValueHelpDialog = Fragment.load({
+					id: oView.getId(),
+					name: "frontend.bbs.view.materialRequest.ValueHelpDialog",
+					controller: this
+				}).then(function (oDialog) {
+					oView.addDependent(oDialog);
+					return oDialog;
+				});
+			}
+			this._pValueHelpDialog.then(function(oDialog) {
+				// Create a filter for the binding
+				// oDialog.getBinding("items").filter([new Filter("Name", FilterOperator.Contains, sInputValue)]);
+				// Open ValueHelpDialog filtered by the input's value
+				oDialog.bindElement({
+					model : "oItemShow",
+					path : account
+				})
+				oDialog.open(sInputValue);
+			});
+		},	
        onNavBack: function (oEvent) {
 			var oHistory, sPreviousHash;
 			oHistory = History.getInstance();

@@ -188,8 +188,6 @@ sap.ui.define([
 		onValueHelpRequest: function (oEvent) {
 			var sInputValue = oEvent.getSource().getValue(),
 				oView = this.getView();
-
-			
 	
 			var oSelectedRow = oEvent.getSource().getParent(); //Selected Row.
 			this.selectedRow = oSelectedRow;
@@ -224,7 +222,12 @@ sap.ui.define([
 		},
 		onValueHelpClose: function (oEvent) {
 			var oSelectedItem = oEvent.getParameter("selectedItem");
-			oEvent.getSource().getBinding("items").filter([]);
+			this.oBindingInfo = oEvent.getSource().getBindingInfo('items');
+			if(this.oBindingInfo.filters){
+				oEvent.getSource().getBinding("items").filter(this.oBindingInfo.filters);
+			}else{
+				oEvent.getSource().getBinding("items").filter([]);
+			}
 
 			if (!oSelectedItem) {
 				return;
@@ -234,15 +237,15 @@ sap.ui.define([
 		},
 		onValueHelpSearch: function (oEvent) {
 			var sValue = oEvent.getParameter("value");
-			var oBindingInfo = this.getView().byId("selectDialog").getBindingInfo('items');
+			this.oBindingInfo = this.getView().byId("selectDialog").getBindingInfo('items');
 			if (sValue) {
-			oBindingInfo.filters = [
+			this.oBindingInfo.filters = [
 				new sap.ui.model.Filter("ItemCode", sap.ui.model.FilterOperator.EQ, sValue)
 			];
 			} else {
-				delete oBindingInfo.filters;
+				delete this.oBindingInfo.filters;
 			}
-			this.getView().byId("selectDialog").bindAggregation('items', oBindingInfo);
+			this.getView().byId("selectDialog").bindAggregation('items', this.oBindingInfo);
 		},
        onNavBack: function (oEvent) {
 			var oHistory, sPreviousHash;

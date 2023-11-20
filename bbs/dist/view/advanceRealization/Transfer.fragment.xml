@@ -34,7 +34,7 @@
 						<Select
 								forceSelection="false"
 								id="transferTo"
-								selectedKey="advanceRequestDetailModel>/U_RealTrfBank"
+								selectedKey="{advanceRequestDetailModel>/U_RealTrfBank}"
 								items="{
 									path: 'transferAccounts>/value',
 									sorter: { path: 'Name' }

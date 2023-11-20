@@ -346,9 +346,7 @@ xmlns:core="sap.ui.core"
 							<ComboBox width="100%"
 								editable="{viewModel>/editable}"
 								selectedKey="{advanceRequestDetailModel>U_ItemCode}"
-								enabled="true"
 							>
-
 							</ComboBox>
 						</table:template>
 					</table:Column>

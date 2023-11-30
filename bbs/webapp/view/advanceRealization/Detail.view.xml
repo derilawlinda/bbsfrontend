@@ -297,7 +297,6 @@ xmlns:core="sap.ui.core"
 		<Panel expandable="true" expanded="true" headerText="Realizations" width="auto" class="sapUiTinyMargin">
 			<table:Table id="advanceRealLineTableID"
 					rows="{advanceRequestDetailModel>/REALIZATIONREQLINESCollection}"
-					visibleRowCount="5"
 					rowActionCount="1"
 					selectionMode="None"
 				>

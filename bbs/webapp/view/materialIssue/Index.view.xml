@@ -12,6 +12,9 @@ xmlns:table="sap.ui.table"
         id="materialIssueTableID" 
         inset="false"
         selectionChange="handleSelectionChange"
+        growing="true"
+	growingThreshold="10"
+        growingScrollToLoad="true" 
         items="{
 					path: 'materialIssue>/value',
 					sorter: {

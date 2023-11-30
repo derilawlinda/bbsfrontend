@@ -12,6 +12,9 @@ xmlns:table="sap.ui.table"
         id="reimbursementTable" 
         inset="false"
         selectionChange="handleSelectionChange"
+        growing="true"
+	growingThreshold="10"
+        growingScrollToLoad="true" 
         items="{
 					path: 'reimbursements>/value',
 					sorter: {

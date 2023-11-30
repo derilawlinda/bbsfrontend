@@ -27,6 +27,7 @@ sap.ui.define([
 			is_approver : false
 		});
 		this.getView().setModel(viewModel,"viewModel");
+		oModel.setSizeLimit(9999);
 		oModel.loadData(backendUrl+"advanceRequest/getAdvanceRealizations", {
 			company : this.company
 		}, true, "GET",false,false,{
@@ -118,10 +119,16 @@ sap.ui.define([
 
 		onSearch : function(oEvent){
 			var mParamas = oEvent.getParameters();
-			if(mParamas.filterKeys){
-				var statusFilter = Object.keys(mParamas.filterKeys).toString();
+			if(mParamas.filterCompoundKeys){
+				if(mParamas.filterCompoundKeys.U_RealiStatus){
+					var realizaTionStatusFilter = Object.keys(mParamas.filterCompoundKeys.U_RealiStatus).toString();
+				}
+				if(mParamas.filterCompoundKeys.U_Status){
+					var advanceStatusFilter = Object.keys(mParamas.filterCompoundKeys.U_Status).toString();
+				}
 			}else{
-				var statusFilter = "";
+				var realizaTionStatusFilter = "";
+				var advanceStatusFilter = "";
 			}
 			this.getView().byId("advanceRealizationTableID").setBusy(true);
 			var search = this.getView().byId("searchField").getValue();
@@ -129,7 +136,8 @@ sap.ui.define([
 			var oModel = new JSONModel();
 			oModel.loadData(backendUrl+"advanceRequest/getAdvanceRealizations", {
 				"search" : search,
-				"status" : statusFilter,
+				"status" : realizaTionStatusFilter,
+				"advanceStatus" : advanceStatusFilter,
 				"company" : this.company
 			}, true, "GET",false,false,{
 				'Authorization': 'Bearer ' + oJWT

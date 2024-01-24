@@ -86,6 +86,7 @@ sap.ui.define([
 		this.getOwnerComponent().setModel(oModel,"budgeting");
 
 		var oProjectModel = new JSONModel();
+		oProjectModel.setSizeLimit(1000);
 		oProjectModel.loadData(backendUrl+"project/getProjects", {
 			company : company
 		}, true, "GET",false,false,{

@@ -113,6 +113,7 @@
 							required="true"
 							change="onProjectChange"
 							items="{projects>/value/}"
+							length="1000"
 						>
 						<core:Item text="{projects>Name}" key="{projects>Code}" />
 						</ComboBox>

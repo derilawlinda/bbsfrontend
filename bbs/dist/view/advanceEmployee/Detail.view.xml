@@ -282,6 +282,19 @@ xmlns:core="sap.ui.core"
 						</table:template>
 					</table:Column>
 
+					<table:Column >
+						<Text text="Description" />
+						<table:template>
+							<Input
+								id="inputDescription"
+								type="Text"
+								placeholder="Description"
+								editable="{viewModel>/editable}"
+								value="{advanceRequestDetailModel>U_Description}"
+								/>
+						</table:template>
+					</table:Column>
+
 				</table:columns>
 
 				<table:rowActionTemplate>

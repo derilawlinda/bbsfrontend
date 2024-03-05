@@ -444,7 +444,7 @@ xmlns:core="sap.ui.core"
 					<Button id="approveButton" type="Accept" text="Approve" press="onApproveButtonClick" visible="{viewModel>/is_approver}" />
 					<Button id="rejectByFinanceButton" type="Reject" text="Reject by Finance" press="onRejectButtonClick" visible="{= ${advanceRequestDetailModel>/U_RealiStatus} !== 5 &amp;&amp; ${viewModel>/is_finance} === true }" />
 					<Button id="rejectButton" type="Reject" text="Reject" press="onRejectButtonClick" visible="{viewModel>/is_approver}" />
-					<Button id="transferedButton" type="Emphasized" text="Confirm" press="onConfirmButtonClick" visible="{viewModel>/is_finance}" />
+					<Button id="transferedButton" type="Emphasized" text="Confirm" press="onConfirmButtonClick" visible="{= ${advanceRequestDetailModel>/U_RealiStatus} == 4 &amp;&amp; ${viewModel>/is_finance} === true }" />
 					<Button id="resubmitButton" type="Critical" text="Resubmit" press="onSubmitButtonClick" visible="{viewModel>/resubmit}" />
               
 				</Toolbar>

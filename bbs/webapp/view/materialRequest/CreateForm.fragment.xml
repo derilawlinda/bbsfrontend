@@ -157,12 +157,13 @@
 								placeholder="Enter Item"
 								showSuggestion="true"
 								showValueHelp="true"
+								suggestionItems="{new_mr_items>/}"
 								valueHelpRequest=".onValueHelpRequest"
 								value="{new_mr_items>U_ItemCode}"
 								>
-								<!-- <suggestionItems>
-									<core:Item text="{Name}" />
-								</suggestionItems> -->
+								<suggestionItems>
+									<core:ListItem text="{U_ItemCode}" additionalText="{U_ItemName}" />
+								</suggestionItems>
 							</Input>
 						</table:template>
 					</table:Column>

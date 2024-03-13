@@ -44,6 +44,7 @@ sap.ui.define(
             this.oHistory = History.getInstance();
             var sPreviousHash = oStore.get("prevHash");
             console.log(sPreviousHash);
+            console.log( oStore.get("company"));
 
             $.ajax({url : backendUrl+"login",
                 type: 'POST',

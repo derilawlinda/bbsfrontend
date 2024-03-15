@@ -21,7 +21,7 @@ sap.ui.define(
                 if(subdomain == 'ess-kkb'){
                     this.getView().byId("Company").setSelectedKey('KKB');
                 }else if(subdomain == 'ess-bbs'){
-                    this.getView().byId("Company").setSelectedKey('BBS_LIVE');
+                    this.getView().byId("Company").setSelectedKey('BBS');
                 }
 
             }
